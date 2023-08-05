@@ -4,14 +4,15 @@
     "author": "Wilson Ape",
     "description": "Apex Wallet Visualizer",
     "license": "UNLICENSED",
-    "main": "apexview.js",
+    "main": "public/av.js",
     "scripts":
     {
         "dev": "node task watch-dev",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "taskFiles": [
-        "bld/tasks.js"
+        "bld/tasks.js",
+        "server/tasks.js"
     ],
     "dependencies":
     {

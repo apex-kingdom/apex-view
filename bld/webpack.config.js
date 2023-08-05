@@ -24,7 +24,7 @@ var base =
 
     output:
     {
-        path: paths.dist,
+        path: paths.public,
         filename: '[name].js',
         library: '[name]',
         libraryTarget: 'umd',
@@ -85,7 +85,7 @@ var devServer =
     port: 8100,
     static: 
     {
-        directory: paths.dist,
+        directory: paths.public,
         watch: true
     }
     // watchOptions: { aggregateTimeout: 300, ignored: /node_modules/, poll: 1000 }

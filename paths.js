@@ -10,8 +10,9 @@ var paths =
 {
     build: ['bld'],
     components: ['src', 'components'],
-    dist: ['dist'],
     modules: ['node_modules'],
+    public: ['public'],
+    server: ['server'],
     source: ['src'],
     test: ['tst']
 };

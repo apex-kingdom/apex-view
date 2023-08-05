@@ -45,19 +45,5 @@ module.exports =
         {
             new WebpackDevServer(webpackConfig.devServer, webpack(webpackConfig.dev())).start();
         }
-    },
-    {
-        name: 'watch-dev',
-        desc: `Bundle and serve for development.`,
-        fn: ({ log }) =>
-        {
-            var config = { ...webpackConfig.dev(), watch: true };
-
-            webpack(config, (error, stats) =>
-            {
-                if (error) throw error;
-                log(stats.toString(config.stats));
-            });
-        }
     }
 ]
