@@ -6,10 +6,7 @@ module.exports =
         [ "@babel/preset-env", { targets: { browsers: ['last 2 versions'] } } ] 
     ],
         
-    plugins: 
-    [ 
-        [ "import-glob" ]
-    ],
+    plugins: [],
     
     compact: false
 }

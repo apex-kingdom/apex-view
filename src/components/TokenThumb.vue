@@ -1,14 +1,26 @@
 <template>
-  <x-context #default="{ bgIsDark, bw = bgIsDark ? 'white' : 'black' }">
-    <x-flex invert align="center" gap=":1.5" :width="size">
-      <x-flex aligns=":center:center" :height="size" overflow="hidden">
-        <x-image v-if="image" :src="image" :type="imageType" max-height="100%" max-width="100%" />
-        <x-icon v-else name="apex" :colors="bw + '_f.8'" size="50%" />
-      </x-flex>
-      <x-text v-if="count" font="tiny" :colors="bw"> 
+  <x-context #default="{ bgColor, bgDiff, bgSame, hideLbls }">
+    <x-flex invert align="center" :width="size">
+      <x-text 
+        v-if="count" 
+        font="tiny" 
+        :colors="`${bgDiff}:${bgSame}_f.75`" 
+        :h-colors="`${bgSame}:${bgDiff}_f.5`" 
+        pad="v1" 
+        cursor="pointer" 
+        @click="$emit('amount')"
+      > 
         {{ count }} 
       </x-text>
-      <x-text font="tiny" over-wrap="anywhere" :colors="bw"> 
+      <f-token-image 
+        :iconbar="show && !hideLbls" 
+        :image="image" 
+        :image-type="imageType" 
+        :size="size" 
+        @click="$emit('open')"
+        @hover="show = $event"
+      />
+      <x-text v-if="!hideLbls" font="tiny" over-wrap="anywhere" :colors="`${bgDiff}:${bgSame}_f.75`" pad="v1"> 
         {{ title }} 
       </x-text>
     </x-flex>    
@@ -17,14 +29,15 @@
 
 
 <script>
-import { XContext, XFlex, XIcon, XImage, XText } from 'exude'
+import { XContext, XFlex, XFullscreen, XIcon, XImage, XText } from 'exude'
+import FTokenImage from './face/FTokenImage'
 
 
 export default 
 {
     name: 'TokenThumb',
     
-    components: { XContext, XFlex, XIcon, XImage, XText },
+    components: { FTokenImage, XContext, XFlex, XFullscreen, XIcon, XImage, XText },
     
     props:
     {
@@ -43,11 +56,13 @@ export default
         /**
             Size of the thumbnail image (width and height).
         */
-        size: { type: Number, default: 40 },
+        size: { type: Number, default: 48 },
         /**
             Title for token thumb.
         */
         title: String
-    }
+    },
+    
+    data: () => ({ show: false })
 }
 </script>

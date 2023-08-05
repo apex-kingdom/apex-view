@@ -6,14 +6,16 @@
     @hover="hover = $event"
   >
     <x-box 
-      :colors="hover ? 'white:prime' : 'white:quine'" 
+      :colors="active || hover ? 'white:prime' : 'white:transparent'" 
+      border="a.25!prime"
       pad="v1 h2" 
-      radius="a10"
-      min-width="7"
+      radius="a2"
     >
       {{ value }} 
     </x-box>
-    <x-box margin="l1 r2"> {{ label }} </x-box>
+    <x-box margin="l1 r2" :colors="active ? 'linkHover' : null"> 
+      {{ label }} 
+    </x-box>
   </x-flex>
 </template>
 
@@ -27,7 +29,7 @@ import { XBox, XFlex } from 'exude'
 */
 export default
 {
-    name: 'AStat',
+    name: 'FStat',
     
     components: { XBox, XFlex },
     
@@ -35,6 +37,10 @@ export default
     
     props:
     {
+        /**
+            In active state?
+        */
+        active: Boolean,
         /**
             Stat name.
         */

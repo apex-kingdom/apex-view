@@ -23,17 +23,21 @@ module.exports =
             });
         }
     },
-    // {
-    //     name: 'build-prod',
-    //     desc: `Bundle for production (${chalk.whiteBright(packson.main)}).`,
-    //     fn: ({ exit, run }) =>
-    //     {
-    //         var webpackCfgPath = path.join(paths.build, 'webpack.config.js');
-    //         var params = [ 'webpack', '--config', `"${webpackCfgPath}"`, '--env', 'prod' ];
-    // 
-    //         run.npx(params, { NODE_ENV: 'production' }).on('close', exit);
-    //     }
-    // },
+    {
+        name: 'build-prod',
+        desc: `Bundle for production (${chalk.whiteBright(packson.main)}).`,
+        fn: ({ exit, log }) =>
+        {
+            var config = webpackConfig.prod();
+
+            webpack(config, (error, stats) =>
+            {
+                if (error) throw error;
+                log(stats.toString(config.stats));
+                exit();
+            });
+        }
+    },
     {
         name: 'serve-dev',
         desc: `Launches dev server (${chalk.whiteBright('port ' + webpackConfig.devServer.port)}).`,

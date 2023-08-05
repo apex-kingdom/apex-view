@@ -1,18 +1,26 @@
 <template>
-  <div @click="print">
-    <token-thumb :title="title" :count="count" :image="image" :image-type="imageType"/>
-  </div>
+  <token-thumb 
+    :title="data.name" 
+    :count="count" 
+    :image="data.image" 
+    :image-type="data.imageType" 
+    @open="handleOpen" 
+    @amount="handleAmount" 
+  />
 </template>
 
 
 <script>
 import { XBox } from 'exude'
+import { m_context } from 'exude'
 import TokenThumb from '_comps/TokenThumb'
 
 
 export default
 {
     name: 'WalletItem',
+
+    mixins: [ m_context('wallet').consumer ],
 
     components: { TokenThumb, XBox },
     
@@ -26,34 +34,26 @@ export default
     
     computed:
     {
-        count() { return this.isNft && !this.data.collection_name ? null : this.data.user_quantity; },
-        
-        image() { return this.isNft ? this.ocmeta.image : this.meta.logo; },
-      
-        imageType() { return this.isNft ? null : 'png'; },
-        
-        isNft() { return this.data.isNFT; },
-
-        meta() { return this.data.metadata || {}; },
-        
-        ocmeta() { return this.data.onchain_metadata || {}; },
-
-        title() 
-        { 
-            let title = '';
-            
-            if (this.isNft)
-                title = this.data.collection_name;
-            else
-                title = this.meta.ticker;
-                
-            return title || this.data.asset_name_dec;
-        },
+        count() { return this.data.isNFT ? null : this.data.userQuantityFormatted; },              
     },
     
     methods:
     {
-        print() { console.log('item', this.data); }
+        handleAmount() 
+        {
+            if (this.data.isCollection)
+                this.$router.push({ name: 'nfts', query: { c: this.data.policyId } });
+            else if (this.wallet)
+                this.wallet.showToken(this.data);
+        },
+        
+        handleOpen() 
+        { 
+            console.log(this.data.name, this.data);
+            
+            if (this.wallet)
+                this.wallet.showToken(this.data);
+        }        
     }
 }
 </script>

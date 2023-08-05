@@ -1,0 +1,21 @@
+# ApexView Change Log
+
+## Notes
+
+thoughts:
+- separate section for ada handles?
+- taptools link for tokens (sidepanel)
+
+## To Dos
+
+features:
+- sea creature icons for wallet size
+
+bugs:
+- $handle collection name not displaying properly
+- better floater window positioning on open
+
+tasks:
+- pull all native tokens (not just 100)
+- metadata parsing for CIP68
+- show additional media for tokens (images/videos)

@@ -33,7 +33,14 @@ export default
             Internally, the library relies on the following names:
               - `skeletonLoad`: keyframes for skeleton loading animation
         */
-        keyframes: {},
+        keyframes: 
+        {
+            spin:
+            {
+                '0%': { transform: 'rotate(0deg)' },
+                '100%': { transform: 'rotate(360deg)' }
+            }          
+        },
         /**
             Enumerated CSS animation specifications.
             
@@ -58,7 +65,14 @@ export default
         named: 
         {
             title: { clip: 'text', image: 'linear-gradient(#4b4114, #e6debb 47%, #ffffff00 48.5%, #e6debb 50%, #b9a032)' },
-            button: { image: 'linear-gradient(#e6debb, #b9a032)' }
+            button: { image: 'linear-gradient(#e6debb, #b9a032)' },
+            
+            console: 'console0, console1, console2, console3, console4',
+            console0: { image: 'linear-gradient(#99999933 50%, #22222222 0)', size: "25 25" },
+            console1: { image: 'linear-gradient(72deg, #99999933 50%, #22222222 0)', size: "25 25" },
+            console2: { image: 'linear-gradient(144deg, #99999933 50%, #22222222 0)', size: "25 25" },
+            console3: { image: 'linear-gradient(216deg, #99999933 50%, #22222222 0)', size: "25 25" },
+            console4: { image: 'linear-gradient(288deg, #99999933 50%, #22222222 0)', size: "25 25" }            
         }
     },
     
@@ -116,7 +130,7 @@ export default
             link: '#bba43c',
             linkHover: '#EEEEEE',
             highlight: '#4B4114', // punga
-            entryBg: '#222222',
+            entryBg: '#2A2A2A',
             
             // accent: '#',
             // error: '#',
@@ -147,7 +161,7 @@ export default
         /**
             Name of the default font face to use when none specified.
         */
-        defaultFace: 'Montserrat',
+        defaultFace: 'Montserrat, sans-serif',
       
         /**
             Enumerated font size rulesets.  
@@ -166,11 +180,11 @@ export default
             h6: { fontSize: 6, lineHeight: 6 },
             
             micro: { fontSize: 2.75, lineHeight: 2.75 },
-            tiny: { fontSize: 3.5, lineHeight: 3.5 },
+            tiny: { fontSize: 3.5, lineHeight: 4 },
             small: { fontSize: 4, lineHeight: 4 },
-            base: { fontSize: 5, lineHeight: 5 },
+            base: { fontSize: 5, lineHeight: 6 },
             large: { fontSize: 6.5, lineHeight: 6.5 },
-            huge: { fontSize: 9, lineHeight: 9 },
+            huge: { fontSize: 18, lineHeight: 18 },
             jumbo: { fontSize: 24, lineHeight: 24 }
         },
         
@@ -256,9 +270,13 @@ export default
         */
         named: 
         {
+            entry: '1px 1px 6px black',
             floater: '0px 0px 4px black',
+            insetEntry: 'inset 1px 1px 6px black',
             insetFloater: 'inset 0px 0px 8px black',
             section: '0px 0px 4px quarter',
+            sidebar: '4px 4px 4px black',
+            sidebarRight: '0 0 8px black',
             text: '0.5px 0.5px 0 black'
         }
     },
@@ -279,7 +297,7 @@ export default
         named: 
         {
             default: { property: 'all', duration: '0.15s', timingFunction: 'ease' },
-            nav: { property: 'opacity, left', duration: '0.5s', timingFunction: 'ease' }          
+            nav: { property: 'opacity, right', duration: '0.5s', timingFunction: 'ease' }          
         }
     }
 }

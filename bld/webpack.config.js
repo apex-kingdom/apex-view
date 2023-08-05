@@ -60,7 +60,14 @@ var base =
         new VueLoaderPlugin(),
         new ProvidePlugin({ app: path.join(paths.build, 'vars') }), 
         new HtmlPlugin({ filename: 'index.html', title: 'ApexView Test Page', publicPath: '/' }),
-        new InjectBodyPlugin({ content: `<div id="${vars.rootHtmlId}"></div>` })
+        new InjectBodyPlugin(
+        { 
+            content: 
+            `
+              <div id="${vars.rootHtmlId}"></div>
+              <style> html, body { background-color: black; } </style>
+            ` 
+        })
     ]
 }
 
@@ -85,6 +92,7 @@ var devServer =
 }
 
 var dev = ext => ({ ...base, mode: 'development', ...ext });
+var prod = ext => ({ ...base, mode: 'production', ...ext });
 
 
-module.exports = { dev, devServer };
+module.exports = { dev, devServer, prod };

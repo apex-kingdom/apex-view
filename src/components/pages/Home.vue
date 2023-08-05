@@ -1,42 +1,71 @@
 <template>
-  <x-flex invert aligns=":center">
-    <x-flex invert aligns=":center" margin="t12 b12">
-      <apex-title label="ApexView" font="jumbo" />
-      <x-flex display="inline-block" colors="quarter" margin="v5" filter="drop-shadow(4px 4px 0 black)">
-        <x-icon name="cardano" size="32" colors=":black_f.5" stroke-width=".5" />
+  <x-context #default="{ mobile }">
+    <x-flex invert aligns=":center">
+      <f-main-title text="ApexView" :font="mobile ? 'huge' : 'jumbo'" margin="t8" />
+      <x-flex display="inline-block" colors="quarter" margin="t4 b7" filter="drop-shadow(4px 4px 0 black)">
+        <x-icon name="cardano" :size="mobile ? 28 : 32" colors=":black_f.5" stroke-width=".5" />
       </x-flex>
-    </x-flex>    
-    <apex-input 
-      font="base" 
-      placeholder="Enter wallet address or $handle" 
-      width="65%" 
-      :value.sync="address"
-      @keydown="handleKey"
-    />
-  </x-flex>
+      <x-text 
+        block 
+        align="center" 
+        font="tiny" 
+        colors="white:red_l-.75" 
+        width="50%" 
+        min-width="86" 
+        max-width="180" 
+        radius="a2" 
+        pad="a4" 
+        margin="b5"
+      >
+        <p>
+          Please note that this app is currently in <u>LIMITED ALPHA</u> as bugs are squashed and features are 
+          being added.  
+        </p>
+        <br />
+        <p>
+          <b>Wallets show only the first 100 tokens being returned from the APIs.</b>
+        </p>
+      </x-text>
+      <address-select :addys="addys" width="75%" max-width="225" @select="handleSelect" @remove="handleRemove" />
+    </x-flex>
+  </x-context>
 </template>
 
 
 <script>
-import { XFlex, XIcon } from 'exude';
-import ApexInput from '../form/ApexInput';
-import ApexTitle from '../ApexTitle';
+import { XBox, XContext, XFlex, XIcon, XText } from 'exude'
+import AddressSelect from '../AddressSelect'
+import FMainTitle from '../face/FMainTitle'
 
 
 export default
 {
     name: 'Home',
         
-    components: { ApexInput, ApexTitle, XFlex, XIcon },
+    components: { AddressSelect, FMainTitle, XBox, XContext, XFlex, XIcon, XText },
     
-    data: () => ({ address: '' }),
+    created()
+    {
+        Object.defineProperty(this, 'addys', { get: () => JSON.parse(window.localStorage.getItem('addys')) || [] });
+    },
     
     methods:
     {
-        handleKey(evt)
+        handleSelect(address)
         {
-            if (evt.code.toLowerCase() === 'enter')
-                this.$router.push({ name: 'tokens', params: { address: this.address } });              
+            this.$router.push({ name: 'tokens', params: { address } });              
+        },
+
+        handleRemove(address)
+        {
+            let { addys } = this, index = 0;
+            
+            while ((index = addys.indexOf(address)) >= 0)
+                addys = [ ...addys.slice(0, index), ...addys.slice(index + 1) ];
+            
+            window.localStorage.setItem('addys', JSON.stringify(addys));
+            
+            this.$forceUpdate();
         }
     }
 }

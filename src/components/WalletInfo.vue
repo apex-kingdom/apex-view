@@ -3,32 +3,33 @@
     <x-flex 
       wrap 
       aligns=":center:center" 
-      colors=":black" 
+      colors=":black_f.125" 
       border="a.25!terti" 
       pad="v2 h4" 
       radius="a3" 
       gap="4:2" 
-      margin="a4" 
+      margin="a2" 
       shadow="floater"
     >
-      <a-address :value="w.address" label="wallet address" :small="mobile" copy qr-code /> 
-      <a-address :value="w.stakeKey" label="stake key" :small="mobile" copy qr-code /> 
+      <f-data-value :value="w.input" label="wallet address" :font="mobile ? 'tiny' : 'small'" copy qr-code /> 
+      <f-data-value :value="w.stakeKey" label="stake key" :font="mobile ? 'tiny' : 'small'" copy qr-code /> 
       <x-flex aligns=":center:center"> 
         <x-icon name="austral" :size="mobile ? 4 : 8" />
-        <x-text bold :font="mobile ? 'base' : 'large'"> {{ w.ada }} </x-text>
+        <x-text bold :font="mobile ? 'base' : 'large'"> {{ w.adaFormatted }} </x-text>
       </x-flex>
-      <x-text colors="terti" :font="mobile ? 'base' : 'large'"> 
-        {{ w.stakePool || 'UNSTAKED' }} 
-      </x-text>
+      <component v-if="w.pool" v-bind="poolProps"> {{ w.pool.ticker || 'UNSTAKED' }} </component>
+      <x-link @click="wallet.reload" title="reload data">
+        <x-icon name="reload" size="7" align-v="middle" />
+      </x-link>
     </x-flex>
   </x-context>
 </template>
 
 
 <script>
-import { XContext, XFlex, XIcon, XText } from 'exude'
+import { XContext, XFlex, XIcon, XLink, XText } from 'exude'
 import { m_context } from 'exude'
-import AAddress from './util/AAddress'
+import FDataValue from './face/FDataValue'
 
 
 export default
@@ -37,11 +38,31 @@ export default
     
     mixins: [ m_context('wallet').receiver ],
 
-    components: { AAddress, XContext, XFlex, XIcon, XText },
+    components: { FDataValue, XContext, XFlex, XIcon, XLink, XText },
     
     computed:
     {
+        poolProps()
+        {
+            let props = 
+            {
+                is: 'x-text',
+                colors: 'terti',
+                font: this.mobile ? 'base' : 'large'
+            };
+            
+            if (this.w.pool.home)
+            {
+                props.is = 'x-link';
+                props.href = this.w.pool.home;
+                props.title = 'visit pool homepage'
+                props.target = '_blank';
+            }
+            
+            return props;
+        },
+        
         w() { return this.wallet.data; }
-    }    
+    }
 }
 </script>

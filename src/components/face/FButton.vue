@@ -20,7 +20,7 @@ import { XBackground, XButton } from 'exude'
 
 export default
 {
-    name: 'AButton',
+    name: 'FButton',
     
     components: { XBackground, XButton },
     

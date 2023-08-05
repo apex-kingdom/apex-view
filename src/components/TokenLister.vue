@@ -1,6 +1,6 @@
 <template>
   <x-context #default="{ cs, rs }">
-    <x-flex wrap aligns=":flex-start:center" :gap="`${cs}:${rs}`">
+    <x-flex wrap aligns=":flex-start:center" :gap="`${cs}:${rs}`" :pad="`h${cs} v${rs}`">
       <!-- token thumbnail slot -->
       <slot />
     </x-flex>

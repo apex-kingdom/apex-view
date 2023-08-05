@@ -2,15 +2,27 @@
   <x-app colors="text" min-height="100vh" font="base" :style="{ backgroundColor: bgColor }" @click="hideNav(false)">
     <x-context 
       :hideCtrls="hideCtrls" 
+      :hideLbls="settings.noLabels"
       :mobile="smallScreen" 
       :bgColor="bgColor"
-      :bgIsDark="color(bgColor).isDark()"
+      :bgDiff="color(bgColor).isDark() ? 'white' : 'black'"
+      :bgSame="color(bgColor).isDark() ? 'black' : 'white'"
       :cs="colspace"
       :rs="rowspace"
     >
-      <apex-nav v-bind="navProps[navState]" :hide.sync="hideCtrls" transition="nav" @input="bgColor = $event" />
-      <router-view />
-      <apex-footer />
+      <x-box pos="fixed" trbl="t0 b0 l0" z-index="1000">
+        <app-settings :show="openConfig" @update="settings = $event" />
+        <f-main-nav 
+          v-bind="navProps[navState]" 
+          :hide.sync="hideCtrls" 
+          :small="smallScreen"
+          transition="nav" 
+          @config="openConfig = !openConfig" 
+        />
+      </x-box>
+      <x-box pos="relative" z-index="1">
+        <router-view />
+      </x-box>
     </x-context>
   </x-app>
 </template>
@@ -20,8 +32,8 @@
 import color from 'color'
 import { XApp, XBox, XContext } from 'exude';
 import { m_media_query } from 'exude'
-import ApexFooter from './ApexFooter'
-import ApexNav from './ApexNav'
+import FMainNav from './face/FMainNav'
+import AppSettings from './AppSettings'
 import router from '_source/config/router'
 
 
@@ -35,25 +47,23 @@ export default
     
     mixins: [ m_media_query('smallScreen') ],
     
-    components: { ApexFooter, ApexNav, XApp, XBox, XContext },
+    components: { AppSettings, FMainNav, XApp, XBox, XContext },
     
     data: () => 
     ({
-        bgColor: 'black',
         color,
-        colspace: 5,
-        rowspace: 4, 
         hideCtrls: false, 
-        // hideLbls: false,
-        navState: 'show'
+        navState: 'show',
+        openConfig: false,
+        settings: {}
     }),
     
     created()
     {
         this.navProps =
         {
-            show: { trbl: 'l6 t6', opacity: 1 },
-            hide: { trbl: 'l-20 t6', opacity: 0 }
+            show: { trbl: 'r-24 t0', opacity: 1 },
+            hide: { trbl: 'r-6 t0', opacity: 0 }
         }
         
         let timeId = null;
@@ -63,7 +73,9 @@ export default
             
             if (bool)
             {
-                timeId = setTimeout(() => this.navState = 'hide', 4000);
+                // do not allow main nav to close if settings open
+                if (!this.openConfig)
+                    timeId = setTimeout(() => this.navState = 'hide', 4000);
             }
             else
             {
@@ -73,6 +85,16 @@ export default
             }
         }
         this.$watch('hideCtrls', this.hideNav)        
+        this.$watch('openConfig', () => this.hideNav(this.hideCtrls))        
+    },
+    
+    computed:
+    {
+        bgColor() { return this.settings.bgColor || 'black'; },
+      
+        colspace() { return this.settings.noGutters ? 0 : 5; },
+        
+        rowspace() { return this.settings.noGutters ? 0 : 4; }
     }
 }
 </script>

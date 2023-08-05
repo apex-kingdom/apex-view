@@ -3,15 +3,16 @@
     #default="{ close }" 
     v-bind="baseProps" 
     :show="show" 
-    trans="tx-50%" 
-    trbl="t10% l50%"
-    :z-index="stack"
+    :z-index="zIndex"
+    :tabindex="0"
     @update:show="$emit('update:show', $event)"
+    @focusin="topIndex"
+    v-listen-outside-focus="setIndex"
   >
     <x-flex invert aligns=":center" colors="text:gray" pad="a3" radius="a2" shadow="insetFloater" gap=":2">
       <!-- @slot pop message content -->
       <slot />
-      <a-button v-if="mode !== 'alert'" small label="Close" @click="close" />
+      <f-button v-if="mode !== 'alert'" small label="Close" @click="close" />
     </x-flex>
   </x-floater>
 </template>
@@ -19,16 +20,20 @@
 
 <script>
 import { XFlex, XFloater } from 'exude'
-import AButton from './AButton'
+import { listenOutsideFocus } from 'exude'
+import stack from '_source/lib/stack'
+import FButton from './FButton'
 
 
-let stack = 100;
+let pops = stack();
 
 export default
 {
-    name: 'APopMessage',
+    name: 'FPopMessage',
     
-    components: { AButton, XFlex, XFloater },
+    components: { FButton, XFlex, XFloater },
+    
+    directives: { listenOutsideFocus },
     
     props:
     {
@@ -44,7 +49,12 @@ export default
         show: Boolean
     },
     
-    data: () => ({ stack }),
+    data: () => ({ zIndex: 0 }),
+    
+    destroyed()
+    {
+        pops.rem(pops.pos(this._uid));
+    },
     
     computed:
     {
@@ -56,7 +66,6 @@ export default
                 trbl: 't4', 
                 radius: 'a2',
                 shadow: 'floater',
-                zIndex: stack
             };
             
             if (this.mode === 'alert')
@@ -79,11 +88,14 @@ export default
     
     watch:
     {
-        show() 
-        { 
-            stack += this.show ? 1 : -1;
-            this.stack = stack;
-        }
+        show() { this.show && this.topIndex(); }
+    },
+    
+    methods:
+    {
+        setIndex() { this.zIndex = 100 + pops.pos(this._uid); },
+        
+        topIndex() { this.zIndex = 100 + pops.top(this._uid); }
     }
 }
 </script>

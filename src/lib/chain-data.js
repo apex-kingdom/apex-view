@@ -38,13 +38,6 @@ function pull(name, params, pathname)
         
         return op.get(data, path);
     })
-    // handle any errors
-    .catch(err => 
-    {
-        // TODO: handle errors!
-        console.error(name, err);
-    })
-    .then(d => (console.log(name, d), d))    
 }
 
 
@@ -108,3 +101,5 @@ function resolve(name)
 
 
 export default Object.keys(config).reduce((o, n) => o = { ...o, [n]: (...a) => pull(n, ...a) }, {});
+
+export let clearDataCache = () => cache.data = {};

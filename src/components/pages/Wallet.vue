@@ -1,26 +1,42 @@
 <template>
-  <x-context #default="{ hideCtrls, cs }">
+  <x-context #default="{ hideCtrls, cs, rs }">
     <x-flex v-if="data" invert aligns=":center">
-      <x-exapse :expand="!hideCtrls" max-breadth="75%" pos="fixed" trbl="t0" pad="t3" z-index="10">
+      <x-exapse :expand="!hideCtrls" max-breadth="60%" pos="fixed" trbl="t0" pad="t2" z-index="10">
         <wallet-info />
       </x-exapse>
-      <x-box :margin="`h${cs} v30`">
+      <x-box :margin="`v${ hideCtrls ? 0 : 30 }`" place-self="stretch">
         <router-view />
       </x-box> 
-      <x-exapse lower :expand="!hideCtrls" max-breadth="75%" pos="fixed" trbl="b0" pad="b3" z-index="10">
+      <x-exapse lower :expand="!hideCtrls" max-breadth="90%" pos="fixed" trbl="b0" pad="b2" z-index="10">
         <wallet-tabs />
       </x-exapse>
     </x-flex>
+    <x-box pos="fixed" trbl="t0 b0 r0" z-index="20" radius="t6 l6">
+      <x-background :image="`linear-gradient(#99999922 50%, #66666622 0)`" size="50 50" />
+      <x-background :image="`linear-gradient(72deg, #99999922 50%, #22222222 0)`" size="50 50" />
+      <x-background :image="`linear-gradient(144deg, #99999922 50%, #22222222 0)`" size="50 50" />
+      <x-background :image="`linear-gradient(216deg, #99999922 50%, #22222222 0)`" size="50 50" />
+      <x-background :image="`linear-gradient(288deg, #99999922 50%, #22222222 0)`" size="50 50" />
+      <wallet-console :show.sync="showConsole" :title="tokenData.name">
+        <token-details :token="tokenData" />
+      </wallet-console>
+    </x-box>
+    <f-site-loading :opacity="loading ? 1 : 0" :z-index="loading ? 1000 : -1" />
+    <f-wallet-error v-if="error" :error="error" />
   </x-context>
 </template>
 
 
 <script>
-import { XBox, XContext, XExapse, XFlex } from 'exude'
+import { XBackground, XBox, XContext, XExapse, XFlex } from 'exude'
 import { m_context } from 'exude'
+import FSiteLoading from '../face/FSiteLoading'
+import FWalletError from '../face/FWalletError'
+import TokenDetails from '../TokenDetails'
+import WalletConsole from '../WalletConsole'
 import WalletInfo from '../WalletInfo'
 import WalletTabs from '../WalletTabs'
-import account from '_source/lib/account'
+import wallet from '_source/lib/wallet'
 
 
 export default
@@ -29,19 +45,42 @@ export default
         
     mixins: [ m_context('wallet').provider ],
     
-    components: { WalletInfo, WalletTabs, XBox, XContext, XExapse, XFlex },
+    components: 
+    { 
+        FSiteLoading, 
+        FWalletError, 
+        TokenDetails, 
+        WalletConsole, 
+        WalletInfo, 
+        WalletTabs, 
+        XBackground, 
+        XBox, 
+        XContext, 
+        XExapse, 
+        XFlex 
+    },
     
-    data: () => ({ data: null }),
+    data: () => 
+    ({ 
+        address: null, 
+        data: null, 
+        error: null,
+        loading: false,
+        showConsole: false, 
+        tokenData: {} 
+    }),
     
     watch:
     {
-        '$route.params': 
+        address() 
+        { 
+            this.data = null;
+            this.requestData()
+        },
+        
+        '$route.params':
         {
-            handler({ address, group }) 
-            { 
-                this.data = null;       
-                account(address).then(data => this.data = data);                
-            },
+            handler({ address }) { this.address = address },
             immediate: true
         }
     },
@@ -50,11 +89,48 @@ export default
     {
         provideWalletContext()
         {
-            let obj = {}
-
+            let obj = 
+            {
+                reload: () => this.requestData(true),
+                showToken: data =>
+                {
+                    if (this.showConsole && this.tokenData === data)
+                    {
+                        this.showConsole = false;
+                    }
+                    else
+                    {
+                        this.tokenData = data;
+                        this.showConsole = true;
+                    }
+                }
+            };
+            
             Object.defineProperty(obj, 'data', { get: () => this.data || {}, enumerable: true });
 
             return obj;           
+        },
+        
+        requestData(clear)
+        {
+            this.loading = true;
+            
+            wallet(this.address, clear)
+                .then(data => { this.data = data; this.updateHistory(data.input); })
+                .catch(error => { this.data = null; this.error = error; })
+                .finally(() => { this.loading = false; });    
+        }, 
+        
+        updateHistory(address)
+        {
+            let addys = JSON.parse(window.localStorage.getItem('addys') || '[]');
+            let index = 0;
+            
+            while ((index = addys.indexOf(address)) >= 0)
+                addys = [ ...addys.slice(0, index), ...addys.slice(index + 1) ];
+            
+            addys.unshift(address);
+            window.localStorage.setItem('addys', JSON.stringify(addys));
         }
     }
 }

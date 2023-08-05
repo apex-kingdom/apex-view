@@ -13,5 +13,5 @@
 */
 export default function(str, len)
 {
-    return str.length > len * 2 ? [str.slice(0, len), str.slice(-len)].join('...') : str;
+    return (str || '').length > len * 2 ? [str.slice(0, len), str.slice(-len)].join('...') : str;
 }

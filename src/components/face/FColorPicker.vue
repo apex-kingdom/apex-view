@@ -6,8 +6,8 @@
       model="hex"
       :rgb-sliders="true"
       :enable-alpha="false"
-      :value="current"
-      @input="setColor"
+      :value="value"
+      @input="$emit('update:value', $event)"
     />
   </x-box>
 </template>
@@ -21,35 +21,17 @@ import { XBox } from 'exude'
 
 export default
 {
-    name: 'ColorPicker',
+    name: 'FColorPicker',
         
     components: { Verte, XBox },
-    
-    data: () => ({ current: 'black' }),
     
     props:
     {
         /**
-            A name for this color picker.
+            Color value.
         */
-        name: { type: String, required: true }
-    },
-    
-    mounted()
-    {
-        this.setColor(localStorage.getItem(this.name) || '#000000');
-    },
-    
-    methods:
-    {
-        setColor(color) 
-        { 
-            this.current = color;
-            localStorage.setItem(this.name, color);
-            
-            this.$emit('input', color); 
-        }
-    }  
+        value: { type: String, default: 'black' }
+    }
 }
 </script>
 

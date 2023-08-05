@@ -4,22 +4,22 @@
       <x-flex 
         wrap 
         aligns=":center:center" 
-        colors=":black" 
+        colors=":black_f.125" 
         border="a.25!terti" 
         pad="v2 h4" 
         radius="a3" 
         gap="6:2" 
-        margin="a4" 
+        margin="a2" 
         shadow="floater"
       >
         <x-link @click="$router.push({ name: 'tokens' })">
-          <a-stat label="Tokens" :value="w.tokens.length" />
+          <f-stat label="Tokens" :active="$route.name === 'tokens'" :value="w.tokens.length" />
         </x-link>
         <x-link @click="$router.push({ name: 'collections' })">
-          <a-stat label="Collections" :value="w.collections.length" />
+          <f-stat label="Collections" :active="$route.name === 'collections'" :value="w.collections.length" />
         </x-link>
         <x-link @click="$router.push({ name: 'nfts' })">
-          <a-stat label="NFTs" :value="w.nfts.length" />
+          <f-stat label="NFTs" :active="$route.name === 'nfts'" :value="w.nfts.length" />
         </x-link>
       </x-flex>
     </x-text>
@@ -30,20 +30,20 @@
 <script>
 import { XContext, XFlex, XLink, XText } from 'exude'
 import { m_context } from 'exude'
-import AStat from './util/AStat'
+import FStat from './face/FStat'
 
 
 export default
 {
-    name: 'DWalletInfo',
+    name: 'WalletTabs',
     
     mixins: [ m_context('wallet').receiver ],
 
-    components: { AStat, XContext, XFlex, XLink, XText },
+    components: { FStat, XContext, XFlex, XLink, XText },
     
     computed:
-    {
+    {        
         w() { return this.wallet.data; }
-    }    
+    }
 }
 </script>
