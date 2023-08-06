@@ -15,7 +15,7 @@ module.exports =
             {
                 if (error) throw error;
                 log(stats.toString(config.stats));
-                exit();
+                exit(0);
             });
         }
     },
@@ -30,7 +30,7 @@ module.exports =
             {
                 if (error) throw error;
                 log(stats.toString(config.stats));
-                exit();
+                exit(0);
             });
         }
     },
