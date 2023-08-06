@@ -2,7 +2,7 @@
 /**
     Filter and flatten object values.
 */
-export default function(source, test = () => true)
+module.exports = function(source, test = () => true)
 {
     let filter = (obj, pre) =>
     {

@@ -1,8 +1,8 @@
-import numeral from 'numeral'
-import token from './token'
+var numeral = require('numeral');
+var token = require('./token');
 
 
-export default function()
+module.exports = function()
 {
     let collections = {};
     

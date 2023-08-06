@@ -3,7 +3,6 @@ var packson = require('./package.json');
 
 
 exports.root = path.join(__dirname);
-exports.dist = path.join(exports.root, ...packson.main.split(/\//).slice(0, -1));  
 exports.sub = (...base) => (...segs) => path.join(...base, ...segs)
 
 var paths =

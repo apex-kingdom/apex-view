@@ -19,3 +19,4 @@ tasks:
 - pull all native tokens (not just 100)
 - metadata parsing for CIP68
 - show additional media for tokens (images/videos)
+- load NFT images only on when scrolled into view

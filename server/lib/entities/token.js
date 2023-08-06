@@ -1,6 +1,6 @@
-import numeral from 'numeral'
-import { decode } from 'hex-encode-decode'
-import objectFilter from '../object-filter'
+var numeral = require('numeral');
+var { decode } = require('hex-encode-decode');
+var objectFilter = require('../object-filter');
 
 
 let reBaseName = /^(.+)\s*#.*$/;
@@ -30,7 +30,7 @@ let reNonTraits = new RegExp('^[^a-z0-9]*' + nonTraits.map(s => `(${s})`).join('
     @return { object }
       Formatted token data.
 */
-export default function(init, data)
+module.exports = function(init, data)
 {
     let token = { __raw: data, __token: true };
     let meta = data.metadata || {};

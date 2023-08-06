@@ -98,7 +98,8 @@ export default
       
         handleKey(evt)
         {
-            if (evt.code.toLowerCase() === 'enter') this.emitSelection(this.value);
+            if (this.value && evt.code.toLowerCase() === 'enter') 
+                this.emitSelection(this.value);
         }
     }
 }

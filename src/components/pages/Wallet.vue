@@ -123,14 +123,17 @@ export default
         
         updateHistory(address)
         {
-            let addys = JSON.parse(window.localStorage.getItem('addys') || '[]');
-            let index = 0;
-            
-            while ((index = addys.indexOf(address)) >= 0)
-                addys = [ ...addys.slice(0, index), ...addys.slice(index + 1) ];
-            
-            addys.unshift(address);
-            window.localStorage.setItem('addys', JSON.stringify(addys));
+            if (address)
+            {
+                let addys = JSON.parse(window.localStorage.getItem('addys') || '[]');
+                let index = 0;
+                
+                while ((index = addys.indexOf(address)) >= 0)
+                    addys = [ ...addys.slice(0, index), ...addys.slice(index + 1) ];
+                
+                addys.unshift(address);
+                window.localStorage.setItem('addys', JSON.stringify(addys));
+            }
         }
     }
 }

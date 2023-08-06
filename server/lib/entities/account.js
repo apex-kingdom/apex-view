@@ -1,10 +1,10 @@
-import numeral from 'numeral'
-import collection from './collection'
-import pool from './pool'
-import token from './token'
+var numeral = require('numeral');
+var collection = require('./collection');
+var pool = require('./pool');
+var token = require('./token');
 
 
-export default function(input)
+module.exports = function(input)
 {
     let account = {};
     let groups = collection();

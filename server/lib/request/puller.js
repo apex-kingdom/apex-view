@@ -1,10 +1,8 @@
-import axios from 'axios'
-import op from 'object-path'
-import config from '../config/request'
-import uid from './uid'
+var axios = require('axios');
+var op = require('object-path');
+var config = require('./config');
 
 
-let cache = { data: {}, resolve: {} };
 /**
     Fetches Cardano blockchain data.
     
@@ -21,15 +19,7 @@ let cache = { data: {}, resolve: {} };
 */
 function pull(name, params, pathname)
 {
-    return Promise.resolve(params).then(args => 
-    {
-        let cid = uid(name, args);
-        
-        if (!cache.data[cid])
-            cache.data[cid] = send(name, args);
-        
-        return cache.data[cid];
-    })
+    return Promise.resolve(params).then(args => send(name, args))
     // resolve data to proper path
     .then(data => 
     {
@@ -70,7 +60,7 @@ function send(name, args)
 
 function resolve(name)
 {
-    if (!cache.resolve[name])
+    if (!resolve.cache[name])
     {
         let { method, base, headers = {}, url = '', root, paths, vars, preps } = config[name];
                 
@@ -93,13 +83,12 @@ function resolve(name)
             preps = { ...pre.preps, ...preps };
         }
         
-        cache.resolve[name] = { method, headers, url, root, paths, vars, preps };
+        resolve.cache[name] = { method, headers, url, root, paths, vars, preps };
     }
     
-    return cache.resolve[name];
+    return resolve.cache[name];
 }
 
+resolve.cache = {};
 
-export default Object.keys(config).reduce((o, n) => o = { ...o, [n]: (...a) => pull(n, ...a) }, {});
-
-export let clearDataCache = () => cache.data = {};
+module.exports = Object.keys(config).reduce((o, n) => o = { ...o, [n]: (...a) => pull(n, ...a) }, {});

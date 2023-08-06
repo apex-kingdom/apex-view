@@ -1,6 +1,5 @@
 
-
-export default function(data)
+module.exports = function(data)
 {
     let pool = {};
     
