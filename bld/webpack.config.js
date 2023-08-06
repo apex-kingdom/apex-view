@@ -1,17 +1,10 @@
-var path = require('path');
 var { ProvidePlugin } = require('webpack');
 var HtmlPlugin = require('html-webpack-plugin')
 var { default: InjectBodyPlugin } = require('inject-body-webpack-plugin')
 var { VueLoaderPlugin } = require('vue-loader');
 var paths = require('../paths');
-var packson = require('../package.json');
 var vars = require('./vars');
 
-
-// library name from package.json
-var libname = packson.main.split(/\//).slice(-1)[0].split(/\./)[0];
-// subpath handler for source folder
-var source = paths.sub(paths.source);
 
 var base =
 {
@@ -19,7 +12,7 @@ var base =
 
     entry:
     {
-        [libname]: source('app.js')
+        av: paths.sub(paths.source)('app.js')
     },
 
     output:
@@ -58,7 +51,7 @@ var base =
     plugins:
     [
         new VueLoaderPlugin(),
-        new ProvidePlugin({ app: path.join(paths.build, 'vars') }), 
+        new ProvidePlugin({ app: paths.sub(paths.build)('vars') }), 
         new HtmlPlugin({ filename: 'index.html', title: 'ApexView Test Page', publicPath: '/' }),
         new InjectBodyPlugin(
         { 
@@ -71,28 +64,8 @@ var base =
     ]
 }
 
-var devServer =
-{
-    historyApiFallback: 
-    { 
-        // index: '/index.html' 
-        rewrites: 
-        [
-            { from: /^.+$/, to: '/index.html' }
-        ]
-    },
-    liveReload: true,
-    port: 8100,
-    static: 
-    {
-        directory: paths.public,
-        watch: true
-    }
-    // watchOptions: { aggregateTimeout: 300, ignored: /node_modules/, poll: 1000 }
-}
-
 var dev = ext => ({ ...base, mode: 'development', ...ext });
 var prod = ext => ({ ...base, mode: 'production', ...ext });
 
 
-module.exports = { dev, devServer, prod };
+module.exports = { dev, prod };

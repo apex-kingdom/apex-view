@@ -5,7 +5,7 @@ var paths = require('../paths');
 var wallet = require('./lib/wallet');
 
 
-var port = 8080;
+var port = process.env.PORT || 3000;
 
 app.use('/', express.static(paths.public));
 // all roads lead to SPA

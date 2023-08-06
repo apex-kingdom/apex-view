@@ -7,8 +7,7 @@
     "main": "public/av.js",
     "scripts":
     {
-        "dev": "node task watch-dev",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "build": "node task build-prod"
     },
     "taskFiles": [
         "bld/tasks.js",
@@ -43,5 +42,10 @@
         "vue-loader": "^15.9.8",
         "webpack": "^5.75.0",
         "webpack-dev-server": "^4.11.1"
+    },
+    "engines" : 
+    { 
+        "node" : ">=14.15.0",
+        "npm" : ">=6.14.0"
     }
 }
