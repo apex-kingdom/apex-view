@@ -44,9 +44,11 @@ export default
         
     components: { AddressSelect, FMainTitle, XBox, XContext, XFlex, XIcon, XText },
     
+    data: () => ({ addys: [] }),
+    
     created()
     {
-        Object.defineProperty(this, 'addys', { get: () => JSON.parse(window.localStorage.getItem('addys')) || [] });
+        this.updateAddys();
     },
     
     methods:
@@ -65,7 +67,12 @@ export default
             
             window.localStorage.setItem('addys', JSON.stringify(addys));
             
-            this.$forceUpdate();
+            this.updateAddys();
+        },
+        
+        updateAddys()
+        {
+            this.addys = JSON.parse(window.localStorage.getItem('addys')) || [];          
         }
     }
 }

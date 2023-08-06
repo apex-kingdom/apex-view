@@ -70,11 +70,11 @@ module.exports = function(init, data)
     token.onchainMetadataStandard = data.onchain_metadata_standard;
         
     if (typeof ocmd.attributes === 'object')
-        token.traits = objectFilter(ocmd.attributes, ()  => true);
+        token.traits = objectFilter(ocmd.attributes, () => true);
     else if (typeof ocmd.traits === 'object')
-        token.traits = objectFilter(ocmd.traits, ()  => true);
+        token.traits = objectFilter(ocmd.traits, () => true);
     else
-        token.traits = objectFilter(ocmd, k => !reNonTraits.test(k));
+        token.traits = objectFilter(ocmd, k => !reNonTraits.test(k.slice(-1)[0]));
 
     return token;
 }

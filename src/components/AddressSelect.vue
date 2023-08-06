@@ -13,6 +13,7 @@
       @keydown="handleKey"
     />
     <x-text 
+      v-if="list.length > 0"
       block 
       colors="text:entryBg" 
       height="62" 
