@@ -4,10 +4,11 @@
     "author": "Wilson Ape",
     "description": "Apex Wallet Visualizer",
     "license": "UNLICENSED",
-    "main": "public/av.js",
+    "main": "server",
     "scripts":
     {
-        "build": "node task build-prod"
+        "build": "node task build-prod",
+        "start": "node server"
     },
     "taskFiles": [
         "bld/tasks.js",
