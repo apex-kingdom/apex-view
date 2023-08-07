@@ -1,16 +1,16 @@
 <template>
-  <x-flex v-bind="$attrs" :aligns="aligns" gap="1" pos="relative">
+  <x-flex v-bind="$attrs" :aligns="aligns" gap=".25vw" pos="relative">
     <component :is="link ? 'x-link' : 'x-text'" :font="font">
       {{ shorten(value, count) }}
     </component>
     <template v-if="copy">
-      <x-copy-to-clipboard :data="value" :size="iconSize" @copied="showCopy = true" />
+      <x-copy-to-clipboard :data="value" display="flex" :size="iconSize" @copied="showCopy = true" />
       <f-pop-message mode="alert" :timeo="4000" :show.sync="showCopy">
         <x-text colors="quarter" font="small" pad="a1"> Copied to clipboard! </x-text>
       </f-pop-message>
     </template>
     <template v-if="qrCode">
-      <x-link @click="show = true">
+      <x-link display="flex" @click="show = true">
         <x-icon name="qrcode" :size="iconSize" />
       </x-link>
       <f-pop-message mode="info" :show.sync="show">
@@ -57,7 +57,7 @@ export default
         /**
             Size of utility icons.
         */
-        iconSize: { type: Number, default: 4 },
+        iconSize: { type: [ String, Number ], default: 4 },
         /**
             Label for the data value.
         */

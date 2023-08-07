@@ -62,8 +62,8 @@ export default
     {
         this.navProps =
         {
-            show: { trbl: 'r-24 t0', opacity: 1 },
-            hide: { trbl: 'r-6 t0', opacity: 0 }
+            show: { trbl: 'r-6vw t0', opacity: 1 },
+            hide: { trbl: 'r-1vw t0', opacity: 0 }
         }
         
         let timeId = null;

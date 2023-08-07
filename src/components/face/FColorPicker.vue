@@ -1,5 +1,5 @@
 <template>
-  <x-box v-bind="$attrs" colors=":black_f.25" radius="a4" overflow="hidden">
+  <x-box v-bind="$attrs" colors=":black_f.25" radius="a2vw" overflow="hidden">
     <verte 
       display="widget"
       picker="wheel" 

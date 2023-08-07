@@ -7,9 +7,9 @@
   >
     <x-box 
       :colors="active || hover ? 'white:prime' : 'white:transparent'" 
-      border="a.25!prime"
-      pad="v1 h2" 
-      radius="a2"
+      border="a.1vw!prime"
+      pad="v.2vw h.8vw" 
+      radius="a1vw"
     >
       {{ value }} 
     </x-box>

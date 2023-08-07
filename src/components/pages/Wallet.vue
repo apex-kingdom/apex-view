@@ -1,13 +1,13 @@
 <template>
   <x-context #default="{ hideCtrls, cs, rs }">
     <x-flex v-if="data" invert aligns=":center">
-      <x-exapse :expand="!hideCtrls" max-breadth="60%" pos="fixed" trbl="t0" pad="t2" z-index="10">
+      <x-exapse :expand="!hideCtrls" max-breadth="60%" pos="fixed" trbl="t0" z-index="10">
         <wallet-info />
       </x-exapse>
-      <x-box :margin="`v${ hideCtrls ? 0 : 30 }`" place-self="stretch">
+      <x-box :margin="`v${ hideCtrls ? 0 : '8vw' }`" place-self="stretch">
         <router-view />
       </x-box> 
-      <x-exapse lower :expand="!hideCtrls" max-breadth="90%" pos="fixed" trbl="b0" pad="b2" z-index="10">
+      <x-exapse lower :expand="!hideCtrls" max-breadth="90%" pos="fixed" trbl="b0" z-index="10">
         <wallet-tabs />
       </x-exapse>
     </x-flex>

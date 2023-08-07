@@ -5,19 +5,20 @@
     pos="absolute"         
     aligns=":center" 
     colors=":black_f.125" 
-    border="a.25!terti" 
-    pad="v2 h4" 
-    radius="a3" 
-    margin="t4" 
+    border="a.1vw!terti" 
+    pad="a.8vw" 
+    gap=":.75vw"
+    radius="a1vw" 
+    margin="t2.5vh" 
     shadow="floater"
   >
-    <x-link @click="$router.push({ name: 'home' })" colors="quarter">
+    <x-link colors="quarter" display="flex" @click="$router.push({ name: 'home' })">
       <x-icon name="apex" :size="size" />
     </x-link>
-    <x-link @click="hideToggle">
+    <x-link display="flex" @click="hideToggle">
       <x-icon :name="hide ? 'subtitles' : 'subtitlesOff'" :size="size" />
     </x-link>
-    <x-link @click="$emit('config')">
+    <x-link display="flex" @click="$emit('config')">
       <x-icon name="settings" :size="size" />
     </x-link>
   </x-flex>
@@ -47,7 +48,8 @@ export default
     
     computed:
     {
-        size() { return this.small ? 8 : 12; }
+        // size() { return this.small ? 8 : 12; }
+        size() { return '2.5vw'; }
     }
 }
 </script>

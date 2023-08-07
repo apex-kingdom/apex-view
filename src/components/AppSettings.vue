@@ -4,38 +4,36 @@
     invert 
     :expand="show" 
     colors=":black_f.125" 
-    :extent="80" 
     breadth="100%" 
-    margin="l-.25"
     radius="r6 b6"
     shadow="sidebar"
   >
-    <x-text block pad="a5" font="base">
-      <x-text block bold font="base" pad="v2" border="b.25!terti"> 
+    <x-text block pad="a1vw" width="28vw" font="vBase">
+      <x-text block bold font="vSmall" pad="v1vw" border="b.25!terti"> 
         Flex Mode 
       </x-text>
-      <x-field block el="label" margin="v5" pad="h3">
-        <x-checkbox :icon="noLabels ? 'check' : 'checkEmpty'" size="8" align=":middle" :value.sync="noLabels" />
+      <x-field block el="label" margin="v1vw" pad="h1.2vw">
+        <x-checkbox :icon="noLabels ? 'check' : 'checkEmpty'" size="2.5vw" align=":middle" :value.sync="noLabels" />
         Hide names &amp; labels
       </x-field>
-      <x-field block el="label" margin="v5" pad="h3">
-        <x-checkbox :icon="noGutters ? 'check' : 'checkEmpty'" size="8" align=":middle" :value.sync="noGutters" />
+      <x-field block el="label" margin="v1vw" pad="h1.2vw">
+        <x-checkbox :icon="noGutters ? 'check' : 'checkEmpty'" size="2.5vw" align=":middle" :value.sync="noGutters" />
         No grid gutters
       </x-field>
-      <x-text block bold font="base" pad="v2" margin="t10" border="b.25!terti"> 
+      <x-text block bold font="vSmall" pad="v1vw" margin="t2.5vw" border="b.25!terti"> 
         Background Color
       </x-text>
-      <f-color-picker border="a.25!quine!dotted" margin="v5" :value.sync="bgColor" />
+      <f-color-picker border="a.25!quine!dotted" margin="v2vw" :value.sync="bgColor" />
     </x-text> 
     <x-text 
       block
       align="center" 
-      pad="v1"
+      pad="v.5vw"
       colors="quine:black_f.125"
       pos="absolute" 
       trbl="b0" 
-      font="tiny" 
-      width="100%"
+      font="vTiny" 
+      overflow="auto"
     >
       ©2023 Apex Kingdom &amp; wilsonape
     </x-text>

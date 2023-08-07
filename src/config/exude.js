@@ -178,36 +178,24 @@ export default
             h4: { fontSize: 12, lineHeight: 12 },
             h5: { fontSize: 9, lineHeight: 9 },
             h6: { fontSize: 6, lineHeight: 6 },
-            
+
             micro: { fontSize: 2.75, lineHeight: 2.75 },
             tiny: { fontSize: 3.5, lineHeight: 4 },
             small: { fontSize: 4, lineHeight: 4 },
             base: { fontSize: 5, lineHeight: 6 },
             large: { fontSize: 6.5, lineHeight: 6.5 },
             huge: { fontSize: 18, lineHeight: 18 },
-            jumbo: { fontSize: 24, lineHeight: 24 }
+            jumbo: { fontSize: 24, lineHeight: 24 },
+
+            vTiny: { fontSize: '1vw', lineHeight: '1.1vw' },
+            vSmall: { fontSize: '1.5vw', lineHeight: '1.5vw' },
+            vBase: { fontSize: '1.9vw', lineHeight: '2vw' }
         },
         
         /**
             Font weight enumerations.
         */
-        // weight: 
-        // {
-        //     '9': '900',
-        //     '8': '800',
-        //     '7': '700',
-        //     '6': '600',
-        //     '5': '500',
-        //     '4': '400',
-        //     '3': '300',
-        //     '2': '200',
-        //     '1': '100',
-        // 
-        //     '+': 'bolder',
-        //     '-': 'lighter',
-        // 
-        //     clear: 'unset'
-        // }
+        // weight: {}
     },
     
     icon:
