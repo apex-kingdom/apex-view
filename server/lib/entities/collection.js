@@ -4,7 +4,7 @@ var token = require('./token');
 
 module.exports = function()
 {
-    let collections = { __entity: 'collection' };
+    let collections = {};
     
     let getCollection = data =>
     {
@@ -12,7 +12,7 @@ module.exports = function()
       
         if (!collections[policyId])
         {
-            let collection = {};
+            let collection = { __entity: 'collection' };
             
             collection.isCollection = true;
             collection.policyId = policyId;

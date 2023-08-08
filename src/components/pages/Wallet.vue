@@ -79,8 +79,11 @@ export default
         {
             switch(this.entity)
             {
-                case 'account': return 'wallet-details';
-                case 'token': return 'token-details';
+                case 'account': 
+                    return 'wallet-details';
+                case 'collection': 
+                case 'token': 
+                    return 'token-details';
             }
         },
       
@@ -90,8 +93,11 @@ export default
         {
             switch(this.entity)
             {
-                case 'account': return shorten(this.consoleData.input, 8);
-                case 'token': return this.consoleData.name;
+                case 'account': 
+                    return shorten(this.consoleData.input, 8);
+                case 'collection': 
+                case 'token': 
+                    return this.consoleData.name;
             }
         }
     },
