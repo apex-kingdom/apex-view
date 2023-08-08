@@ -86,5 +86,11 @@ module.exports =
     {
         base: 'blockfrost',
         url: '/scripts/{hash}/json'
+    },
+    
+    transaction:
+    {
+        base: 'blockfrost',
+        url: '/txs/{hash}'
     }
 }

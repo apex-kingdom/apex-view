@@ -1,14 +1,21 @@
 <template>
   <x-box width="100%">
-    <f-token-image iconbar :image="token.image" :image-type="token.imageType" :size="size" margin="hauto" />
-    <x-flex aligns=":center:space-around" colors="white:black" border="t.25!prime"  :width="size" margin="hauto">
+    <f-token-image iconbar :image="data.image" :image-type="data.imageType" :size="size" margin="hauto" />
+    <x-flex 
+      aligns=":center:space-around" 
+      colors="white:black" 
+      border="t.25!prime" 
+      :width="size" 
+      pad="a1"
+      margin="hauto"
+    >
       <f-data-value v-bind="assetProps" copy aligns=":center:center" :count="ocmds ? 20 : 24" font="micro" />
       <x-text v-if="ocmds" font="micro" colors="second"> 
         {{ ocmds }} 
       </x-text>
     </x-flex>
-    <f-traits v-if="token.isNFT" :object="token.traits" />
-    <f-traits v-if="token.isCollection" #default="{ value }" :object="token.traits">
+    <f-traits v-if="data.isNFT" :object="data.traits" />
+    <f-traits v-if="data.isCollection" #default="{ value }" :object="data.traits">
       <x-grid inline cols="3fr 1fr" gap="1:1">
         <template v-for="(key, idx) in Object.keys(value)">
           <x-box :key="key" align="left"> {{ key }} </x-box>
@@ -54,30 +61,30 @@ export default
         /**
             Token data to be displayed.
         */
-        token: Object
+        data: Object
     },
     
     computed:
     {
         assetProps()
         {
-            let props = {}, { token } = this;
+            let props = {}, { data } = this;
             
-            if (token.isCollection)
+            if (data.isCollection)
             {
                 props.label = 'policy id';
-                props.value = token.policyId;
+                props.value = data.policyId;
             }
             else
             {
                 props.label = 'fingerprint';
-                props.value = token.fingerprint;
+                props.value = data.fingerprint;
             }
         
             return props;
         },
         
-        ocmds() { return this.token.onchainMetadataStandard; }
+        ocmds() { return this.data.onchainMetadataStandard; }
     }
 }
 </script>

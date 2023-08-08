@@ -8,16 +8,16 @@
     radius="r6 b6"
     shadow="sidebar"
   >
-    <x-text block pad="a1vw" width="28vw" font="vBase">
+    <x-text block pad="a1vw" font="vSmall" space="nowrap">
       <x-text block bold font="vSmall" pad="v1vw" border="b.25!terti"> 
         Flex Mode 
       </x-text>
-      <x-field block el="label" margin="v1vw" pad="h1.2vw">
-        <x-checkbox :icon="noLabels ? 'check' : 'checkEmpty'" size="2.5vw" align=":middle" :value.sync="noLabels" />
+      <x-field block el="label" margin="v1vw" pad="h1.1vw">
+        <x-checkbox :icon="noLabels ? 'check' : 'checkEmpty'" size="austral" align=":middle" :value.sync="noLabels" />
         Hide names &amp; labels
       </x-field>
-      <x-field block el="label" margin="v1vw" pad="h1.2vw">
-        <x-checkbox :icon="noGutters ? 'check' : 'checkEmpty'" size="2.5vw" align=":middle" :value.sync="noGutters" />
+      <x-field block el="label" margin="v1vw" pad="h1.1vw">
+        <x-checkbox :icon="noGutters ? 'check' : 'checkEmpty'" size="austral" align=":middle" :value.sync="noGutters" />
         No grid gutters
       </x-field>
       <x-text block bold font="vSmall" pad="v1vw" margin="t2.5vw" border="b.25!terti"> 

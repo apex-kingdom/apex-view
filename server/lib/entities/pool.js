@@ -1,7 +1,7 @@
 
 module.exports = function(data)
 {
-    let pool = {};
+    let pool = { __entity: 'pool' };
     
     pool.id = data.pool_id;
     pool.name = data.name;

@@ -4,7 +4,7 @@
       <x-text 
         v-if="count" 
         font="tiny" 
-        :colors="`${bgDiff}:${bgSame}_f.75`" 
+        :colors="`${bgDiff}:${bgSame}_f.65`" 
         :h-colors="`${bgSame}:${bgDiff}_f.5`" 
         pad="v1" 
         cursor="pointer" 
@@ -20,7 +20,7 @@
         @click="$emit('open')"
         @hover="show = $event"
       />
-      <x-text v-if="!hideLbls" font="tiny" over-wrap="anywhere" :colors="`${bgDiff}:${bgSame}_f.75`" pad="v1"> 
+      <x-text v-if="!hideLbls" font="tiny" over-wrap="anywhere" :colors="`${bgDiff}:${bgSame}_f.65`" pad="v1"> 
         {{ title }} 
       </x-text>
     </x-flex>    

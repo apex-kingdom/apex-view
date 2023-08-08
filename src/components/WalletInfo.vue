@@ -3,22 +3,28 @@
     wrap 
     aligns=":center:center" 
     colors=":black_f.125" 
-    border="a.1vw!terti!"
+    border="a.1vw!gray"
     pad="v.8vw h1.8vw" 
-    radius="a1vh" 
-    gap="2vw"
+    radius="a1vw" 
+    gap="2vw:1vw"
     margin="a2.5vh" 
     shadow="floater"
   >
-    <f-data-value :value="w.input" label="wallet address" font="vSmall" icon-size="1.25vw" copy qr-code /> 
-    <f-data-value :value="w.stakeKey" label="stake key" font="vSmall" icon-size="1.25vw" copy qr-code /> 
+    <f-data-value 
+      :value="w.input" 
+      label="wallet address" 
+      font="vSmall" 
+      icon-size="address" 
+      copy 
+      :action="handleClick" 
+    /> 
     <x-flex aligns=":center:center"> 
-      <x-icon name="austral" size="2.25vw" />
+      <x-icon name="austral" size="austral" />
       <x-text bold font="vBase"> {{ w.adaFormatted }} </x-text>
     </x-flex>
     <component v-if="w.pool" v-bind="poolProps"> {{ w.pool.ticker || 'UNSTAKED' }} </component>
     <x-link display="flex" title="reload data" @click="wallet.reload">
-      <x-icon name="reload" size="2.25vw" />
+      <x-icon name="reload" size="austral" />
     </x-link>
   </x-flex>
 </template>
@@ -61,6 +67,11 @@ export default
         },
         
         w() { return this.wallet.data; }
+    },
+    
+    methods:
+    {
+        handleClick() { this.wallet.showConsole(this.wallet.data); }
     }
 }
 </script>

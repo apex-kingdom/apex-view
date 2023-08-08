@@ -30,9 +30,9 @@ let reNonTraits = new RegExp('^[^a-z0-9]*' + nonTraits.map(s => `(${s})`).join('
     @return { object }
       Formatted token data.
 */
-module.exports = function(init, data)
+module.exports = function(init, data, mint)
 {
-    let token = { __raw: data, __token: true };
+    let token = { __entity: 'token', __raw: data, __mint: mint, __token: true };
     let meta = data.metadata || {};
     let ocmd = data.onchain_metadata || {};
     let ocmdExists = !!data.onchain_metadata
@@ -75,6 +75,8 @@ module.exports = function(init, data)
         token.traits = objectFilter(ocmd.traits, () => true);
     else
         token.traits = objectFilter(ocmd, k => !reNonTraits.test(k.slice(-1)[0]));
+
+    token.mintBlockHeight = mint.block_height;
 
     return token;
 }

@@ -76,14 +76,6 @@ export default
         }
     },
     
-    button:
-    {
-        /**
-            Default button padding.
-        */
-        // defaultPad: 'v1% h1.25%'
-    },
-    
     color:
     {
         /**
@@ -119,6 +111,7 @@ export default
             black: '#000000',
             white: '#FFFFFF',
             gray: '#3D3D3D',
+            ltgray: '#C2C2C2',
             
             prime: '#776518',
             second: '#B9A032', // alpine
@@ -188,8 +181,9 @@ export default
             jumbo: { fontSize: 24, lineHeight: 24 },
 
             vTiny: { fontSize: '1vw', lineHeight: '1.1vw' },
-            vSmall: { fontSize: '1.5vw', lineHeight: '1.5vw' },
-            vBase: { fontSize: '1.9vw', lineHeight: '2vw' }
+            vSmaller: { fontSize: 'calc(.8vw + 6px)', lineHeight: 'calc(.8vw + 6px)' },
+            vSmall: { fontSize: 'calc(.9vw + 9px)', lineHeight: 'calc(.9vw + 9px)' },
+            vBase: { fontSize: 'calc(1vw + 14px)', lineHeight: 'calc(1vw + 14px)' }
         },
         
         /**
@@ -233,6 +227,23 @@ export default
         defaultSize: 12,
     },
     
+    length:
+    {
+        /**
+            General purpose enumerated CSS length values.
+            
+            Define "aliases" using keys that point to other keys.                
+        */
+        named: 
+        {
+            address: 'calc(1vw + 8px)',
+            austral: 'calc(1.7vw + 12px)',
+            hidenav: 'calc(-1vw - 22px)',
+            mainnav: 'calc(1.5vw + 22px)',
+            shownav: 'calc(-5vw - 22px)'
+        }
+    },
+    
     media:
     {
         /**
@@ -258,9 +269,8 @@ export default
         */
         named: 
         {
-            entry: '1px 1px 6px black',
-            floater: '0px 0px 4px black',
-            insetEntry: 'inset 1px 1px 6px black',
+            entry: '2px 2px 4px black',
+            floater: '0px 0px 8px black',
             insetFloater: 'inset 0px 0px 8px black',
             section: '0px 0px 4px quarter',
             sidebar: '4px 4px 4px black',

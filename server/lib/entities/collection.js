@@ -4,7 +4,7 @@ var token = require('./token');
 
 module.exports = function()
 {
-    let collections = {};
+    let collections = { __entity: 'collection' };
     
     let getCollection = data =>
     {

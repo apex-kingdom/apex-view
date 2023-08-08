@@ -6,7 +6,9 @@
       :mobile="smallScreen" 
       :bgColor="bgColor"
       :bgDiff="color(bgColor).isDark() ? 'white' : 'black'"
+      :bgDiff2="color(bgColor).isDark() ? 'ltgray' : 'gray'"
       :bgSame="color(bgColor).isDark() ? 'black' : 'white'"
+      :bgSame2="color(bgColor).isDark() ? 'gray' : 'ltgray'"
       :cs="colspace"
       :rs="rowspace"
     >
@@ -62,8 +64,8 @@ export default
     {
         this.navProps =
         {
-            show: { trbl: 'r-6vw t0', opacity: 1 },
-            hide: { trbl: 'r-1vw t0', opacity: 0 }
+            show: { trbl: 'rshownav t0', opacity: 1 },
+            hide: { trbl: 'rhidenav t0', opacity: 0 }
         }
         
         let timeId = null;

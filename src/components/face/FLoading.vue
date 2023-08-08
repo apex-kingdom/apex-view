@@ -1,7 +1,7 @@
 <template>
   <x-flex v-bind="$attrs" inline>
     <x-animation name="spin" repeat="infinite" :duration="rps + 's'" timing="linear" />
-    <x-icon :name="icon" :size="size" :colors="iconColors" title="loading" />
+    <x-icon :name="icon" :size="size" :colors="iconColors" />
   </x-flex>
 </template>
 

@@ -58,7 +58,21 @@ var base =
             content: 
             `
               <div id="${vars.rootHtmlId}"></div>
-              <style> html, body { background-color: black; } </style>
+              <style> 
+              html, body 
+              { 
+                  background-color: black; 
+              } 
+              html, body, div
+              { 
+                  scrollbar-width: none;
+                  -ms-overflow-style: none;
+              } 
+              body::-webkit-scrollbar, div::-webkit-scrollbar
+              {
+                  display: none;
+              }
+              </style>
             ` 
         })
     ]

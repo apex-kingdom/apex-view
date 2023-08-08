@@ -6,7 +6,7 @@ var token = require('./token');
 
 module.exports = function(input)
 {
-    let account = {};
+    let account = { __entity: 'account' };
     let groups = collection();
 
     account.input = input;
@@ -16,9 +16,9 @@ module.exports = function(input)
     
     Object.defineProperty(account, 'collections', { get: () => groups.values(), enumerable: true });         
 
-    let addToken = (asset, info) =>
+    let addToken = (asset, info, mint) =>
     {
-        let data = token(asset, info);
+        let data = token(asset, info, mint);
         
         if (data.isNFT)
             account.nfts.push(groups.addToken(data));

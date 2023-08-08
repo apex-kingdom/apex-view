@@ -22,7 +22,16 @@ module.exports = function get(input)
             
         let assetsPromise = cdata.accountAssets(key).then(array => 
         {
-            let list = array.map(a => cdata.asset(a.unit).then(i => wallet.addToken(a, i)));
+            let list = array.map(a => 
+            {
+                return cdata.asset(a.unit).then
+                (
+                    i => cdata.transaction(i.initial_mint_tx_hash).then
+                    (
+                        t => wallet.addToken(a, i, t)
+                    )
+                ); 
+            });
             
             return Promise.all(list);
         });

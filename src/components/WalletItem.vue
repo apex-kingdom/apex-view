@@ -44,7 +44,7 @@ export default
             if (this.data.isCollection)
                 this.$router.push({ name: 'nfts', query: { c: this.data.policyId } });
             else if (this.wallet)
-                this.wallet.showToken(this.data);
+                this.wallet.showConsole(this.data);
         },
         
         handleOpen() 
@@ -52,7 +52,7 @@ export default
             console.log(this.data.name, this.data);
             
             if (this.wallet)
-                this.wallet.showToken(this.data);
+                this.wallet.showConsole(this.data);
         }        
     }
 }

@@ -1,7 +1,16 @@
 <template>
   <x-context #default="{ bgDiff }">
     <x-flex v-bind="flexProps" @click="$emit('click')" @hover="$emit('hover', $event)">
-      <x-image v-if="image" :id="fsid" :src="image" :media-type="imageType" max-height="100%" max-width="100%" />
+      <x-image 
+        v-if="image" 
+        :id="fsid" 
+        :src="image" 
+        :media-type="imageType" 
+        height="100%" 
+        width="100%" 
+        max-height="100%" 
+        max-width="100%" 
+      />
       <x-icon v-else name="apex" :colors="bgDiff + '_f.8'" size="50%" />
       <x-fullscreen 
         v-if="image" 
@@ -11,6 +20,7 @@
         size="8" 
         filter="drop-shadow(.5px .5px 1px black)"
         pos="absolute" 
+        pad="a0"
         :trbl="`b0 r${iconbar ? '0' : '-8'}`" 
         tabindex="-1"
       />

@@ -1,13 +1,13 @@
 <template>
   <x-context #default="{ hideCtrls, cs, rs }">
     <x-flex v-if="data" invert aligns=":center">
-      <x-exapse :expand="!hideCtrls" max-breadth="60%" pos="fixed" trbl="t0" z-index="10">
+      <x-exapse no-scroll :expand="!hideCtrls" max-breadth="85%" pos="fixed" trbl="t0" z-index="10">
         <wallet-info />
       </x-exapse>
       <x-box :margin="`v${ hideCtrls ? 0 : '8vw' }`" place-self="stretch">
         <router-view />
       </x-box> 
-      <x-exapse lower :expand="!hideCtrls" max-breadth="90%" pos="fixed" trbl="b0" z-index="10">
+      <x-exapse lower no-scroll :expand="!hideCtrls" max-breadth="90%" pos="fixed" trbl="b0" z-index="10">
         <wallet-tabs />
       </x-exapse>
     </x-flex>
@@ -17,8 +17,8 @@
       <x-background :image="`linear-gradient(144deg, #99999922 50%, #22222222 0)`" size="50 50" />
       <x-background :image="`linear-gradient(216deg, #99999922 50%, #22222222 0)`" size="50 50" />
       <x-background :image="`linear-gradient(288deg, #99999922 50%, #22222222 0)`" size="50 50" />
-      <wallet-console :show.sync="showConsole" :title="tokenData.name">
-        <token-details :token="tokenData" />
+      <wallet-console :show.sync="showConsole" :title="title">
+        <component :is="details" :data="consoleData" />
       </wallet-console>
     </x-box>
     <f-site-loading :opacity="loading ? 1 : 0" :z-index="loading ? 1000 : -1" />
@@ -34,8 +34,10 @@ import FSiteLoading from '../face/FSiteLoading'
 import FWalletError from '../face/FWalletError'
 import TokenDetails from '../TokenDetails'
 import WalletConsole from '../WalletConsole'
+import WalletDetails from '../WalletDetails'
 import WalletInfo from '../WalletInfo'
 import WalletTabs from '../WalletTabs'
+import shorten from '_source/lib/shorten'
 import wallet from '_source/lib/wallet'
 
 
@@ -51,6 +53,7 @@ export default
         FWalletError, 
         TokenDetails, 
         WalletConsole, 
+        WalletDetails,
         WalletInfo, 
         WalletTabs, 
         XBackground, 
@@ -63,19 +66,42 @@ export default
     data: () => 
     ({ 
         address: null, 
+        consoleData: {},
         data: null, 
         error: null,
         loading: false,
         showConsole: false, 
-        tokenData: {} 
     }),
+    
+    computed:
+    {
+        details()
+        {
+            switch(this.entity)
+            {
+                case 'account': return 'wallet-details';
+                case 'token': return 'token-details';
+            }
+        },
+      
+        entity() { return this.consoleData.__entity; },
+        
+        title() 
+        {
+            switch(this.entity)
+            {
+                case 'account': return shorten(this.consoleData.input, 8);
+                case 'token': return this.consoleData.name;
+            }
+        }
+    },
     
     watch:
     {
         address() 
         { 
             this.data = null;
-            this.requestData()
+            this.requestData();
         },
         
         '$route.params':
@@ -92,15 +118,15 @@ export default
             let obj = 
             {
                 reload: () => this.requestData(true),
-                showToken: data =>
+                showConsole: data =>
                 {
-                    if (this.showConsole && this.tokenData === data)
+                    if (this.showConsole && this.consoleData === data)
                     {
                         this.showConsole = false;
                     }
                     else
                     {
-                        this.tokenData = data;
+                        this.consoleData = data;
                         this.showConsole = true;
                     }
                 }
@@ -116,7 +142,17 @@ export default
             this.loading = true;
             
             wallet(this.address, clear)
-                .then(data => { this.data = data; this.updateHistory(data.input); })
+                .then(data => 
+                {
+                    this.data = data; 
+                    this.updateHistory(data.input); 
+                    
+                    if(this.data !== null)
+                    {
+                        this.data.tokens.sort((a, b) => a.mintBlockHeight - b.mintBlockHeight);
+                        this.data.nfts.sort((a, b) => a.mintBlockHeight - b.mintBlockHeight);
+                    }
+                })
                 .catch(error => { this.data = null; this.error = error; })
                 .finally(() => { this.loading = false; });    
         }, 

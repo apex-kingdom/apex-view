@@ -4,9 +4,9 @@
       wrap 
       aligns=":center:center" 
       colors=":black_f.125" 
-      border="a.1vw!terti"
+      border="a.1vw!gray"
       pad="v.8vw h1.8vw" 
-      radius="a1vh" 
+      radius="a1vw" 
       gap="2vw"
       margin="a2.5vh" 
       shadow="floater"
