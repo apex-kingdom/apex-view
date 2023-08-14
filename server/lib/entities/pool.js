@@ -1,13 +1,26 @@
+var pull = require('../request');
 
-module.exports = function(data)
+
+/**
+    Gets pool details for the given pool id.
+    
+    @param { string } poolId
+      Pool Id for the pool to be retrieved.
+    @return { promise }
+      Resolves to a "pool" object.
+*/
+module.exports = async function(poolId)
 {
-    let pool = { __entity: 'pool' };
+    var pool = { __entity: 'pool' };
     
-    pool.id = data.pool_id;
-    pool.name = data.name;
-    pool.desc = data.description;
-    pool.ticker = data.ticker;
-    pool.home = data.homepage;
-    
-    return pool;
+    return pull.poolMeta(poolId).then(data => 
+    {
+        pool.id = data.pool_id;
+        pool.name = data.name;
+        pool.desc = data.description;
+        pool.ticker = data.ticker;
+        pool.home = data.homepage;
+        
+        return pool;
+    });
 }

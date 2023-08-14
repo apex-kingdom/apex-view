@@ -1,60 +1,37 @@
 var numeral = require('numeral');
-var collection = require('./collection');
+var pull = require('../request');
+var loop = require('../loop');
 var pool = require('./pool');
-var token = require('./token');
 
 
-module.exports = function(input)
+/**
+    Gets the wallet for the given staking key.
+    
+    @param { string } stakeKey
+      Staking key for the wallet to be retrieved.
+    @return { promise }
+      Resolves to a "account" object.
+*/
+module.exports = async function(stakeKey)
 {
-    let account = { __entity: 'account' };
-    let groups = collection();
-
-    account.input = input;
-    account.inputType = type(input);
-    account.tokens = [];
-    account.nfts = [];
+    var account = { __entity: 'account' };
     
-    Object.defineProperty(account, 'collections', { get: () => groups.values(), enumerable: true });         
-
-    let addToken = (asset, info, mint) =>
-    {
-        let data = token(asset, info, mint);
-        
-        if (data.isNFT)
-            account.nfts.push(groups.addToken(data));
-        else
-            account.tokens.push(data);
-    }
-    
-    let setData = data =>
+    return pull.account(stakeKey).then(data => 
     {
         account.active = data.active;
         
         account.ada = numeral(data.controlled_amount).value();
-        account.adaAdjusted = times(6).reduce(v => v * .1, account.ada);
+        account.adaAdjusted = loop(6).reduce(v => v * .1, account.ada);
         account.adaFormatted = numeral(account.adaAdjusted).format('0,0');
            
         account.stakeKey = data.stake_address;
 
         account.walletType = data.type;
-    }
-    
-    let setPool = data =>
-    {
-        account.pool = pool(data);
-    }
-    
-    return { addToken, setData, setPool, get: () => account };
+        
+        return pool(data.pool_id).then(data => 
+        {
+            account.pool = data;
+            return account;
+        });
+    });
 }
-
-
-function type(input)
-{
-    if (/^\$/.test(input)) return 'handle'; // handle
-    if (/^stake/.test(input)) return 'staking'; // stake key
-    
-    return 'address'; // address
-}
-
-
-let times = num => Array.apply(null, Array(num))
