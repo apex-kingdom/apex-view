@@ -1,32 +1,44 @@
 <template>
-  <x-box width="100%">
-    <x-qr-code 
-      :content="data.stakeKey" 
-      :padding="2" 
-      colors="quarter:gray_f.25" 
-      :width="size" 
-      :height="size" 
-      margin="hauto"
-    />
-    <f-data-value 
-      v-bind="assetProps" 
-      copy 
-      aligns=":center:center" 
-      colors="white:black" 
-      border="t.25!prime" 
-      :width="size" 
-      :count="24" 
-      font="micro" 
-      pad="a1"
-      margin="hauto"
-    />
-  </x-box>
+  <x-context #default="{ bgColor, ext, sm }">
+    <x-box width="100%">
+      <x-qr-code 
+        :content="data.stakeKey" 
+        :padding="2" 
+        colors="quarter:gray_f.25" 
+        :width="size" 
+        :height="size" 
+        margin="hauto"
+      />
+      <f-data-value 
+        v-bind="assetProps" 
+        copy 
+        aligns=":center:center" 
+        colors="#EEEEEE:black_f.25" 
+        border="v.25!quarter_f.5" 
+        :width="size" 
+        :count="24" 
+        font="micro" 
+        pad="a1"
+        margin="hauto"
+      />
+      <x-grid cols="1fr 1fr" gap="1:1" :width="size" margin="hauto v5" pad="h2">
+        <template v-for="({ label, value }) in gridData">
+          <x-flex :key="label" aligns=":center" :colors="`:${ext.diff}_f.35`" pad="v1.5 h2"> 
+            <x-text font="small" :colors="`${bgColor+sm}.6`"> {{ label }} </x-text>
+          </x-flex>
+          <x-flex :key="value" :colors="`${ext.same}:${ext.diff}_f.4`" pad="v1.5 h2"> 
+            <x-text :colors="ext.same"> {{ value }} </x-text>
+          </x-flex>
+        </template>
+      </x-grid>
+    </x-box>
+  </x-context>
 </template>
 
 
 
 <script>
-import { XBox, XFlex, XQrCode } from 'exude'
+import { XBox, XContext, XFlex, XGrid, XQrCode, XText } from 'exude'
 import FDataValue from './face/FDataValue'
 
 
@@ -34,7 +46,7 @@ export default
 {
     name: 'WalletDetails',
     
-    components: { FDataValue, XBox, XFlex, XQrCode },
+    components: { FDataValue, XBox, XContext, XFlex, XGrid, XQrCode, XText },
     
     props:
     {
@@ -59,6 +71,22 @@ export default
             };
                     
             return props;
+        },
+        
+        gridData()
+        {
+            let { data } = this;
+          
+            let gdata = 
+            [
+                { label: '₳ Amount', value: data.adaFormatted },
+                { label: '₳ Rewards Total', value: data.rewardsFormatted },
+                { label: 'Asset Count', value: data.tokens.length + data.nfts.length },
+                { label: 'Stake Pool', value: data.pool.ticker },
+                { label: 'Since Epoch', value: data.epoch },
+            ];
+            
+            return gdata;
         }
     }
 }

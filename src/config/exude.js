@@ -117,13 +117,20 @@ export default
             second: '#B9A032', // alpine
             terti: '#C7B35D', // sundance
             quarter: '#E6DEBB', // spanish white
-            quine: '#4b483d', //roti
+            quine: '#4B483D', //roti
 
             text: '#F0ECDA',
             link: '#bba43c',
             linkHover: '#EEEEEE',
             highlight: '#4B4114', // punga
             entryBg: '#2A2A2A',
+            
+            // collection: '#99FF99',
+            attribute: '#FFFF99',
+            description: '#99FFFF',
+            trait: '#99FF99',
+            name: '#9999FF',
+            negate: '#FF9999',
             
             // accent: '#',
             // error: '#',

@@ -18,7 +18,7 @@
         <f-stat label="Collections" :active="$route.name === 'collections'" :value="w.collections.length" />
       </x-link>
       <x-link @click="$router.push({ name: 'nfts' })">
-        <f-stat label="NFTs" :active="$route.name === 'nfts'" :value="w.nfts.length" />
+        <f-stat label="NFTs" :active="$route.name.indexOf('nft') === 0" :value="w.nfts.length" />
       </x-link>
     </x-flex>
   </x-text>

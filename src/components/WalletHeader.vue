@@ -1,12 +1,12 @@
 <template>
-  <x-context #default="{ bgDiff, hideLbls }">
+  <x-context #default="{ ext, hideLbls }">
     <x-text 
       v-if="!hideLbls" 
+      v-bind="$attrs"
       block 
       bold 
       font="h5" 
-      :colors="`${bgDiff}_f.25`"
-      margin="h20% v6"
+      :colors="`${ext.diff}_f.25`"
     >
       <!-- @slot header content -->
       <slot />

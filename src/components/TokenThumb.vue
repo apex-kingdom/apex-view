@@ -1,11 +1,11 @@
 <template>
-  <x-context #default="{ bgColor, bgDiff, bgSame, hideLbls }">
+  <x-context #default="{ ext, hideLbls }">
     <x-flex invert align="center" :width="size">
       <x-text 
         v-if="count" 
         font="tiny" 
-        :colors="`${bgDiff}:${bgSame}_f.65`" 
-        :h-colors="`${bgSame}:${bgDiff}_f.5`" 
+        :colors="`${ext.diff}:${ext.same}_f.65`" 
+        :h-colors="`${ext.same}:${ext.diff}_f.5`" 
         pad="v1" 
         cursor="pointer" 
         @click="$emit('amount')"
@@ -20,7 +20,7 @@
         @click="$emit('open')"
         @hover="show = $event"
       />
-      <x-text v-if="!hideLbls" font="tiny" over-wrap="anywhere" :colors="`${bgDiff}:${bgSame}_f.65`" pad="v1"> 
+      <x-text v-if="!hideLbls" font="tiny" over-wrap="anywhere" :colors="`${ext.diff}:${ext.same}_f.65`" pad="v1"> 
         {{ title }} 
       </x-text>
     </x-flex>    

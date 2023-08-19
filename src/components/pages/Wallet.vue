@@ -4,7 +4,7 @@
       <x-exapse no-scroll :expand="!hideCtrls" max-breadth="85%" pos="fixed" trbl="t0" z-index="10">
         <wallet-info />
       </x-exapse>
-      <x-box :margin="`v${ hideCtrls ? 0 : '8vw' }`" place-self="stretch">
+      <x-box :margin="`v${ hideCtrls ? 0 : '12vh' }`" place-self="stretch">
         <router-view />
       </x-box> 
       <x-exapse lower no-scroll :expand="!hideCtrls" max-breadth="90%" pos="fixed" trbl="b0" z-index="10">
@@ -82,7 +82,7 @@ export default
                 case 'account': 
                     return 'wallet-details';
                 case 'collection': 
-                case 'token': 
+                case 'asset': 
                     return 'token-details';
             }
         },
@@ -96,7 +96,7 @@ export default
                 case 'account': 
                     return shorten(this.consoleData.input, 8);
                 case 'collection': 
-                case 'token': 
+                case 'asset': 
                     return this.consoleData.name;
             }
         }
@@ -107,7 +107,7 @@ export default
         address() 
         { 
             this.data = null;
-            this.requestData();
+            this.requestData().then(data => { this.data = data; this.updateHistory(this.address) });
         },
         
         '$route.params':
@@ -123,7 +123,7 @@ export default
         {
             let obj = 
             {
-                reload: () => this.requestData(true),
+                reload: () => this.requestData(true).then(data => this.data = data),             
                 showConsole: data =>
                 {
                     if (this.showConsole && this.consoleData === data)
@@ -143,23 +143,12 @@ export default
             return obj;           
         },
         
-        requestData(clear)
+        requestData(reset)
         {
             this.loading = true;
             
-            wallet(this.address, clear)
-                .then(data => 
-                {
-                    this.data = data; 
-                    this.updateHistory(data.input); 
-                    
-                    if(this.data !== null)
-                    {
-                        this.data.tokens.sort((a, b) => a.mintBlockHeight - b.mintBlockHeight);
-                        this.data.nfts.sort((a, b) => a.mintBlockHeight - b.mintBlockHeight);
-                    }
-                })
-                .catch(error => { this.data = null; this.error = error; })
+            return wallet(this.address, null, reset)
+                .catch(error => { this.data = null; throw this.error = error; })
                 .finally(() => { this.loading = false; });    
         }, 
         

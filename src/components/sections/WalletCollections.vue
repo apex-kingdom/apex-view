@@ -1,6 +1,6 @@
 <template>
   <x-box> 
-    <wallet-header> {{ w.collections.length }} Collections </wallet-header>
+    <wallet-header margin="h15% v8"> {{ w.collections.length }} Collections </wallet-header>
     <token-lister>
       <wallet-item v-for="t in w.collections" :key="t.fingerprint" :data="t" />
     </token-lister>

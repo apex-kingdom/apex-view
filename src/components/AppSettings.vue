@@ -3,10 +3,15 @@
     horiz 
     invert 
     :expand="show" 
-    colors=":black_f.125" 
-    breadth="100%" 
+    colors=":black_f.125"
+    border="a.1vw!gray l0"
+    :hide="hide" 
+    breadth="100%"
+    margin="l-.1vw" 
     radius="r6 b6"
     shadow="sidebar"
+    @transitionstart="hide = false"
+    @transitionend="hide = !show"
   >
     <x-text block pad="a1vw" font="vSmall" space="nowrap">
       <x-text block bold font="vSmall" pad="v1vw" border="b.25!terti"> 
@@ -60,7 +65,7 @@ export default
         show: Boolean
     },
     
-    data: () => ({ bgColor: '#000000', noLabels: false, noGutters: false }),
+    data: () => ({ bgColor: '#000000', noLabels: false, noGutters: false, hide: false }),
     
     created()
     {

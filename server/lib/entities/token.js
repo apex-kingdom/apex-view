@@ -37,6 +37,8 @@ module.exports = async function(assetId)
         var ocmd = data.onchain_metadata || {};
         var ocmdExists = !!data.onchain_metadata
         
+        // token.__raw = data;
+        
         token.policyId = data.policy_id;
         token.fingerprint = data.fingerprint;
         // for now we will assume token is an NFT when 
@@ -48,7 +50,8 @@ module.exports = async function(assetId)
         token.assetNameDec = decode(token.assetName);
         token.name = (!token.isNFT && token.ticker) || ocmd.name || token.assetNameDec;
 
-        token.description = ocmd.description;
+        token.description = [].concat(ocmd.description || meta.description).join('');
+        token.homepage = meta.url;
         token.files = ocmd.files || [];
         
         token.image = ocmd.image || meta.logo;

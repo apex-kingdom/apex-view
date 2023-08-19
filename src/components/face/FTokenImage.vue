@@ -1,5 +1,5 @@
 <template>
-  <x-context #default="{ bgDiff }">
+  <x-context #default="{ ext }">
     <x-flex v-bind="flexProps" @click="$emit('click')" @hover="$emit('hover', $event)">
       <x-image 
         v-if="image" 
@@ -11,7 +11,7 @@
         max-height="100%" 
         max-width="100%" 
       />
-      <x-icon v-else name="apex" :colors="bgDiff + '_f.8'" size="50%" />
+      <x-icon v-else name="apex" :colors="ext.diff + '_f.8'" size="50%" />
       <x-fullscreen 
         v-if="image" 
         :target-id="fsid" 

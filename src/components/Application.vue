@@ -1,18 +1,20 @@
 <template>
-  <x-app colors="text" min-height="100vh" font="base" :style="{ backgroundColor: bgColor }" @click="hideNav(false)">
+  <x-app :colors="`text:${bgColor}`" min-height="100vh" font="base" @click="hideNav(false)">
     <x-context 
       :hideCtrls="hideCtrls" 
       :hideLbls="settings.noLabels"
       :mobile="smallScreen" 
       :bgColor="bgColor"
-      :bgDiff="color(bgColor).isDark() ? 'white' : 'black'"
-      :bgDiff2="color(bgColor).isDark() ? 'ltgray' : 'gray'"
-      :bgSame="color(bgColor).isDark() ? 'black' : 'white'"
-      :bgSame2="color(bgColor).isDark() ? 'gray' : 'ltgray'"
+      :ext="color('white', 'black')"
+      :gray="color('ltgray', 'gray')"
+      :apex="color('quarter', 'prime')"
+      :red="color('lightcoral', 'darkred')"
+      :dm="bgIsDark ? '_l' : '_d'"
+      :sm="bgIsDark ? '_d' : '_l'"
       :cs="colspace"
       :rs="rowspace"
     >
-      <x-box pos="fixed" trbl="t0 b0 l0" z-index="1000">
+      <x-box v-listen-outside-click="() => openConfig = false" pos="fixed" trbl="t0 b0 l0" z-index="1000">
         <app-settings :show="openConfig" @update="settings = $event" />
         <f-main-nav 
           v-bind="navProps[navState]" 
@@ -34,6 +36,7 @@
 import color from 'color'
 import { XApp, XBox, XContext } from 'exude';
 import { m_media_query } from 'exude'
+import { listenOutsideClick } from 'exude'
 import FMainNav from './face/FMainNav'
 import AppSettings from './AppSettings'
 import router from '_source/config/router'
@@ -51,9 +54,10 @@ export default
     
     components: { AppSettings, FMainNav, XApp, XBox, XContext },
     
+    directives: { listenOutsideClick },
+    
     data: () => 
     ({
-        color,
         hideCtrls: false, 
         navState: 'show',
         openConfig: false,
@@ -87,12 +91,24 @@ export default
             }
         }
         this.$watch('hideCtrls', this.hideNav)        
-        this.$watch('openConfig', () => this.hideNav(this.hideCtrls))        
+        this.$watch('openConfig', () => this.hideNav(this.hideCtrls))
+        // color swapper
+        this.color = (light, dark) =>
+        {
+            let obj = { light, dark };
+            
+            Object.defineProperty(obj, 'diff', { get: () => this.bgIsDark ? light : dark, enumerable: true });
+            Object.defineProperty(obj, 'same', { get: () => this.bgIsDark ? dark : light, enumerable: true });
+            
+            return obj;
+        }
     },
     
     computed:
     {
         bgColor() { return this.settings.bgColor || 'black'; },
+        
+        bgIsDark() { return color(this.bgColor).isDark(); },
       
         colspace() { return this.settings.noGutters ? 0 : 5; },
         

@@ -1,8 +1,8 @@
 <template>
-  <x-context #default="{ bgDiff, bgSame2 }">
+  <x-context #default="{ ext, gray }">
     <x-box v-bind="$attrs"> 
       <x-input 
-        :colors="`${bgDiff}:${bgSame2}_f.15`" 
+        :colors="`${ext.diff}:${gray.same}_f.15`" 
         font="large" 
         radius="a2" 
         placeholder="Enter wallet address or $handle"
@@ -27,7 +27,7 @@
           <x-link 
             align="left" 
             colors="text:entryBg_f.15"
-            h-colors="white:prime"
+            hf-colors="white:prime"
             pad="v2 h3" 
             flex="1" 
             radius="a2" 
@@ -37,16 +37,17 @@
             {{ addy }} 
           </x-link>
           <x-flex 
+            el="button"
             aligns=":center" 
-            colors=":entryBg_f.15"
-            h-colors="white:prime" 
+            colors="white:entryBg_f.15"
+            hf-colors="white:prime" 
             cursor="pointer" 
             pad="a1.5" 
             radius="a100" 
             shadow="entry"
             @click="emitRemove(addy)" 
           >
-            <x-icon name="trash" size="7" :title="`Delete ${addy}.`" tabindex="0" />
+            <x-icon name="trash" size="7" :title="`Delete ${addy}.`" />
           </x-flex>
         </x-flex>
       </x-text>

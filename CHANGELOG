@@ -11,14 +11,13 @@ thoughts:
 features:
 - sea creature icons for wallet size
 - allow sequential navigation of NFTs in the side panel
-- filtering by attributes
-- filtering by name (regex)
 - filtering by date range
 
 bugs:
 - $handle collection name not displaying properly
 - better floater window positioning on open
 - fix responsiveness for mobile (navigation/settings)
+- fix router navigation "to same route" error on reload with filter hash
 
 tasks:
 - pull all native tokens (not just 100)
@@ -26,4 +25,7 @@ tasks:
 - show additional media for tokens (images/videos)
 - load NFT images only on when scrolled into view
 - caching for server side data pulls
-- side panel for wallet details
+- finish side panel for wallet details
+- social media previews for URLs
+- SEO stuff
+- better filter hash scheme

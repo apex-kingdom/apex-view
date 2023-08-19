@@ -19,14 +19,17 @@ module.exports = async function(stakeKey)
     return pull.account(stakeKey).then(data => 
     {
         account.active = data.active;
+        account.epoch = data.active_epoch;
         
         account.ada = numeral(data.controlled_amount).value();
         account.adaAdjusted = loop(6).reduce(v => v * .1, account.ada);
         account.adaFormatted = numeral(account.adaAdjusted).format('0,0');
+        
+        account.rewards = numeral(data.rewards_sum).value();
+        account.rewardsAdjusted = loop(6).reduce(v => v * .1, account.rewards);
+        account.rewardsFormatted = numeral(account.rewardsAdjusted).format('0,0');
            
         account.stakeKey = data.stake_address;
-
-        account.walletType = data.type;
         
         return pool(data.pool_id).then(data => 
         {
