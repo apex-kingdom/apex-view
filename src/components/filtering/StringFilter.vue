@@ -19,7 +19,7 @@
                 <x-option 
                   v-for="o in optionData" 
                   #default="{ selected }" 
-                  :data="o.data" 
+                  :key="o.data" 
                   :colors="`black:${o.color}`"
                   :hf-colors="`white:${o.color}_d.75`"
                 >
