@@ -147,7 +147,7 @@ export default
         {
             this.loading = true;
             
-            return wallet(this.address, null, reset)
+            return wallet(this.address, reset)
                 .catch(error => { this.data = null; throw this.error = error; })
                 .finally(() => { this.loading = false; });    
         }, 

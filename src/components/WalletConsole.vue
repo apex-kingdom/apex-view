@@ -5,7 +5,7 @@
       lower
       invert 
       :expand="show" 
-      :colors="`${ext.diff}:${bgColor}_f.5`" 
+      :colors="`${ext.diff}:${bgColor}_f.4`" 
       breadth="100%" 
       margin="r-.25"
       radius="t6 l6"
@@ -14,8 +14,8 @@
       <!-- setting background for the enclosing xexapse -->
       <x-box radius="t6 l6" width="100" pad="v15 h2">
         <x-button 
-          :colors="`${ext.diff}:${ext.same}_f.75`" 
-          :hf-colors="`:${ext.same}_f.5`" 
+          :colors="`${ext.diff}:${bgColor}_f.15`" 
+          :hf-colors="`:${ext.same}_f.25`" 
           :border="`a.5!${bgColor}_r10`"
           weight="5"
           font="base" 

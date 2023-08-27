@@ -1,5 +1,5 @@
 <template>
-  <x-context #default="{ bgColor, ext }">
+  <x-context #default="{ bgColor, ext, apex }">
     <x-box width="100%">
       <f-token-image iconbar :image="data.image" :image-type="data.imageType" :size="size" margin="hauto" />
       <x-flex 
@@ -31,7 +31,8 @@
         <x-link 
           v-if="data.homepage" 
           font="micro"
-          colors="quine:white_f.75" 
+          :colors="`${apex.diff}_f.5:${apex.diff}_f.75`" 
+          :hf-colors="ext.diff" 
           :href="data.homepage" 
           target="_blank" 
           pad="v1 h3"
@@ -41,25 +42,44 @@
         </x-link>
       </x-flex>
       <f-traits v-if="data.isNFT" :object="data.traits" />
-      <f-traits v-if="data.isCollection" #default="{ value }" :object="data.traits">
-        <x-grid inline cols="3fr 1fr" gap="1:1">
+      <f-traits v-if="data.isCollection" #default="{ value }" :object="data.traits" box-width="100%">
+        <x-grid inline cols="4fr 1fr" gap="1:1" margin="b2" over-wrap="anywhere" width="100%">
           <template v-for="(key, idx) in Object.keys(value)">
-            <x-box :key="key" align="left"> {{ key }} </x-box>
-            <x-box :key="key + '_ct'"> {{ value[key] }} </x-box>
+            <x-box :key="key" align="left" :colors="`:${bgColor}_f.75`" pad="a1"> 
+              {{ key }} 
+            </x-box>
+            <x-box :key="key + '_ct'" align="right" :colors="`:${bgColor}_f.75`" pad="a1"> 
+              {{ value[key] }} 
+            </x-box>
           </template>
         </x-grid>
       </f-traits>
-      <!-- <template v-for="(f, i) in token.files">
+      <!-- <x-box :height="size" :width="size" margin="v8 hauto">
         <f-token-image
-          v-if="f.mediaType.indexOf('image') === 0"
+          v-for="(f, i) in images"
           iconbar
           :key="i" 
           :image="f.src" 
           :image-type="f.mediaType" 
           :size="size" 
-          margin="hauto" 
+          margin="v2" 
         />
-      </template> -->
+        <x-box 
+          v-if="videos.length" 
+          el="video"
+          controls 
+          autoplay 
+          loop 
+          playsinline 
+          muted 
+          :poster="data.image" 
+          :width="size" 
+          margin="v2" 
+        >
+          <source v-for="(v, i) in videos" :key="i" :src="v.src" :type="v.mediaType" />
+          <div> No HTML video support! </div>
+        </x-box>
+      </x-box> -->
     </x-box>
   </x-context>
 </template>
@@ -111,7 +131,19 @@ export default
             return props;
         },
         
-        ocmds() { return this.data.onchainMetadataStandard; }
+        images() 
+        {
+            let { files } = this.data;
+            return files ? files.filter(i => (i.mediaType || '').includes('image')) : []; 
+        },
+        
+        ocmds() { return this.data.onchainMetadataStandard; },
+
+        videos() 
+        {
+            let { files } = this.data;
+            return files ? files.filter(v => (v.mediaType || '').includes('video')) : []; 
+        }
     }
 }
 </script>

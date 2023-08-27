@@ -8,7 +8,7 @@
             <x-icon :name="checked ? 'not_equal' : 'equal'" :size="iconSize" />
           </x-checkbox>
           <x-flex aligns=":center">
-            <x-input name="$test" font="base" colors="black" pad="a1" width="60" :debounce="25" />
+            <x-input name="$test" font="base" colors="black" pad="a1" width="60" :debounce="200" />
             <x-button hf-colors="white:black_f.5" pad="a1" @click="show = !show">
               <x-icon name="caret" :size="iconSize" />
             </x-button>

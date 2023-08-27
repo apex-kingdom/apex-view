@@ -7,7 +7,7 @@
       border="a.1vw!gray"
       pad="v.8vw h1.8vw" 
       radius="a1vw" 
-      gap="2vw"
+      gap="2vw:1.5vw"
       margin="a2.5vh" 
       shadow="floater"
     >
