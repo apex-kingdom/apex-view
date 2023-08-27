@@ -19,5 +19,7 @@ module.exports =
     // server listening port
     port: process.env.PORT || 3000,
     // production flag
-    prod: /^production$/i.test(process.env.NODE_ENV)
+    prod: /^production$/i.test(process.env.NODE_ENV),
+    // redis connection url
+    redis_url: process.env.REDIS_URL
 }

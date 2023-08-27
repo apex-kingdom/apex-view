@@ -1,8 +1,8 @@
 var { createClient } = require('redis');
-var { keyexp } = require('./');
+var { keyexp, redis_url } = require('./');
 
 
-var client = createClient();
+var client = createClient({ url: redis_url });
 
 var redisEvents = 
 {
