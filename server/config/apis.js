@@ -1,4 +1,4 @@
-var { encode } = require('hex-encode-decode');
+var { apikey } = require('./');
 
 
 module.exports =
@@ -9,9 +9,28 @@ module.exports =
         url: 'https://cardano-mainnet.blockfrost.io/api/v0',
         headers: 
         { 
-            project_id: process.env.API_BLOCKFROST
+            project_id: apikey.blockfrost
         },
-        root: 'data'
+        root: 'data',        
+        error_codes:
+        {
+            // when the request is not valid
+            '400': 'Invalid request.',
+            // when the projects exceed their daily request limit
+            '402': 'Daily request limit exceeded.',
+            // when the request is not authenticated
+            '403': 'Unauthenticated request.',
+            // when the resource doesn't exist
+            '404': 'Resource does not exist.',
+            // when the user has been auto-banned for flooding too much after 
+            // previously receiving error code 402 or 429
+            '418': 'Auto-banned user.',
+            // when the user has sent too many requests in a given amount of 
+            // time and therefore has been rate-limited
+            '429': 'Too many requests (rate-limited).',
+            // when our endpoints are having a problem
+            '500': 'Internal server issue.'
+        }
     },
     
     account:
@@ -20,11 +39,21 @@ module.exports =
         url: '/accounts/{account}'
     },
     
-    accountAssets:
+    accountAddresses:
     {
         base: 'account',
-        url: '/addresses/assets'
-    },
+        url: '/addresses'
+    }, 
+                        
+    accountAssets:
+    {
+        base: 'accountAddresses',
+        url: '/assets?page={page}',
+        vars:
+        {
+            page: 1
+        }
+    }, 
     
     adaHandle:
     {
@@ -37,10 +66,6 @@ module.exports =
         vars:
         {
             policy: 'f0ff48bbb7bbe9d59a40f1ce90e9e9d0ff5002ec48f232b49ca0fb9a'
-        },
-        preps:
-        {
-            adaHandle: value => encode(value.replace(/^\$/, ''))
         }
     },
     
@@ -52,7 +77,7 @@ module.exports =
         { 
             stakeKey: 'stake_address'
         }
-    },        
+    },
                         
     asset:
     {

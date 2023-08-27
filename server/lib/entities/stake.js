@@ -1,4 +1,5 @@
 var pull = require('../request');
+var { encode } = require('hex-encode-decode');
 
 
 var reHandle = /^\$/;
@@ -24,7 +25,7 @@ module.exports = async function(input)
 async function resolve(input)
 {
     // resolve handle to address
-    if (reHandle.test(input)) return pull.adaHandle(input, 'address').then(resolve);
+    if (reHandle.test(input)) return pull.adaHandle(encode(input.replace(/^\$/, '')), 'address').then(resolve);
     // resolve address to staking key
     else if (!/^stake/.test(input)) return pull.address(input, 'stakeKey').then(resolve);
     // we should have a staking key here

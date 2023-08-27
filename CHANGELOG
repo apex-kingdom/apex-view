@@ -2,15 +2,19 @@
 
 ## Notes
 
+holder features:
+- show date (or block height/time) NFT acquired by wallet
+
 thoughts:
 - separate section for ada handles?
 - taptools link for tokens (sidepanel)
+- carousel viewing mode for NFTs?
+
 
 ## To Dos
 
 features:
 - sea creature icons for wallet size
-- allow sequential navigation of NFTs in the side panel
 - filtering by date range
 
 bugs:
@@ -20,10 +24,8 @@ bugs:
 - fix router navigation "to same route" error on reload with filter hash
 
 tasks:
-- pull all native tokens (not just 100)
 - meta data parsing for CIP68
 - show additional media for tokens (images/videos)
-- load NFT images only on when scrolled into view
 - caching for server side data pulls
 - finish side panel for wallet details
 - social media previews for URLs

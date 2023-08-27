@@ -1,7 +1,6 @@
 var numeral = require('numeral');
 var pull = require('../request');
 var loop = require('../loop');
-var pool = require('./pool');
 
 
 /**
@@ -14,6 +13,8 @@ var pool = require('./pool');
 */
 module.exports = async function(stakeKey)
 {
+    var e = require('./');
+    
     var account = { __entity: 'account' };
     
     return pull.account(stakeKey).then(data => 
@@ -31,10 +32,6 @@ module.exports = async function(stakeKey)
            
         account.stakeKey = data.stake_address;
         
-        return pool(data.pool_id).then(data => 
-        {
-            account.pool = data;
-            return account;
-        });
+        return e.pool(data.pool_id).then(pool => ({ ...account, pool }));
     });
 }

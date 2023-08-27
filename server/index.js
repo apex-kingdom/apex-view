@@ -1,14 +1,12 @@
 var express = require('express');
 var app = express();
-var router = require('./router');
+var router = require('./config/router');
 var paths = require('../paths');
-
+var { port } = require('./config');
 
 
 app.use('/', express.static(paths.public));
 app.use(router);
-
-var port = process.env.PORT || 3000;
 
 app.listen(port, () => 
 {

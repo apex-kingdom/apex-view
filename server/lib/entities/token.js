@@ -6,19 +6,6 @@ var pull = require('../request');
 
 
 var reBaseName = /^(.+)\s*#.*$/;
-var nonTraits = 
-[   
-    'description', 
-    'files', 
-    'image', 
-    'media', 
-    'mediaType', 
-    'name', 
-    'project', 
-    'projectName',
-    'website'
-];
-var reNonTraits = new RegExp('^[^a-z0-9]*' + nonTraits.map(s => `(${s})`).join('|') + '[^a-z0-9]*$', 'i');
 /**
     Gets token data for the given asset id.
     
@@ -37,7 +24,7 @@ module.exports = async function(assetId)
         var ocmd = data.onchain_metadata || {};
         var ocmdExists = !!data.onchain_metadata
         
-        // token.__raw = data;
+        token.__raw = data;
         
         token.policyId = data.policy_id;
         token.fingerprint = data.fingerprint;
@@ -52,26 +39,34 @@ module.exports = async function(assetId)
 
         token.description = [].concat(ocmd.description || meta.description).join('');
         token.homepage = meta.url;
-        token.files = ocmd.files || [];
+        token.files = (ocmd.files || []).map(data => 
+        {
+            let file = {};
+            
+            file.mediaType = data.mediaType;
+            file.src = [].concat(data.src).join('');
+            
+            return file;
+        });
         
-        token.image = ocmd.image || meta.logo;
+        token.image = [].concat(ocmd.image || meta.logo).join('');
         token.imageType = ocmd.mediaType || 'image/png';            
         // for collection use
-        token.project = ocmd.project;
+        token.project = [].concat(ocmd.project);
         if (reBaseName.test(token.name)) token.assetBaseName = token.name.replace(reBaseName, '$1');    
         
         token.decimals = meta.decimals || 0;    
         token.quantity = numeral(data.quantity).value();
         // token.quantityFormatted = numeral(token.quantity).format(format(token.quantity));
 
+        token.traits = getTraits(ocmd);
         token.onchainMetadataStandard = data.onchain_metadata_standard;
-            
-        if (typeof ocmd.attributes === 'object')
-            token.traits = objectFilter(ocmd.attributes, () => true);
-        else if (typeof ocmd.traits === 'object')
-            token.traits = objectFilter(ocmd.traits, () => true);
-        else
-            token.traits = objectFilter(ocmd, k => !reNonTraits.test(k.slice(-1)[0]));
+        
+        // if ((token.onchainMetadataStandard || '').indexOf('CIP68') >= 0)
+        // {
+        //     token.description = decode(token.description);
+        //     token.traits = Object.keys(token.traits).reduce((o, k) => ({ ...o, [k]: decode(token.traits[k]) }), {});
+        // }
             
         return pull.transaction(data.initial_mint_tx_hash).then(data => 
         {
@@ -79,4 +74,32 @@ module.exports = async function(assetId)
             return token;        
         });
     });
+}
+
+
+var traitObjects = [ 'traits', 'attributes', 'Features' ];
+var nonTraits = 
+[   
+    'description',
+    'discord', 
+    'files', 
+    'github',
+    'image', 
+    'media', 
+    'mediaType', 
+    'name', 
+    'project', 
+    'projectName',
+    'twitter',
+    'website',
+];
+var reNonTraits = new RegExp('^[^a-z0-9]*' + nonTraits.map(s => `(${s})`).join('|') + '[^a-z0-9]*$', 'i');
+
+function getTraits(ocmd)
+{
+    for (prop of traitObjects)
+        if (typeof ocmd[prop] === 'object')
+            return objectFilter(ocmd[prop], () => true);
+    
+    return objectFilter(ocmd, (k, v) => !reNonTraits.test(k.slice(-1)[0]) && typeof v !== 'object');    
 }
