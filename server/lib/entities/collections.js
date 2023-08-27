@@ -1,5 +1,4 @@
 var numeral = require('numeral');
-var assets = require('./assets');
 
 
 /**

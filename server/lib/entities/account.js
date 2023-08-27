@@ -13,8 +13,6 @@ var loop = require('../loop');
 */
 module.exports = async function(stakeKey)
 {
-    var e = require('./');
-    
     var account = { __entity: 'account' };
     
     return pull.account(stakeKey).then(data => 
@@ -31,7 +29,8 @@ module.exports = async function(stakeKey)
         account.rewardsFormatted = numeral(account.rewardsAdjusted).format('0,0');
            
         account.stakeKey = data.stake_address;
+        account.poolId = data.pool_id;
         
-        return e.pool(data.pool_id).then(pool => ({ ...account, pool }));
+        return account;
     });
 }

@@ -3,6 +3,7 @@ var { decode } = require('hex-encode-decode');
 var loop = require('../loop');
 var objectFilter = require('../object-filter');
 var pull = require('../request');
+var { prod } = require('../../config');
 
 
 var reBaseName = /^(.+)\s*#.*$/;
@@ -24,7 +25,7 @@ module.exports = async function(assetId)
         var ocmd = data.onchain_metadata || {};
         var ocmdExists = !!data.onchain_metadata
         
-        token.__raw = data;
+        if (!prod) token.__raw = data;
         
         token.policyId = data.policy_id;
         token.fingerprint = data.fingerprint;
@@ -67,12 +68,10 @@ module.exports = async function(assetId)
         //     token.description = decode(token.description);
         //     token.traits = Object.keys(token.traits).reduce((o, k) => ({ ...o, [k]: decode(token.traits[k]) }), {});
         // }
-            
-        return pull.transaction(data.initial_mint_tx_hash).then(data => 
-        {
-            token.mintBlockHeight = data.block_height;
-            return token;        
-        });
+        
+        token.mintTx = data.initial_mint_tx_hash;
+        
+        return token;
     });
 }
 

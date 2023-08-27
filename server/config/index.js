@@ -14,6 +14,7 @@ module.exports =
         pool: 7 * 24 * 60 * 60, // 1 week
         // stake: 60, // 1 min
         token: 24 * 60 * 60, // 1 day
+        tx: 7 * 24 * 60 * 60 // 1 week
     },
     // server listening port
     port: process.env.PORT || 3000,
