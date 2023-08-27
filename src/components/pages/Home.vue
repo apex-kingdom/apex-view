@@ -18,12 +18,12 @@
         margin="b5"
       >
         <p>
-          Please note that this app is currently in <u>LIMITED ALPHA</u> as bugs are squashed and features are 
+          Please note that this app is currently in <u>ALPHA</u> as bugs are squashed and features are 
           being added.  
         </p>
         <br />
         <p>
-          <b>Wallets show only the first 100 tokens being returned from the APIs.</b>
+          <b>Beware that third-party service limits may cut off access to the app with excessive usage.</b>
         </p>
       </x-text>
       <address-select :addys="addys" width="75%" max-width="225" @select="handleSelect" @remove="handleRemove" />

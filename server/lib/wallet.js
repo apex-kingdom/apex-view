@@ -1,53 +1,39 @@
-var cdata = require('./request');
-var account = require('./items/account');
+var e = require('./entities');
 
 
-/**
-    Builds root object for Cardano account data.
-    
-    @param { string } input
-      Can be a stake key, address, or handle.
-    @param { boolean } clear
-      Clear data before retrieval?
-*/
-module.exports = function get(input)
+module.exports = async function(input)
 {
-    let wallet = account(input); 
-    
-    let batch = resolveInput(input).then(key => 
-    {
-        let detailsPromise = cdata.account(key)
-            .then(data => (wallet.setData(data), data))
-            .then(data => data.pool_id && cdata.poolMeta(data.pool_id).then(wallet.setPool));
-            
-        let assetsPromise = cdata.accountAssets(key).then(array => 
+    var getData = stake => Promise.all(
+    [ 
+        stake, 
+        e.account(stake.stakeKey).then(account => 
         {
-            let list = array.map(a => 
-            {
-                return cdata.asset(a.unit).then
-                (
-                    i => cdata.transaction(i.initial_mint_tx_hash).then
-                    (
-                        t => wallet.addToken(a, i, t)
-                    )
-                ); 
-            });
-            
-            return Promise.all(list);
-        });
-            
-        return Promise.all([ detailsPromise, assetsPromise ]);
-    });
+            return e.pool(account.poolId).then(pool => ({ ...account, pool }));
+        }), 
+        e.assets(stake.stakeKey).then(array => 
+        {
+            return Promise.all(array.map(data => 
+            {                
+                return e.token(data.unit)
+                    // .then(token => e.tx(token.mintTx).then(data => token))
+                    .then(token => e.asset(data, token))
+            }))
+        }) 
+    ])
     
-    return batch.then(() => wallet.get());
-}
+    var assembleData = ([ stake, account, assets ]) =>
+    {
+        var nfts = assets.filter(i => i.isNFT);
 
-async function resolveInput(key) 
-{
-    if (/^\$/.test(key)) // resolve handle to address
-        return cdata.adaHandle(key, 'address').then(resolveInput);
-    else if (!/^stake/.test(key)) // resolve address to staking key
-        return cdata.address(key, 'stakeKey').then(resolveInput);
-    // we should have a staking key here
-    return key;
+        return e.collections(nfts).then(collections => 
+        ({ 
+            ...account, 
+            input: stake.input, 
+            tokens: assets.filter(i => !i.isNFT), 
+            collections, 
+            nfts 
+        }));
+    }
+      
+    return e.stake(input).then(getData).then(assembleData);  
 }

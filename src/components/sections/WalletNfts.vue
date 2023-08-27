@@ -120,24 +120,7 @@ export default
 
         disableString() { return this.value.filter(v => v.filterType == 'string').length >= 4; },
         
-        filterSpec()
-        {                      
-            let $test = this.jsonSpec.map(value =>
-            {
-                let { filterType, ...spec } = value;
-                
-                if (filterType === 'string')
-                    spec.$test = new RegExp(escapeRE(spec.$test), 'i');
-                    
-                return spec;
-            });
-            
-            return { $test, $and: true };
-        },
-
-        inputHash() { return this.jsonSpec.length ? encode(this.jsonSpec) : '' },
-
-        jsonSpec()
+        filterSet()
         {
             return this.value.filter(({ $test, $path }) => 
             {              
@@ -151,6 +134,23 @@ export default
             });
         },
         
+        filterSpec()
+        {                      
+            let $test = this.filterSet.map(value =>
+            {
+                let { filterType, ...spec } = value;
+                
+                if (filterType === 'string')
+                    spec.$test = new RegExp(escapeRE(spec.$test), 'i');
+                    
+                return spec;
+            });
+            
+            return { $test, $and: true };
+        },
+
+        inputHash() { return this.filterSet.length ? encode(this.filterSet) : '' },
+
         nfts() { return this.wallet.data.nfts; }        
     },
     
@@ -164,7 +164,7 @@ export default
                 this.$router.push({ name: 'nft-filter', params: { hash: this.inputHash } });
             else
                 this.$router.push({ name: 'nft-filter' });
-        }      
+        }
     }
 }
 </script>

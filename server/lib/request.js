@@ -1,6 +1,7 @@
 var axios = require('axios');
 var op = require('object-path');
-var config = require('./config');
+var config = require('../config/apis');
+var { prod } = require('../config');
 
 
 /**
@@ -19,15 +20,15 @@ var config = require('./config');
 */
 function pull(name, params, pathname)
 {
-    return Promise.resolve(params).then(args => send(name, args))
+    let { root, paths } = resolve(name);
+    
+    return send(name, params)
     // resolve data to proper path
     .then(data => 
     {
-        let { root, paths } = resolve(name);
-        let path = [root, paths[pathname]].filter(x => !!x).join('.');
-        
+        let path = [root, paths[pathname]].filter(x => !!x).join('.');        
         return op.get(data, path);
-    })
+    });
 }
 
 
@@ -36,23 +37,23 @@ function pull(name, params, pathname)
     
     @param { string } name
       Name of the request to make.
-    @param { any, object } params
-      Interpolation parameters for request.
-      This value is used as a default replacement value if not an object.
+    @param { any, object } args
+      Interpolation parameters for url.
+      Used as a default replacement value if not an object.
     @return { promise }
       Resolves to the data requested.
 */
 function send(name, args)
 {
-    let { method, headers, url, vars, preps } = resolve(name);
-
+    let { method, headers, url, vars } = resolve(name);
+    
     let reps = { ...vars, ...(typeof args === 'object' ? args : { default: args }) };
     // interpolate url
-    url = url.replace(/\{(.+?)\}/g, (m, s1) => 
-    {
-        let val = reps.hasOwnProperty(s1) ? reps[s1] : reps.default;
-        return (preps[s1] || (v => v))(val);
-    });
+    url = url.replace(/\{(.+?)\}/g, (m, s1) => reps.hasOwnProperty(s1) ? reps[s1] : reps.default );
+
+    let request = { url, method, headers };
+    
+    if (!prod) console.log('axios: requesting', name, url);
 
     return axios({ url, method, headers });
 }
@@ -62,7 +63,7 @@ function resolve(name)
 {
     if (!resolve.cache[name])
     {
-        let { method, base, headers = {}, url = '', root, paths, vars, preps } = config[name];
+        let { method, base, headers = {}, url = '', root, paths, vars } = config[name];
                 
         if (base)
         {
@@ -79,11 +80,9 @@ function resolve(name)
             paths = { ...pre.paths, ...paths };
             // interpolation variables
             vars = { ...pre.vars, ...vars };
-            // processing functions for variables
-            preps = { ...pre.preps, ...preps };
         }
         
-        resolve.cache[name] = { method, headers, url, root, paths, vars, preps };
+        resolve.cache[name] = { method, headers, url, root, paths, vars };
     }
     
     return resolve.cache[name];

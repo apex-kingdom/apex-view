@@ -1,7 +1,6 @@
 var numeral = require('numeral');
 var pull = require('../request');
 var loop = require('../loop');
-var pool = require('./pool');
 
 
 /**
@@ -30,11 +29,8 @@ module.exports = async function(stakeKey)
         account.rewardsFormatted = numeral(account.rewardsAdjusted).format('0,0');
            
         account.stakeKey = data.stake_address;
+        account.poolId = data.pool_id;
         
-        return pool(data.pool_id).then(data => 
-        {
-            account.pool = data;
-            return account;
-        });
+        return account;
     });
 }
