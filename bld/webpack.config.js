@@ -1,6 +1,5 @@
 var { ProvidePlugin } = require('webpack');
 var HtmlPlugin = require('html-webpack-plugin')
-var { default: InjectBodyPlugin } = require('inject-body-webpack-plugin')
 var { VueLoaderPlugin } = require('vue-loader');
 var paths = require('../paths');
 var vars = require('./vars');
@@ -52,28 +51,11 @@ var base =
     [
         new VueLoaderPlugin(),
         new ProvidePlugin({ app: paths.sub(paths.build)('vars') }), 
-        new HtmlPlugin({ filename: 'index.html', title: 'ApexView Test Page', publicPath: '/' }),
-        new InjectBodyPlugin(
-        { 
-            content: 
-            `
-              <div id="${vars.rootHtmlId}"></div>
-              <style> 
-              html, body 
-              { 
-                  background-color: black; 
-              } 
-              html, body, div
-              { 
-                  scrollbar-width: none;
-                  -ms-overflow-style: none;
-              } 
-              body::-webkit-scrollbar, div::-webkit-scrollbar
-              {
-                  display: none;
-              }
-              </style>
-            ` 
+        new HtmlPlugin
+        ({ 
+            filename: 'index.html',
+            template: paths.sub(paths.source)('app.html'),
+            publicPath: '/'
         })
     ]
 }
