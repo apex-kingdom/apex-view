@@ -6,6 +6,7 @@ var entities =
     account: require('./account'),
     asset: require('./asset'),
     assets: require('./assets'),
+    chain: require('./chain'),
     collections: require('./collections'),
     pool: require('./pool'),
     stake: require('./stake'),
@@ -44,5 +45,5 @@ var reducer = (obj, name) =>
     return obj;
 }
 
-var cacheables = [ 'account', 'assets', 'pool', 'stake', 'token', 'tx' ];
+var cacheables = [ 'account', 'assets', 'chain', 'pool', 'stake', 'token', 'tx' ];
 module.exports = { ...entities, ...cacheables.reduce(reducer, {}) };
