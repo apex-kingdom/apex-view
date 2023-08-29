@@ -16,6 +16,7 @@ thoughts:
 features:
 - sea creature icons for wallet size
 - filtering by date range
+- screenshot feature
 
 bugs:
 - $handle collection name not displaying properly
@@ -26,7 +27,6 @@ bugs:
 tasks:
 - meta data parsing for CIP68
 - show additional media for tokens (images/videos)
-- caching for server side data pulls
 - finish side panel for wallet details
 - social media previews for URLs
 - SEO stuff

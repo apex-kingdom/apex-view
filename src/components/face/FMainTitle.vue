@@ -2,7 +2,6 @@
   <x-text 
     v-bind="$attrs"
     bold 
-    block
     colors="transparent"     
     filter="drop-shadow(4px 4px 0 black)"
     pos="relative"

@@ -14,9 +14,13 @@ export default
         */
         namespace: 'apex',
         /**
+            Scale degrees value.
+        */
+        sangle: 1,
+        /**
             Scale time value.
         */
-        stime: 100,
+        stime: 1000,
         /**
             Scale unit value.
         */
@@ -189,8 +193,9 @@ export default
 
             vTiny: { fontSize: '1vw', lineHeight: '1.1vw' },
             vSmaller: { fontSize: 'calc(.8vw + 6px)', lineHeight: 'calc(.8vw + 6px)' },
-            vSmall: { fontSize: 'calc(.9vw + 9px)', lineHeight: 'calc(.9vw + 9px)' },
-            vBase: { fontSize: 'calc(1vw + 14px)', lineHeight: 'calc(1vw + 14px)' }
+            vSmall: { fontSize: 'calc(.9vw + 9px)', lineHeight: 'calc(.9vw + 12px)' },
+            vBase: { fontSize: 'calc(1vw + 14px)', lineHeight: 'calc(1vw + 14px)' },
+            vHuge: { fontSize: 'calc(3vw + 18px)', lineHeight: 'calc(3vw + 18px)' }
         },
         
         /**
@@ -301,6 +306,7 @@ export default
         */
         named: 
         {
+            about: { property: 'opacity, z-index', duration: '0.5s', timingFunction: 'ease' },          
             default: { property: 'all', duration: '0.15s', timingFunction: 'ease' },
             nav: { property: 'opacity, right', duration: '0.5s', timingFunction: 'ease' }          
         }

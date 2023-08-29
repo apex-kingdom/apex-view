@@ -1,6 +1,6 @@
 <template>
   <x-context #default="{ bgColor, ext, apex }">
-    <x-box width="100%">
+    <x-box :key="assetProps.value" width="100%">
       <f-token-image iconbar :image="data.image" :image-type="data.imageType" :size="size" margin="hauto" />
       <x-flex 
         aligns=":center:space-around" 

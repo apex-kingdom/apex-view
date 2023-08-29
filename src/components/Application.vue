@@ -16,14 +16,34 @@
     >
       <x-box v-listen-outside-click="() => openConfig = false" pos="fixed" trbl="t0 b0 l0" z-index="1000">
         <app-settings :show="openConfig" @update="settings = $event" />
-        <f-main-nav 
+        <main-nav 
           v-bind="navProps[navState]" 
           :hide.sync="hideCtrls" 
           :small="smallScreen"
           transition="nav" 
+          z-index="10"
           @config="openConfig = !openConfig" 
+          @about="openAbout = !openAbout" 
         />
       </x-box>
+      <x-when #default="props" :test="openAbout" opacity="0" w-opacity="1" z-index="-1" w-z-index="1010">
+        <x-flex v-bind="props" aligns=":center:center" colors=":black_f.25" pos="fixed" trbl="a0">
+          <x-box 
+            colors=":black" 
+            height="75%" 
+            width="75%" 
+            overflow="auto"
+            overscroll="contain"
+            border="a1vw!black"
+            pad="a1vw" 
+            shadow="floater" 
+            transition="about" 
+            radius="a6"
+          >
+            <about @close="openAbout = false" />
+          </x-box>
+        </x-flex>
+      </x-when>
       <x-box pos="relative" z-index="1">
         <router-view />
       </x-box>
@@ -34,11 +54,12 @@
 
 <script>
 import color from 'color'
-import { XApp, XBox, XContext } from 'exude';
+import { XApp, XBox, XContext, XFlex, XWhen } from 'exude';
 import { m_media_query } from 'exude'
 import { listenOutsideClick } from 'exude'
-import FMainNav from './face/FMainNav'
+import About from './About'
 import AppSettings from './AppSettings'
+import MainNav from './MainNav'
 import router from '_source/config/router'
 
 
@@ -52,7 +73,7 @@ export default
     
     mixins: [ m_media_query('smallScreen') ],
     
-    components: { AppSettings, FMainNav, XApp, XBox, XContext },
+    components: { About, AppSettings, MainNav, XApp, XBox, XContext, XFlex, XWhen },
     
     directives: { listenOutsideClick },
     
@@ -60,6 +81,7 @@ export default
     ({
         hideCtrls: false, 
         navState: 'show',
+        openAbout: false,
         openConfig: false,
         settings: {}
     }),

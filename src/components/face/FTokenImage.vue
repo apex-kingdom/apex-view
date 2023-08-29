@@ -1,6 +1,6 @@
 <template>
   <x-context #default="{ ext }">
-    <x-flex v-bind="flexProps" @click="$emit('click')" @hover="$emit('hover', $event)">
+    <x-flex v-bind="flexProps" :data-x-bone="loading" @click="$emit('click')" @hover="$emit('hover', $event)">
       <x-image 
         v-if="image" 
         :id="fsid" 
@@ -9,11 +9,16 @@
         height="100%" 
         width="100%" 
         max-height="100%" 
-        max-width="100%" 
+        max-width="100%"
+        :hide="failing"
+        :pos="failing ? 'absolute' : 'static'" 
+        @loading="loading = $event"
+        @failing="failing = $event"
       />
       <x-icon v-else name="apex" :colors="ext.diff + '_f.8'" size="50%" />
+      <x-icon v-if="failing" name="alert" :colors="ext.diff + '_f.8'" size="50%" />
       <x-fullscreen 
-        v-if="image" 
+        v-if="image && !failing" 
         :target-id="fsid" 
         colors="prime"
         h-colors="white"
@@ -58,6 +63,8 @@ export default
         size: { type: Number, default: 48 },        
     },
     
+    data: () => ({ failing: false, loading: false }),
+    
     computed:
     {
         flexProps()
@@ -83,6 +90,6 @@ export default
         },
         
         fsid() { return this._uid + '_fs' }
-    }
+    }    
 }
 </script>
