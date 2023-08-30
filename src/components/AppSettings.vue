@@ -30,18 +30,6 @@
       </x-text>
       <f-color-picker border="a.25!quine!dotted" margin="v2vw" :value.sync="bgColor" />
     </x-text> 
-    <x-text 
-      block
-      align="center" 
-      pad="v.5vw"
-      colors="quine:black_f.125"
-      pos="absolute" 
-      trbl="b0" 
-      font="vTiny" 
-      overflow="auto"
-    >
-      ©2023 Apex Kingdom &amp; wilsonape
-    </x-text>
   </x-exapse>
 </template>
 

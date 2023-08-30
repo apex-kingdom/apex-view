@@ -13,6 +13,8 @@ module.exports = async function(poolId)
 {
     var pool = { __entity: 'pool' };
     
+    if (!poolId) return pool;
+    
     return pull.poolMeta(poolId).then(data => 
     {
         pool.id = data.pool_id;
@@ -21,6 +23,11 @@ module.exports = async function(poolId)
         pool.ticker = data.ticker;
         pool.home = data.homepage;
         
+        return pool;
+    })
+    .catch(error => 
+    {
+        console.log('apex: unable to get pool data for id', poolId);
         return pool;
     });
 }

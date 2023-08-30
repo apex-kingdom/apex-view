@@ -82,8 +82,8 @@ export default
                 { label: '₳ Amount', value: data.adaFormatted },
                 { label: '₳ Rewards Total', value: data.rewardsFormatted },
                 { label: 'Asset Count', value: data.tokens.length + data.nfts.length },
-                { label: 'Stake Pool', value: data.pool.ticker },
-                { label: 'Since Epoch', value: data.epoch },
+                { label: 'Stake Pool', value: data.pool.ticker || 'UNSTAKED' },
+                { label: 'Since Epoch', value: data.epoch || '???' },
             ];
             
             return gdata;

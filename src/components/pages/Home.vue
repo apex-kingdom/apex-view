@@ -1,7 +1,7 @@
 <template>
   <x-context #default="{ mobile }">
     <x-flex invert aligns=":center">
-      <f-main-title text="ApexView" :font="mobile ? 'huge' : 'jumbo'" margin="t8" />
+      <f-main-title block text="ApexView" :font="mobile ? 'huge' : 'jumbo'" margin="t8" />
       <x-flex display="inline-block" colors="quarter" margin="t4 b7" filter="drop-shadow(4px 4px 0 black)">
         <x-icon name="cardano" :size="mobile ? 28 : 32" colors=":black_f.5" stroke-width=".5" />
       </x-flex>

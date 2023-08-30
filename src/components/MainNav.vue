@@ -21,6 +21,9 @@
     <x-link display="flex" @click="$emit('config')">
       <x-icon name="settings" size="mainnav" />
     </x-link>
+    <x-link display="flex" @click="$emit('about')">
+      <x-icon name="info" size="mainnav" />
+    </x-link>
   </x-flex>
 </template>
 
@@ -32,7 +35,7 @@ import { m_toggle } from 'exude'
 
 export default
 {
-    name: 'ApexNav',
+    name: 'MainNav',
     
     mixins: [ m_toggle('hide') ],
     

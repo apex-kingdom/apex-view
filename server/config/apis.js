@@ -91,6 +91,18 @@ module.exports =
         url: '/addresses'
     },
     
+    genesis:
+    {
+        base: 'blockfrost',
+        url: '/genesis'
+    },
+    
+    eras:
+    {
+        base: 'blockfrost',
+        url: '/network/eras'
+    },
+    
     policy:
     {
         base: 'asset',
