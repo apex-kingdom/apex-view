@@ -33,6 +33,22 @@ module.exports =
         }
     },
     
+    opencnft:
+    {
+        method: 'get',
+        url: 'https://api.opencnft.io/{version}',
+        headers: 
+        { 
+            'X-Api-Key': apikey.opencnft
+        },
+        root: 'data',
+        vars:
+        {
+            version: '2'
+        },
+        throttle: 'opencnft'
+    },
+    
     account:
     {
         base: 'blockfrost',
@@ -89,6 +105,12 @@ module.exports =
     {
         base: 'asset',
         url: '/addresses'
+    },
+    
+    collection:
+    {
+        base: 'opencnft',
+        url: '/collection/search?q={policy}'
     },
     
     genesis:

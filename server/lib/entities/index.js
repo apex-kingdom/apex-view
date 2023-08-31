@@ -4,10 +4,11 @@ var { keyexp, prod } = require('../../config');
 var entities =
 {
     account: require('./account'),
+    accountCollections: require('./account-collections'),
     asset: require('./asset'),
     assets: require('./assets'),
     chain: require('./chain'),
-    collections: require('./collections'),
+    collection: require('./collection'),
     pool: require('./pool'),
     stake: require('./stake'),
     token: require('./token'),
@@ -45,5 +46,5 @@ var reducer = (obj, name) =>
     return obj;
 }
 
-var cacheables = [ 'account', 'assets', 'chain', 'pool', 'stake', 'token', 'tx' ];
+var cacheables = [ 'account', 'assets', 'chain', 'collection', 'pool', 'stake', 'token', 'tx' ];
 module.exports = { ...entities, ...cacheables.reduce(reducer, {}) };

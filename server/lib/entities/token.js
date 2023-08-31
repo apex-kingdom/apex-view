@@ -40,7 +40,8 @@ module.exports = async function(assetId)
 
         token.description = [].concat(ocmd.description || meta.description).join('');
         token.homepage = meta.url;
-        token.files = (ocmd.files || []).map(data => 
+
+        token.files = [].concat(ocmd.files || []).map(data => 
         {
             let file = {};
             
@@ -53,7 +54,7 @@ module.exports = async function(assetId)
         token.image = [].concat(ocmd.image || meta.logo).join('');
         token.imageType = ocmd.mediaType || 'image/png';            
         // for collection use
-        token.project = [].concat(ocmd.project);
+        token.project = ocmd.project ? [].concat(ocmd.project).join('') : null;
         if (reBaseName.test(token.name)) token.assetBaseName = token.name.replace(reBaseName, '$1');    
         
         token.decimals = meta.decimals || 0;    
@@ -76,7 +77,7 @@ module.exports = async function(assetId)
 }
 
 
-var traitObjects = [ 'traits', 'attributes', 'Features' ];
+var traitObjects = [ 'traits', 'Traits', 'attributes', 'Attributes', 'features', 'Features' ];
 var nonTraits = 
 [   
     'description',
@@ -95,10 +96,26 @@ var nonTraits =
 var reNonTraits = new RegExp('^[^a-z0-9]*' + nonTraits.map(s => `(${s})`).join('|') + '[^a-z0-9]*$', 'i');
 
 function getTraits(ocmd)
-{
+{  
     for (prop of traitObjects)
+    {
+        if (Array.isArray(ocmd[prop]))
+            return ocmd[prop].reduce((obj, item) => 
+            {
+                if (typeof item === 'object' && item !== null)
+                {
+                    if (Object.hasOwn(item, 'name') && Object.hasOwn(item, 'value'))
+                        return { ...obj, [item.name]: item.value };
+                    else
+                        return { ...obj, ...item };
+                }
+                
+                return obj;
+            }, {});
+            
         if (typeof ocmd[prop] === 'object')
             return objectFilter(ocmd[prop], () => true);
+    }
     
     return objectFilter(ocmd, (k, v) => !reNonTraits.test(k.slice(-1)[0]) && typeof v !== 'object');    
 }

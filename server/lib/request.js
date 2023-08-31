@@ -1,7 +1,8 @@
 var axios = require('axios');
 var op = require('object-path');
 var config = require('../config/apis');
-var { prod } = require('../config');
+var redis = require('../config/redis');
+var { prod, throttles } = require('../config');
 
 
 /**
@@ -20,15 +21,16 @@ var { prod } = require('../config');
 */
 function pull(name, params, pathname)
 {
-    let { root, paths } = resolve(name);
+    let { root, paths, throttle } = resolve(name);
     
-    return send(name, params)
-    // resolve data to proper path
-    .then(data => 
+    let request = () => send(name, params).then(data => 
     {
+        // resolve data to proper path
         let path = [root, paths[pathname]].filter(x => !!x).join('.');        
         return op.get(data, path);
     });
+    
+    return throttle ? redis.throttle(throttle, request) : request();
 }
 
 
@@ -53,7 +55,7 @@ function send(name, args)
 
     let request = { url, method, headers };
     
-    if (!prod) console.log('axios: requesting', name, url);
+    if (!prod) console.log('apex: sending', method.toUpperCase(), url);
 
     return axios({ url, method, headers });
 }
@@ -63,7 +65,7 @@ function resolve(name)
 {
     if (!resolve.cache[name])
     {
-        let { method, base, headers = {}, url = '', root, paths, vars } = config[name];
+        let { method, base, headers = {}, url = '', root, paths, vars, throttle } = config[name];
                 
         if (base)
         {
@@ -80,9 +82,11 @@ function resolve(name)
             paths = { ...pre.paths, ...paths };
             // interpolation variables
             vars = { ...pre.vars, ...vars };
+            // api throttling config
+            throttle = throttle || pre.throttle;
         }
         
-        resolve.cache[name] = { method, headers, url, root, paths, vars };
+        resolve.cache[name] = { method, headers, url, root, paths, vars, throttle };
     }
     
     return resolve.cache[name];

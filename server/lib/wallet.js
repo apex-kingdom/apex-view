@@ -24,13 +24,14 @@ module.exports = async function(input)
     var assembleData = ([ stake, account, assets ]) =>
     {
         var nfts = assets.filter(i => i.isNFT);
+        var collections = e.accountCollections(e.collection);
 
-        return e.collections(nfts).then(collections => 
+        return Promise.all(nfts.map(collections.add)).then(() => 
         ({ 
             ...account, 
             input: stake.input, 
             tokens: assets.filter(i => !i.isNFT), 
-            collections, 
+            collections: collections.get(), 
             nfts 
         }));
     }
