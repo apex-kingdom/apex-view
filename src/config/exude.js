@@ -129,12 +129,13 @@ export default
             highlight: '#4B4114', // punga
             entryBg: '#2A2A2A',
             
-            // collection: '#99FF99',
-            attribute: '#FFFF99',
-            description: '#99FFFF',
-            trait: '#99FF99',
-            name: '#9999FF',
+            collection: '#99CCFF',
+            attribute: '#CCFF99',
+            description: '#99FFCC',
+            trait: '#FFCC99',
+            name: '#CC99FF',
             negate: '#FF9999',
+            metadata: '#FF99CC',
             
             // accent: '#',
             // error: '#',

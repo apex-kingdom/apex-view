@@ -52,7 +52,7 @@
     </x-layout-cell>
     <x-layout-cell span="7">
       <x-text block align="center" font="vSmall" margin="h4" pad="v2">
-        If you appreciate this app, please consider sending us a bit of ADA.
+        If you appreciate this app, please consider sending a small donation.
         It can really help us pay the bills and keep the site running.
       </x-text>
     </x-layout-cell>

@@ -7,27 +7,21 @@ holder features:
 
 thoughts:
 - separate section for ada handles?
-- taptools link for tokens (sidepanel)
 - carousel viewing mode for NFTs?
 
 
 ## To Dos
 
-features:
+backlog:
 - sea creature icons for wallet size
 - filtering by date range
 - screenshot feature
+- SEO stuff
+- meta data parsing for CIP68
 
 bugs:
-- $handle collection name not displaying properly
-- better floater window positioning on open
 - fix responsiveness for mobile (navigation/settings)
 - fix router navigation "to same route" error on reload with filter hash
 
 tasks:
-- meta data parsing for CIP68
 - show additional media for tokens (images/videos)
-- finish side panel for wallet details
-- social media previews for URLs
-- SEO stuff
-- better filter hash scheme

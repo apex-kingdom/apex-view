@@ -36,16 +36,21 @@ export default
     computed:
     {
         count() { return this.data.isNFT ? null : this.data.userQuantityFormatted; },              
+
+        isCollection() { return this.data.__entity === 'collection' },
     },
     
     methods:
     {
         handleAmount() 
         {
-            if (this.data.isCollection)
+            if (this.isCollection)
             {
-                let filter = [ { $test: [ this.data.policyId ], filterType: 'collection', $path: 'policyId' } ];
-                this.$router.push({ name: 'nft-filter', params: { hash: encode(filter) } });
+                let filter = 
+                [ 
+                    { $test: [ this.data.policyId ], filterType: 'collection', $path: 'policyId' } 
+                ];
+                this.$router.push({ name: 'nfts-filter', params: { hash: encode(filter) } });
             }
             else if (this.wallet)
             {

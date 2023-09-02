@@ -28,14 +28,22 @@
       <x-text block bold font="vSmall" pad="v1vw" margin="t2.5vw" border="b.25!terti"> 
         Background Color
       </x-text>
-      <f-color-picker border="a.25!quine!dotted" margin="v2vw" :value.sync="bgColor" />
+      <f-color-picker 
+        border="a.25!quine!dotted" 
+        margin="t2vw" 
+        :value="bgColor" 
+        @update:value="$emit(`update:bg-color`, $event)" 
+      />
     </x-text> 
+    <x-link block margin="v1vw hauto" colors="quine" @click="$emit('about')">
+      <x-icon name="apex" size="3.5vw" />
+    </x-link>
   </x-exapse>
 </template>
 
 
 <script>
-import { XCheckbox, XExapse, XField, XText } from 'exude';
+import { XCheckbox, XExapse, XField, XIcon, XLink, XText } from 'exude';
 import FColorPicker from './face/FColorPicker'
 
 
@@ -43,17 +51,21 @@ export default
 {
     name: 'AppSettings',
     
-    components: { FColorPicker, XCheckbox, XExapse, XField, XText },
+    components: { FColorPicker, XCheckbox, XExapse, XField, XIcon, XLink, XText },
     
     props:
     {
+        /**
+            Background color.
+        */
+        bgColor: { type: String, default: '#000000' },        
         /**
             Show the settings panel?
         */
         show: Boolean
     },
     
-    data: () => ({ bgColor: '#000000', noLabels: false, noGutters: false, hide: false }),
+    data: () => ({ noLabels: false, noGutters: false, hide: false }),
     
     created()
     {
@@ -61,8 +73,8 @@ export default
         
         let sendEvent = () =>
         {
-            let { bgColor, noLabels, noGutters } = this;
-            this.$emit('update', { bgColor, noLabels, noGutters });
+            let { noLabels, noGutters } = this;
+            this.$emit('update', { noLabels, noGutters });
         }
         // debounce settings updates
         this.emitUpdates = () =>
@@ -74,7 +86,10 @@ export default
     
     mounted()
     {
-        this.bgColor = localStorage.getItem('bgColor');
+        let bgColor = localStorage.getItem('bgColor');
+        if (bgColor)
+            this.$emit(`update:bg-color`, bgColor);
+
         this.noLabels = !!localStorage.getItem('noLabels');
         this.noGutters = !!localStorage.getItem('noGutters');
 
@@ -86,8 +101,6 @@ export default
         bgColor() 
         { 
             localStorage.setItem('bgColor', this.bgColor);
-            
-            this.emitUpdates();         
         },
         
         noLabels()

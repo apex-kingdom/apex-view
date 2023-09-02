@@ -15,7 +15,12 @@
       :rs="rowspace"
     >
       <x-box v-listen-outside-click="() => openConfig = false" pos="fixed" trbl="t0 b0 l0" z-index="1000">
-        <app-settings :show="openConfig" @update="settings = $event" />
+        <app-settings 
+          :show="openConfig" 
+          :bgColor.sync="bgColor"
+          @update="settings = $event" 
+          @about="openAbout = !openAbout, openConfig = false"
+        />
         <main-nav 
           v-bind="navProps[navState]" 
           :hide.sync="hideCtrls" 
@@ -23,7 +28,7 @@
           transition="nav" 
           z-index="10"
           @config="openConfig = !openConfig" 
-          @about="openAbout = !openAbout" 
+          @bg-color="bgColor = $event"
         />
       </x-box>
       <x-when #default="props" :test="openAbout" opacity="0" w-opacity="1" z-index="-1" w-z-index="1010">
@@ -79,6 +84,7 @@ export default
     
     data: () => 
     ({
+        bgColor: 'black',
         hideCtrls: false, 
         navState: 'show',
         openAbout: false,
@@ -128,8 +134,6 @@ export default
     
     computed:
     {
-        bgColor() { return this.settings.bgColor || 'black'; },
-        
         bgIsDark() { return color(this.bgColor).isDark(); },
       
         colspace() { return this.settings.noGutters ? 0 : 5; },

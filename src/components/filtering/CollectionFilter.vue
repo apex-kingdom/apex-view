@@ -12,7 +12,7 @@
             <x-icon :name="checked ? 'not_equal' : 'equal'" :size="iconSize" />
           </x-checkbox>
           <x-flex aligns=":center" @click="show = !show">
-            <x-text block font="base" colors="black" pad="a1" width="60" space="nowrap" overflow="auto">
+            <x-text block font="base" colors="black" pad="a1" width="16vw" space="nowrap" overflow="auto">
               <template v-if="$test && $test.length">
                 {{ $test.length == 1 ? policyMap[$test[0]] : $test.length + ' collections selected.' }}
               </template>
