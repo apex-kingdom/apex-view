@@ -88,7 +88,7 @@ export default
           
             let disable =
             {
-                string: value.filter(v => v.filterType == 'string').length >= 1,
+                string: value.filter(v => v.filterType == 'string').length >= 4,
                 collection: value.filter(v => v.filterType == 'collection').length >= 1
             }
             

@@ -65,7 +65,7 @@ export default
     {
         this.stringOptionData =
         [
-            { data: 'collection', color: 'collection', label: 'Collection Name' },
+            // { data: 'collection', color: 'collection', label: 'Collection Name' },
             { data: 'traits/keyvals', color: 'attribute', label: 'Attribute/Trait' },
             { data: 'traits', color: 'trait', label: 'Trait' },
             { data: 'name', color: 'name', label: 'Name' },

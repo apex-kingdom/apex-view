@@ -45,6 +45,8 @@ module.exports = function(base)
             
             collection.traits = Object.keys(asset.traits).reduce(reducer, collection.traits || {});
             
+            collection.firstMintTime = Math.min(collection.firstMintTime || Infinity, asset.mintTime || Infinity);
+            
             return collections[policyId] = collection;
         });      
     }

@@ -21,6 +21,8 @@ module.exports = async function(input)
     
     var assembleData = ([ stake, account, assets ]) =>
     {
+        assets.sort((a, b) => a.mintTime - b.mintTime);
+      
         var nfts = assets.filter(i => i.isNFT);
         var collections = e.accountCollections(e.collection);
 
@@ -29,7 +31,7 @@ module.exports = async function(input)
             ...account, 
             input: stake.input, 
             tokens: assets.filter(i => !i.isNFT), 
-            collections: collections.get(), 
+            collections: collections.get().sort((a, b) => a.firstMintTime - b.firstMintTime), 
             nfts 
         }));
     }
