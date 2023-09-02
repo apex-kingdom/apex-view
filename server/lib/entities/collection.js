@@ -1,3 +1,4 @@
+var numeral = require('numeral');
 var pull = require('../request');
 var { prod } = require('../../config');
 
@@ -13,15 +14,28 @@ var { prod } = require('../../config');
 module.exports = async function(policyId)
 {
     var collection = { __entity: 'collection' };
-        
-    return pull.collection(policyId).then(([ data ]) => 
+    
+    return Promise.all(
+    [
+        pull.collection(policyId),
+        // pull.collectionMetrics(policyId)
+    ])
+    .then(([ search, metrics = {} ]) => 
     {
-        if (!data) return { ...collection, policyId };
-        
-        if (!prod) collection.__raw = data;
+        let [ result = {} ] = search, { collection: names = {} } = metrics;        
+
+        if (!prod) collection.__raw = { search, metrics };
 
         collection.policyId = policyId;
-        collection.name = data.project;
+        // it appears opencnft api will return a random selection of policy 
+        // information if exact policy id cannot be found (shrug)
+        if ((result.policies || [])[0] === policyId)
+        {
+            collection.name = result.project;            
+        }
+        // collection.name = names.name || result.project;
+        // collection.soldCount = metrics.total_nfts_sold;
+        // collection.holders = metrics.holders;
                 
         return collection;
     });

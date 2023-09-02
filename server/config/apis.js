@@ -113,6 +113,12 @@ module.exports =
         url: '/collection/search?q={policy}'
     },
     
+    collectionMetrics:
+    {
+        base: 'opencnft',
+        url: '/collection/{policy}'
+    },
+    
     genesis:
     {
         base: 'blockfrost',

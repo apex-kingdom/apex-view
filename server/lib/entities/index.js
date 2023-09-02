@@ -18,7 +18,7 @@ var entities =
 
 var reducer = (obj, name) => 
 {
-    obj[name] = ident => 
+    obj[name] = (ident, ...args) => 
     {
         let key = name + ':' + ident;
 
@@ -34,7 +34,7 @@ var reducer = (obj, name) =>
             {
                 if (!prod) console.log('apex: pulling api data for', key);
                 
-                return entities[name](ident).then(data =>
+                return entities[name](ident, ...args).then(data =>
                 {
                     redis.jset(key, data, keyexp[name]);
                     return data;

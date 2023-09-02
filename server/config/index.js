@@ -1,4 +1,6 @@
 
+let min = 60, hour = min * 60, day = 24 * hour, week = 7 * day;
+
 module.exports =
 {
     // 3rd party api keys
@@ -10,11 +12,12 @@ module.exports =
     // redis key expiration (seconds)
     keyexp: 
     {
-        default: 60, // 1 min
-        collection: 24 * 60 * 60, // 1 day
-        pool: 7 * 24 * 60 * 60, // 1 week
-        token: 24 * 60 * 60, // 1 day
-        tx: 7 * 24 * 60 * 60 // 1 week
+        default: 1 * min,
+        chain: 30 * day,
+        collection: 2 * day,
+        pool: 1 * week,
+        token: 1 * day,
+        tx: 1 * week
     },
     // server listening port
     port: process.env.PORT || 3000,

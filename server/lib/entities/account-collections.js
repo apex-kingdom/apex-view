@@ -23,6 +23,7 @@ module.exports = function(base)
         return collections[policyId].then(collection =>
         {
             if (!collection.name) collection.name = asset.project || asset.name;
+            if (!collection.description) collection.description = asset.description;
           
             if (!collection.image)             
             {

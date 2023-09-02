@@ -15,7 +15,7 @@ module.exports = async function()
     [
         pull.genesis(),
         
-        pull.eras().then(array.map(({ start, end, parameters }) => 
+        pull.eras().then(array => array.map(({ start, end, parameters }) => 
         {
             let era = {};
             
@@ -35,10 +35,10 @@ module.exports = async function()
     ])
     .then(([ genesis, eras ]) => 
     {        
-        chain.systemStart = genesis.system.start;
+        chain.systemStart = genesis.system_start;
         chain.epochLen = genesis.epoch_length;
         chain.eras = eras;
-        
+
         return chain;
     });    
 }

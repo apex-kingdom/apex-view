@@ -9,14 +9,26 @@ var pull = require('../request');
     @return { promise }
       Resolves to a "transaction" object.
 */
-module.exports = async function(hash)
+module.exports = async function(hash, chain)
 {
     return pull.transaction(hash).then(data => 
     {
         let tx = { __entity: 'transaction' };
         
-        tx.blockHeight = data.block_height;
+        tx.hash = data.hash;
         
-        return tx;        
+        let { slot } = data;
+        let seconds = chain.systemStart;
+                    
+        for (let era of chain.eras)
+        {
+            seconds += Math.min(era.endSlot, slot) * era.slotLen;
+            slot = slot - era.endSlot;
+            if (slot <= 0) break;
+        }        
+        // if the era of the tx not yet archived set to `null` for now
+        tx.time = (slot > 0) ? null : seconds * 1000;
+        
+        return tx;                  
     });  
 }

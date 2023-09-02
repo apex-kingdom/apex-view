@@ -10,7 +10,7 @@ router.get('/wallet/:input', (req, res, next) =>
     wallet(req.params.input).then(data => res.send(data)).catch(next);
 });
 // all other roads lead to SPA
-router.get('/w/*', (req, res) => 
+router.get('/*', (req, res) => 
 {
     res.sendFile(paths.sub(paths.public)('index.html'));
 });

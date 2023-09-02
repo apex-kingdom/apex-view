@@ -15,10 +15,10 @@ var reBaseName = /^(.+)\s*#.*$/;
     @return { promise }
       Resolves to a "account" object.
 */
-module.exports = async function(assetId)
+module.exports = async function(assetId, trans)
 {
     var token = { __entity: 'token' };
-        
+
     return pull.asset(assetId).then(data => 
     {
         var meta = data.metadata || {};
@@ -34,7 +34,7 @@ module.exports = async function(assetId)
         token.isNFT = data.quantity == 1;
         
         token.ticker = meta.ticker || ocmd.ticker;
-        token.assetName = data.asset_name;
+        token.assetName = data.asset_name || '';
         token.assetNameDec = decode(token.assetName);
         token.name = (!token.isNFT && token.ticker) || ocmd.name || token.assetNameDec;
 
@@ -64,15 +64,19 @@ module.exports = async function(assetId)
         token.traits = getTraits(ocmd);
         token.onchainMetadataStandard = data.onchain_metadata_standard;
         
-        // if ((token.onchainMetadataStandard || '').indexOf('CIP68') >= 0)
-        // {
-        //     token.description = decode(token.description);
-        //     token.traits = Object.keys(token.traits).reduce((o, k) => ({ ...o, [k]: decode(token.traits[k]) }), {});
-        // }
+        if ((token.onchainMetadataStandard || '').indexOf('CIP68') >= 0)
+        {
+            // token.description = decode(token.description);
+            // token.traits = Object.keys(token.traits).reduce((o, k) => ({ ...o, [k]: decode(token.traits[k]) }), {});
+            token.description = '';
+            token.traits = {};
+        }
         
-        token.mintTx = data.initial_mint_tx_hash;
-        
-        return token;
+        return trans(data.initial_mint_tx_hash).then(tx => 
+        {
+            token.mintTime = tx.time
+            return token;            
+        });
     });
 }
 
@@ -90,6 +94,7 @@ var nonTraits =
     'name', 
     'project', 
     'projectName',
+    'sha256',
     'twitter',
     'website',
 ];
