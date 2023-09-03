@@ -3,6 +3,7 @@
     <x-context 
       :hideCtrls="hideCtrls" 
       :hideLbls="settings.noLabels"
+      :hideCnts="settings.noCounts"
       :mobile="smallScreen" 
       :bgColor="bgColor"
       :ext="color('white', 'black')"

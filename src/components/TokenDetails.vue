@@ -14,7 +14,7 @@
           v-bind="assetProps" 
           copy 
           aligns=":center:center" 
-          :count="!ocmds !== !mintDate ? 20 : ocmds && mintDate ? 16 : 24" 
+          :count="!ocmds !== !mintDate ? 18 : ocmds && mintDate ? 16 : 24" 
           font="micro" 
         />
         <x-text v-if="mintDate" font="micro" colors="quarter"> {{ mintDate }} </x-text> 

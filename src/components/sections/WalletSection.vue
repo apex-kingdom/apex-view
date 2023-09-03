@@ -1,9 +1,11 @@
 <template>
-  <x-context #default="{ hideLbls }"> 
+  <x-context #default="{ ext, hideCtrls, hideCnts }"> 
     <x-lister #default="{ array }" :filter-spec="filterSpec" :list="items">
-      <x-field-list v-if="!hideLbls" #default="{ append, remove }" :value.sync="value">
-        <x-flex wrap aligns=":center" margin="h12% t8 b5" gap="2:2">      
-          <wallet-header margin="r2"> {{ array.length }} {{ label }} </wallet-header>
+      <x-flex wrap aligns=":center" margin="h12% t8 b5" gap="2:2">
+        <x-text v-if="!hideCnts" block bold font="h5" :colors="`${ext.diff}_f.25`">
+          {{ array.length }} {{ label }}
+        </x-text>        
+        <x-field-list v-if="!hideCtrls" #default="{ append, remove }" :value.sync="value">
           <!-- @slot control buttons -->
           <slot v-if="items.length > 1" name="controls" :append="append" :disable="disable" />            
           <f-canvas-button 
@@ -14,8 +16,8 @@
           />
           <!-- @slot filter form entry -->
           <slot :remove="remove" />
-        </x-flex>
-      </x-field-list>
+        </x-field-list>
+      </x-flex>
       <token-lister>
         <x-lister #iter="{ item }">
           <wallet-item :data="item" />
@@ -27,11 +29,10 @@
 
 
 <script>
-import { XContext, XFieldList, XFlex, XLister } from 'exude'
+import { XContext, XFieldList, XFlex, XLister, XText } from 'exude'
 import { m_context } from 'exude'
 import FCanvasButton from '../face/FCanvasButton'
 import TokenLister from '_comps/TokenLister'
-import WalletHeader from '_comps/WalletHeader'
 import WalletItem from '_comps/WalletItem'
 import escapeRE from '_source/lib/escape-re';
 import { decode, encode } from '_source/lib/json-code';
@@ -47,12 +48,12 @@ export default
     { 
         FCanvasButton,
         TokenLister, 
-        WalletHeader, 
         WalletItem, 
         XContext, 
         XFieldList, 
         XFlex, 
-        XLister 
+        XLister,
+        XText
     },
     
     props:

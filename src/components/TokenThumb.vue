@@ -1,9 +1,9 @@
 <template>
-  <x-context #default="{ ext, hideLbls }">
+  <x-context #default="{ ext, hideLbls, hideCnts }">
     <x-box v-observe-viewport-intersection="intersect" :width="size">
       <x-flex v-if="visible" invert align="center" width="100%">
         <x-text 
-          v-if="count" 
+          v-if="!hideCnts && count" 
           font="tiny" 
           :colors="`${ext.diff}:${ext.same}_f.65`" 
           :h-colors="`${ext.same}:${ext.diff}_f.5`" 

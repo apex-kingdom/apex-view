@@ -1,6 +1,23 @@
 <template>
   <x-context #default="{ mobile }">
-    <x-flex invert aligns=":center">
+    <x-flex invert aligns=":center" min-height="100vh" pers="100vh" overflow="hidden">
+      <x-destyler 
+        sel="&::before" 
+        content="" 
+        background-image="url(/pub/images/bg.png)" 
+        background-size="100% 100%" 
+        background-repeat="no-repeat"
+        background-position="center center" 
+        transform="rotateX(40deg)"
+        filter="grayscale(100%)"
+        opacity=".25"
+        position="fixed"
+        bottom="-10%"
+        left="-20%"
+        width="140%"
+        height="160%"
+        z-index="-1"
+      />
       <f-main-title block text="ApexView" :font="mobile ? 'huge' : 'jumbo'" margin="t8" />
       <x-flex display="inline-block" colors="quarter" margin="t4 b7" filter="drop-shadow(4px 4px 0 black)">
         <x-icon name="cardano" :size="mobile ? 28 : 32" colors=":black_f.5" stroke-width=".5" />
@@ -33,7 +50,7 @@
 
 
 <script>
-import { XBox, XContext, XFlex, XIcon, XText } from 'exude'
+import { XBox, XContext, XDestyler, XFlex, XIcon, XText } from 'exude'
 import AddressSelect from '../AddressSelect'
 import FMainTitle from '../face/FMainTitle'
 
@@ -42,7 +59,7 @@ export default
 {
     name: 'Home',
         
-    components: { AddressSelect, FMainTitle, XBox, XContext, XFlex, XIcon, XText },
+    components: { AddressSelect, FMainTitle, XBox, XContext, XDestyler, XFlex, XIcon, XText },
     
     data: () => ({ addys: [] }),
     
