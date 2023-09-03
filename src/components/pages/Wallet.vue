@@ -90,14 +90,15 @@ export default
         entity() { return this.consoleData.__entity; },
         
         title() 
-        {
+        {          
             switch(this.entity)
             {
                 case 'account': 
                     return shorten(this.consoleData.input, 8);
                 case 'collection': 
-                case 'asset': 
                     return this.consoleData.name;
+                case 'asset': 
+                    return this.consoleData.title;
             }
         }
     },

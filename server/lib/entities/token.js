@@ -7,6 +7,7 @@ var { prod } = require('../../config');
 
 
 var reBaseName = /^(.+)\s*#.*$/;
+let reProto = /^(https?)|(ipfs)|(data):/i;
 /**
     Gets token data for the given asset id.
     
@@ -37,6 +38,8 @@ module.exports = async function(assetId, trans)
         token.assetName = data.asset_name || '';
         token.assetNameDec = decode(token.assetName);
         token.name = (!token.isNFT && token.ticker) || ocmd.name || token.assetNameDec;
+        token.title = meta.ticker && meta.name
+            ? (meta.ticker !== meta.name ? `${meta.name} (${meta.ticker})` : meta.name) : token.name;
 
         token.description = [].concat(ocmd.description || meta.description).join('');
         token.homepage = meta.url;
@@ -51,8 +54,19 @@ module.exports = async function(assetId, trans)
             return file;
         });
         
-        token.image = [].concat(ocmd.image || meta.logo).join('');
-        token.imageType = ocmd.mediaType || 'image/png';            
+        if (ocmdExists && ocmd.image)
+        {
+            token.image = [].concat(ocmd.image).join('');
+            token.imageType = ocmd.mediaType;
+            
+            if (!reProto.test(token.image)) 
+                token.image = 'ipfs://' + token.image;
+        }
+        else
+        {
+            token.image = [].concat(meta.logo).join('');          
+            token.imageType = meta.mediaType || 'image/png';     
+        }
         // for collection use
         token.project = ocmd.project ? [].concat(ocmd.project).join('') : null;
         if (reBaseName.test(token.name)) token.assetBaseName = token.name.replace(reBaseName, '$1');    
