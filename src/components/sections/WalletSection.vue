@@ -1,11 +1,38 @@
 <template>
-  <x-context #default="{ ext, hideCtrls, hideCnts }"> 
-    <x-lister #default="{ array }" :filter-spec="filterSpec" :list="items">
-      <x-flex wrap aligns=":center" margin="h12% t8 b5" gap="2:2">
-        <x-text v-if="!hideCnts" block bold font="h5" :colors="`${ext.diff}_f.25`">
+  <x-context #default="{ bgColor, ext, sm, hideCtrls, hideCnts }"> 
+    <x-lister #default="{ array }" :filter-spec="filterSpec" :list="sortedItems">
+      <x-flex wrap aligns=":center" margin="h12% t8 b5" gap="1.5:2">
+        <x-text v-if="!hideCnts" block bold font="h5" :colors="`${ext.diff}_f.25`" pad="h1">
           {{ array.length }} {{ label }}
         </x-text>        
         <x-field-list v-if="!hideCtrls" #default="{ append, remove }" :value.sync="value">
+          <div v-if="items.length > 1" style="position:relative">
+            <f-canvas-button icon="sort" title="sort items" @click="show = !show" />
+            <x-drop-menu :show.sync="show" space="nowrap" min-breadth="100%" radius="a2" shadow="entry" z-index="10">
+              <x-flex invert :colors="`${ext.diff}:${bgColor}${sm}.5`" width="100%">
+                <x-choose 
+                  form-context="sort" 
+                  :value="sort" 
+                  font="base" 
+                  align="left" 
+                  pad="v1 h2" 
+                  @update:value="handleUpdate"
+                >
+                  <x-option 
+                    v-for="key of sortKeys" 
+                    #default="{ selected }" 
+                    :key="key" 
+                    :hf-colors="`${ext.same}:${ext.diff}`"
+                  >
+                    <x-flex aligns=":center" align="left" gap="2">
+                      <x-icon :name="selected ? 'radio' : 'radioEmpty'" :size="iconSize" />
+                      <span>{{ sorting[key].label }}</span>
+                    </x-flex>
+                  </x-option>                
+                </x-choose>
+              </x-flex>
+            </x-drop-menu>
+          </div>
           <!-- @slot control buttons -->
           <slot v-if="items.length > 1" name="controls" :append="append" :disable="disable" />            
           <f-canvas-button 
@@ -29,7 +56,7 @@
 
 
 <script>
-import { XContext, XFieldList, XFlex, XLister, XText } from 'exude'
+import { XButton, XChoose, XContext, XDropMenu, XFieldList, XFlex, XIcon, XLister, XOption, XText } from 'exude'
 import { m_context } from 'exude'
 import FCanvasButton from '../face/FCanvasButton'
 import TokenLister from '_comps/TokenLister'
@@ -49,15 +76,24 @@ export default
         FCanvasButton,
         TokenLister, 
         WalletItem, 
+        XButton, 
+        XChoose, 
         XContext, 
+        XDropMenu, 
         XFieldList, 
         XFlex, 
-        XLister,
+        XIcon, 
+        XLister, 
+        XOption, 
         XText
     },
     
     props:
     {
+        /**
+            Icon size.
+        */
+        iconSize: { type: Number, default: 8 },
         /**
             List of items to display.
         */
@@ -65,10 +101,21 @@ export default
         /**
             Label for entity count.
         */
-        label: String
+        label: String,
     },
     
-    data: () => ({ value: [] }),
+    data()
+    {
+        let sorting =
+        {
+            time: { label: 'Date', fn: (a, b) => a.mintTime - b.mintTime, },
+            timeDesc: { label: 'Date (desc)', fn: (a, b) => (b.mintTime - a.mintTime) },
+            name: { label: 'Name', fn: (a, b) => a.name.localeCompare(b.name) },
+            nameDesc: { label: 'Name (desc)', fn: (a, b) => b.name.localeCompare(a.name) },
+        };
+        
+        return { show: false, sort: 'time', sorting, sortKeys: Object.keys(sorting), value: [] };
+    },
 
     created()
     {
@@ -78,9 +125,11 @@ export default
             this.value = hash ? decode(hash) : [];            
         }
         
-        this.routeFilter();        
+        this.routeFilter();
+        
+        this.sort = localStorage.getItem(this.label.toLowerCase() + '-sort') || 'time';
     },
-    
+        
     computed:
     {
         disable() 
@@ -145,6 +194,12 @@ export default
                 return true;
             });
         },
+        
+        sortedItems() 
+        {
+            let { items, sorting, sort } = this;
+            return sort ? items.sort(sorting[sort].fn) : items; 
+        }
     },
 
     watch:
@@ -159,7 +214,14 @@ export default
                 this.$router.push({ name, params: { hash: this.inputHash } });
             else
                 this.$router.push({ name });
-        }      
+        },
+        
+        sort() { localStorage.setItem(this.label.toLowerCase() + '-sort', this.sort); }
+    },
+    
+    methods:
+    {
+        handleUpdate(value) { this.sort = value; this.show = false; }
     }
 }
 </script>

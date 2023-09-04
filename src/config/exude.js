@@ -251,7 +251,7 @@ export default
         {
             address: 'calc(1vw + 8px)',
             austral: 'calc(1.7vw + 12px)',
-            hidenav: 'calc(-1vw - 22px)',
+            hidenav: '-1vw',
             mainnav: 'calc(1.5vw + 22px)',
             shownav: 'calc(-5vw - 22px)'
         }

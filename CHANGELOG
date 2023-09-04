@@ -13,15 +13,15 @@ thoughts:
 ## To Dos
 
 backlog:
-- sea creature icons for wallet size
 - filtering by date range
 - screenshot feature
 - SEO stuff
-- meta data parsing for CIP68
+- show additional media for tokens (images/videos)
 
 bugs:
 - fix responsiveness for mobile (navigation/settings)
 - fix router navigation "to same route" error on reload with filter hash
 
 tasks:
-- show additional media for tokens (images/videos)
+- meta data parsing for CIP68
+- sea creature icons for wallet size

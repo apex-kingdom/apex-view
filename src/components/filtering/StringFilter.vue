@@ -23,8 +23,10 @@
                   :colors="`black:${o.color}`"
                   :hf-colors="`white:${o.color}_d.75`"
                 >
-                  <x-icon :name="selected ? 'check' : 'checkEmpty'" :size="iconSize" align-v="middle" />
-                  {{ o.label }}
+                  <x-flex aligns=":center" align="left" gap="1">
+                    <x-icon :name="selected ? 'check' : 'checkEmpty'" :size="iconSize" />
+                    <span>{{ o.label }}</span>
+                  </x-flex>
                 </x-option>                
               </x-choose>
             </x-flex>

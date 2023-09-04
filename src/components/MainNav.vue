@@ -11,6 +11,7 @@
     radius="a1vw" 
     margin="t2.5vh" 
     shadow="floater"
+    @hover="$emit('hover', $event)"
   >
     <x-link colors="quarter" display="flex" @click="$router.push({ name: 'home' })">
       <x-icon name="apex" size="mainnav" />

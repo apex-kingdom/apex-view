@@ -30,6 +30,7 @@
           z-index="10"
           @config="openConfig = !openConfig" 
           @bg-color="bgColor = $event"
+          @hover="navHover = $event"
         />
       </x-box>
       <x-when #default="props" :test="openAbout" opacity="0" w-opacity="1" z-index="-1" w-z-index="1010">
@@ -86,7 +87,8 @@ export default
     data: () => 
     ({
         bgColor: 'black',
-        hideCtrls: false, 
+        hideCtrls: false,
+        navHover: false, 
         navState: 'show',
         openAbout: false,
         openConfig: false,
@@ -109,7 +111,7 @@ export default
             if (bool)
             {
                 // do not allow main nav to close if settings open
-                if (!this.openConfig)
+                if (!this.openConfig && !this.navHover)
                     timeId = setTimeout(() => this.navState = 'hide', 4000);
             }
             else
@@ -119,8 +121,8 @@ export default
                 if (this.hideCtrls) this.hideNav(this.hideCtrls);
             }
         }
-        this.$watch('hideCtrls', this.hideNav)        
-        this.$watch('openConfig', () => this.hideNav(this.hideCtrls))
+        
+        ['hideCtrls', 'openConfig', 'navHover'].forEach(p => this.$watch(p, () => this.hideNav(this.hideCtrls)));
         // color swapper
         this.color = (light, dark) =>
         {
