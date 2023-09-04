@@ -2,7 +2,7 @@
   <x-context #default="{ ext, gray }">
     <x-box v-bind="$attrs"> 
       <x-input 
-        :colors="`${ext.diff}:${gray.same}_f.15`" 
+        :colors="`${ext.diff}:${gray.same}`" 
         font="large" 
         radius="a2" 
         placeholder="Enter wallet address or $handle"
@@ -26,7 +26,7 @@
         <x-flex v-for="addy in list" :key="addy" aligns=":center" margin="b2" gap="2">
           <x-link 
             align="left" 
-            colors="text:entryBg_f.15"
+            colors="text:entryBg"
             hf-colors="white:prime"
             pad="v2 h3" 
             flex="1" 
@@ -39,7 +39,7 @@
           <x-flex 
             el="button"
             aligns=":center" 
-            colors="white:entryBg_f.15"
+            colors="white:entryBg"
             hf-colors="white:prime" 
             cursor="pointer" 
             pad="a1.5" 

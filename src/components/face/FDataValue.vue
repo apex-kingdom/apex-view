@@ -4,10 +4,7 @@
       {{ shorten(value, count) }}
     </component>
     <template v-if="copy">
-      <x-copy-to-clipboard :data="value" display="flex" :size="iconSize" @copied="showCopy = true" />
-      <f-pop-message mode="alert" :timeo="4000" :show.sync="showCopy">
-        <x-text colors="quarter" font="small" pad="a1"> Copied to clipboard! </x-text>
-      </f-pop-message>
+      <x-copy-to-clipboard :data="value" display="flex" :size="iconSize" duration="3" />
     </template>
   </x-flex>
 </template>
@@ -16,14 +13,13 @@
 <script>
 import { XCopyToClipboard, XFlex, XLink, XText } from 'exude'
 import shorten from '_source/lib/shorten'
-import FPopMessage from './FPopMessage'
 
 
 export default
 {
     name: 'FDataValue',
     
-    components: { FPopMessage, XCopyToClipboard, XFlex, XLink, XText },
+    components: { XCopyToClipboard, XFlex, XLink, XText },
     
     props:
     {
@@ -52,16 +48,12 @@ export default
         */
         iconSize: { type: [ String, Number ], default: 4 },
         /**
-            Label for the data value.
-        */
-        label: String,
-        /**
             The data value.
         */
         value: String
     },
     
-    data: () => ({ shorten, show: false, showCopy: false }),
+    data: () => ({ shorten }),
     
     computed:
     {

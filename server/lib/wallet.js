@@ -3,8 +3,8 @@ var e = require('./entities');
 
 module.exports = async function(input)
 {
-    var getData = stake => Promise.all(
-    [ 
+    var getData = ([ chain, stake ]) => Promise.all(
+    [
         stake, 
         e.account(stake.stakeKey).then(account => 
         {
@@ -14,26 +14,25 @@ module.exports = async function(input)
         {
             return Promise.all(array.map(data => 
             {                
-                return e.token(data.unit)
-                    // .then(token => e.tx(token.mintTx).then(data => token))
-                    .then(token => e.asset(data, token))
-            }))
+                return e.token(data.unit, hash => e.tx(hash, chain)).then(token => e.asset(data, token));
+            }));
         }) 
     ])
     
     var assembleData = ([ stake, account, assets ]) =>
     {
         var nfts = assets.filter(i => i.isNFT);
+        var collections = e.accountCollections(e.collection);
 
-        return e.collections(nfts).then(collections => 
+        return Promise.all(nfts.map(collections.add)).then(() => 
         ({ 
             ...account, 
             input: stake.input, 
             tokens: assets.filter(i => !i.isNFT), 
-            collections, 
+            collections: collections.get(), 
             nfts 
         }));
     }
       
-    return e.stake(input).then(getData).then(assembleData);  
+    return Promise.all([ e.chain(), e.stake(input) ]).then(getData).then(assembleData);  
 }

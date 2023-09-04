@@ -1,6 +1,5 @@
-var numeral = require('numeral');
 var pull = require('../request');
-var loop = require('../loop');
+var nf = require('../num-format');
 
 
 /**
@@ -19,14 +18,12 @@ module.exports = async function(stakeKey)
     {
         account.active = data.active;
         account.epoch = data.active_epoch;
-        
-        account.ada = numeral(data.controlled_amount).value();
-        account.adaAdjusted = loop(6).reduce(v => v * .1, account.ada);
-        account.adaFormatted = numeral(account.adaAdjusted).format('0,0');
-        
-        account.rewards = numeral(data.rewards_sum).value();
-        account.rewardsAdjusted = loop(6).reduce(v => v * .1, account.rewards);
-        account.rewardsFormatted = numeral(account.rewardsAdjusted).format('0,0');
+
+        account.ada = data.controlled_amount;
+        account.adaFormatted = nf(account.ada, 6);
+
+        account.rewards = data.rewards_sum;
+        account.rewardsFormatted = nf(account.rewards, 6);
            
         account.stakeKey = data.stake_address;
         account.poolId = data.pool_id;

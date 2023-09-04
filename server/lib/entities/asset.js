@@ -1,5 +1,4 @@
-var numeral = require('numeral');
-var loop = require('../loop');
+var nf = require('../num-format');
 
 
 /**
@@ -16,10 +15,8 @@ module.exports = async function(data, token)
 {
     var asset = { ...token, __entity: 'asset' };
     
-    asset.userQuantity = numeral(data.quantity).value();
-    asset.userQuantityAdjusted = loop(asset.decimals).reduce(v => v * .1, asset.userQuantity);
-    asset.userQuantityFormat = asset.userQuantityAdjusted > 10 ? '0,0' : `0,0.[${'0'.repeat(asset.decimals)}]`;
-    asset.userQuantityFormatted = numeral(asset.userQuantityAdjusted).format(asset.userQuantityFormat);
-    
+    asset.userQuantity = data.quantity;
+    asset.userQuantityFormatted = nf(asset.userQuantity, asset.decimals);
+        
     return asset;
 }

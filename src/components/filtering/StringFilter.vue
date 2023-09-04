@@ -8,7 +8,7 @@
             <x-icon :name="checked ? 'not_equal' : 'equal'" :size="iconSize" />
           </x-checkbox>
           <x-flex aligns=":center">
-            <x-input name="$test" font="base" colors="black" pad="a1" width="60" :debounce="200" />
+            <x-input name="$test" font="base" colors="black" pad="a1" width="16vw" :debounce="200" />
             <x-button hf-colors="white:black_f.5" pad="a1" @click="show = !show">
               <x-icon name="caret" :size="iconSize" />
             </x-button>
@@ -23,16 +23,18 @@
                   :colors="`black:${o.color}`"
                   :hf-colors="`white:${o.color}_d.75`"
                 >
-                  <x-icon :name="selected ? 'check' : 'checkEmpty'" :size="iconSize" align-v="middle" />
-                  {{ o.label }}
+                  <x-flex aligns=":center" align="left" gap="1">
+                    <x-icon :name="selected ? 'check' : 'checkEmpty'" :size="iconSize" />
+                    <span>{{ o.label }}</span>
+                  </x-flex>
                 </x-option>                
               </x-choose>
             </x-flex>
           </x-drop-menu>
+          <x-button hf-colors="white:black_f.5" pad="a1" @click="$emit('remove', $event)">
+            <x-icon name="close" :size="iconSize" />
+          </x-button>
         </x-flex>            
-        <x-button hf-colors="white:black_f.5" pad="a1" @click="$emit('remove', $event)">
-          <x-icon name="close" colors="danger" :size="iconSize" />
-        </x-button>
       </x-flex>
     </x-fieldset>
   </div>

@@ -18,24 +18,36 @@
         Flex Mode 
       </x-text>
       <x-field block el="label" margin="v1vw" pad="h1.1vw">
-        <x-checkbox :icon="noLabels ? 'check' : 'checkEmpty'" size="austral" align=":middle" :value.sync="noLabels" />
+        <x-checkbox size="austral" align=":middle" :value.sync="noLabels" />
         Hide names &amp; labels
       </x-field>
       <x-field block el="label" margin="v1vw" pad="h1.1vw">
-        <x-checkbox :icon="noGutters ? 'check' : 'checkEmpty'" size="austral" align=":middle" :value.sync="noGutters" />
+        <x-checkbox size="austral" align=":middle" :value.sync="noCounts" />
+        Hide token counts
+      </x-field>
+      <x-field block el="label" margin="v1vw" pad="h1.1vw">
+        <x-checkbox size="austral" align=":middle" :value.sync="noGutters" />
         No grid gutters
       </x-field>
       <x-text block bold font="vSmall" pad="v1vw" margin="t2.5vw" border="b.25!terti"> 
         Background Color
       </x-text>
-      <f-color-picker border="a.25!quine!dotted" margin="v2vw" :value.sync="bgColor" />
+      <f-color-picker 
+        border="a.25!quine!dotted" 
+        margin="t2vw" 
+        :value="bgColor" 
+        @update:value="emitBgColor($event)" 
+      />
     </x-text> 
+    <x-link block margin="v1vw hauto" colors="quine" @click="$emit('about')">
+      <x-icon name="apex" size="3.5vw" />
+    </x-link>
   </x-exapse>
 </template>
 
 
 <script>
-import { XCheckbox, XExapse, XField, XText } from 'exude';
+import { XCheckbox, XExapse, XField, XIcon, XLink, XText } from 'exude';
 import FColorPicker from './face/FColorPicker'
 
 
@@ -43,72 +55,76 @@ export default
 {
     name: 'AppSettings',
     
-    components: { FColorPicker, XCheckbox, XExapse, XField, XText },
+    components: { FColorPicker, XCheckbox, XExapse, XField, XIcon, XLink, XText },
     
     props:
     {
+        /**
+            Background color.
+        */
+        bgColor: { type: String, default: '#000000' },        
         /**
             Show the settings panel?
         */
         show: Boolean
     },
     
-    data: () => ({ bgColor: '#000000', noLabels: false, noGutters: false, hide: false }),
+    data: () => ({ noCounts: false, noLabels: false, noGutters: false, hide: false }),
     
     created()
     {
         let tid = null;
-        
-        let sendEvent = () =>
+        // debounce background color update
+        this.emitBgColor = color =>
         {
-            let { bgColor, noLabels, noGutters } = this;
-            this.$emit('update', { bgColor, noLabels, noGutters });
-        }
-        // debounce settings updates
-        this.emitUpdates = () =>
-        {
-            clearTimeout(tid);
-            tid = setTimeout(sendEvent, 10);
+            if (color)
+            {
+                clearTimeout(tid);
+                tid = setTimeout(() => this.$emit(`update:bg-color`, color), 25);
+            }
         }
     },
     
     mounted()
     {
-        this.bgColor = localStorage.getItem('bgColor');
-        this.noLabels = !!localStorage.getItem('noLabels');
-        this.noGutters = !!localStorage.getItem('noGutters');
-
+        this.emitBgColor(localStorage.getItem('bgColor'));
+        // initialize settings and update
+        [ 'noCounts', 'noGutters', 'noLabels' ].forEach(s => this.resetBool(s));
         this.emitUpdates();         
     },
     
     watch:
     {
-        bgColor() 
-        { 
-            localStorage.setItem('bgColor', this.bgColor);
-            
-            this.emitUpdates();         
-        },
+        bgColor() { this.updateValue('bgColor'); },
         
-        noLabels()
+        noCounts() { this.updateBool('noCounts'); },
+
+        noGutters() { this.updateBool('noGutters'); },
+
+        noLabels() { this.updateBool('noLabels'); }
+    },
+    
+    methods:
+    {
+        emitUpdates()
         {
-            if (this.noLabels)
-                localStorage.setItem('noLabels', this.noLabels);
+            let { noCounts, noGutters, noLabels } = this;
+            this.$emit('update', { noCounts, noGutters, noLabels });
+        },
+      
+        resetBool(setting) { this[setting] = !!localStorage.getItem(setting); },
+      
+        updateBool(setting)
+        {
+            if (this[setting])
+                localStorage.setItem(setting, this[setting]);
             else
-                localStorage.removeItem('noLabels');            
+                localStorage.removeItem(setting);            
                 
             this.emitUpdates();         
         },
 
-        noGutters()
-        {
-            if (this.noGutters)
-                localStorage.setItem('noGutters', this.noGutters);
-            else
-                localStorage.removeItem('noGutters');
-            
-            this.emitUpdates();         
-        }
+        updateValue(setting) { localStorage.setItem(setting, this[setting]); }      
     }
 }
 </script>

@@ -5,7 +5,7 @@ var paths = require('../paths');
 var { port } = require('./config');
 
 
-app.use('/', express.static(paths.public));
+app.use('/pub', express.static(paths.public));
 app.use(router);
 
 app.listen(port, () => 

@@ -3,6 +3,7 @@
     <x-context 
       :hideCtrls="hideCtrls" 
       :hideLbls="settings.noLabels"
+      :hideCnts="settings.noCounts"
       :mobile="smallScreen" 
       :bgColor="bgColor"
       :ext="color('white', 'black')"
@@ -15,7 +16,12 @@
       :rs="rowspace"
     >
       <x-box v-listen-outside-click="() => openConfig = false" pos="fixed" trbl="t0 b0 l0" z-index="1000">
-        <app-settings :show="openConfig" @update="settings = $event" />
+        <app-settings 
+          :show="openConfig" 
+          :bgColor.sync="bgColor"
+          @update="settings = $event" 
+          @about="openAbout = !openAbout, openConfig = false"
+        />
         <main-nav 
           v-bind="navProps[navState]" 
           :hide.sync="hideCtrls" 
@@ -23,7 +29,8 @@
           transition="nav" 
           z-index="10"
           @config="openConfig = !openConfig" 
-          @about="openAbout = !openAbout" 
+          @bg-color="bgColor = $event"
+          @hover="navHover = $event"
         />
       </x-box>
       <x-when #default="props" :test="openAbout" opacity="0" w-opacity="1" z-index="-1" w-z-index="1010">
@@ -79,7 +86,9 @@ export default
     
     data: () => 
     ({
-        hideCtrls: false, 
+        bgColor: 'black',
+        hideCtrls: false,
+        navHover: false, 
         navState: 'show',
         openAbout: false,
         openConfig: false,
@@ -102,7 +111,7 @@ export default
             if (bool)
             {
                 // do not allow main nav to close if settings open
-                if (!this.openConfig)
+                if (!this.openConfig && !this.navHover)
                     timeId = setTimeout(() => this.navState = 'hide', 4000);
             }
             else
@@ -112,8 +121,8 @@ export default
                 if (this.hideCtrls) this.hideNav(this.hideCtrls);
             }
         }
-        this.$watch('hideCtrls', this.hideNav)        
-        this.$watch('openConfig', () => this.hideNav(this.hideCtrls))
+        
+        ['hideCtrls', 'openConfig', 'navHover'].forEach(p => this.$watch(p, () => this.hideNav(this.hideCtrls)));
         // color swapper
         this.color = (light, dark) =>
         {
@@ -128,8 +137,6 @@ export default
     
     computed:
     {
-        bgColor() { return this.settings.bgColor || 'black'; },
-        
         bgIsDark() { return color(this.bgColor).isDark(); },
       
         colspace() { return this.settings.noGutters ? 0 : 5; },

@@ -1,4 +1,5 @@
 var { ProvidePlugin } = require('webpack');
+var CopyPlugin = require("copy-webpack-plugin");
 var HtmlPlugin = require('html-webpack-plugin')
 var { VueLoaderPlugin } = require('vue-loader');
 var paths = require('../paths');
@@ -55,8 +56,9 @@ var base =
         ({ 
             filename: 'index.html',
             template: paths.sub(paths.source)('app.html'),
-            publicPath: '/'
-        })
+            publicPath: '/pub'
+        }),
+        new CopyPlugin({ patterns: [ { context: paths.static, from: paths.sub('**')('*'), to: paths.public } ] })
     ]
 }
 

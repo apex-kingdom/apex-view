@@ -10,7 +10,14 @@
         pad="a1"
         margin="hauto"
       >
-        <f-data-value v-bind="assetProps" copy aligns=":center:center" :count="ocmds ? 20 : 24" font="micro" />
+        <f-data-value 
+          v-bind="assetProps" 
+          copy 
+          aligns=":center:center" 
+          :count="!ocmds !== !mintDate ? 18 : ocmds && mintDate ? 16 : 24" 
+          font="micro" 
+        />
+        <x-text v-if="mintDate" font="micro" colors="quarter"> {{ mintDate }} </x-text> 
         <x-text v-if="ocmds" font="micro" colors="second"> {{ ocmds }} </x-text>
       </x-flex>
       <x-flex invert aligns=":center" margin="v5 h3">
@@ -42,7 +49,7 @@
         </x-link>
       </x-flex>
       <f-traits v-if="data.isNFT" :object="data.traits" />
-      <f-traits v-if="data.isCollection" #default="{ value }" :object="data.traits" box-width="100%">
+      <f-traits v-if="isCollection" #default="{ value }" :object="data.traits" box-width="100%">
         <x-grid inline cols="4fr 1fr" gap="1:1" margin="b2" over-wrap="anywhere" width="100%">
           <template v-for="(key, idx) in Object.keys(value)">
             <x-box :key="key" align="left" :colors="`:${bgColor}_f.75`" pad="a1"> 
@@ -117,7 +124,7 @@ export default
         {
             let props = {}, { data } = this;
             
-            if (data.isCollection)
+            if (this.isCollection)
             {
                 props.label = 'policy id';
                 props.value = data.policyId;
@@ -135,6 +142,20 @@ export default
         {
             let { files } = this.data;
             return files ? files.filter(i => (i.mediaType || '').includes('image')) : []; 
+        },
+        
+        isCollection() { return this.data.__entity === 'collection' },
+        
+        mintDate()
+        {
+            if (!this.isCollection && this.data.mintTime)
+            {
+                let date = new Date(this.data.mintTime);
+                let m = date.getUTCMonth() + 1;
+                let d = date.getUTCDate();
+                                           
+                return [ date.getUTCFullYear(), m < 10 ? '0' + m : m, d < 10 ? '0' + d : d ].join('-');
+            }
         },
         
         ocmds() { return this.data.onchainMetadataStandard; },

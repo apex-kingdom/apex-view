@@ -1,6 +1,4 @@
-var numeral = require('numeral');
 var pull = require('../request');
-var loop = require('../loop');
 
 
 /**

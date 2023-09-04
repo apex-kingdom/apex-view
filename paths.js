@@ -12,6 +12,7 @@ var paths =
     modules: ['node_modules'],
     public: ['public'],
     server: ['server'],
+    static: ['src', 'static'],
     source: ['src'],
     test: ['tst']
 };
