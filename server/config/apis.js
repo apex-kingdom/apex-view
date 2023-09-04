@@ -55,16 +55,10 @@ module.exports =
         url: '/accounts/{account}'
     },
     
-    accountAddresses:
-    {
-        base: 'account',
-        url: '/addresses'
-    }, 
-                        
     accountAssets:
     {
-        base: 'accountAddresses',
-        url: '/assets?page={page}',
+        base: 'account',
+        url: '/addresses/assets?page={page}',
         vars:
         {
             page: 1

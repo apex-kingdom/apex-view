@@ -1,4 +1,3 @@
-var numeral = require('numeral');
 var pull = require('../request');
 var { prod } = require('../../config');
 

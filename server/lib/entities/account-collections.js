@@ -1,4 +1,4 @@
-var numeral = require('numeral');
+var nf = require('../num-format');
 
 
 /**
@@ -25,10 +25,11 @@ module.exports = function(base)
             if (!collection.name) collection.name = asset.project || asset.name;
             if (!collection.description) collection.description = asset.description;
           
-            if (!collection.image)             
+            if (!collection.mintTime || collection.mintTime > asset.mintTime)             
             {
                 collection.image = asset.image;
                 collection.imageType = asset.imageType;
+                collection.mintTime = asset.mintTime;
             }
           
             collection.userQuantity = (collection.userQuantity || 0) + 1;
@@ -45,8 +46,6 @@ module.exports = function(base)
             
             collection.traits = Object.keys(asset.traits).reduce(reducer, collection.traits || {});
             
-            collection.firstMintTime = Math.min(collection.firstMintTime || Infinity, asset.mintTime || Infinity);
-            
             return collections[policyId] = collection;
         });      
     }
@@ -55,7 +54,7 @@ module.exports = function(base)
     {
         return Object.values(collections).map(collection => 
         {
-            collection.userQuantityFormatted = numeral(collection.userQuantity).format('0,0'); 
+            collection.userQuantityFormatted = nf(collection.userQuantity);
             return collection;
         });
     }
