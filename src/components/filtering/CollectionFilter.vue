@@ -5,23 +5,36 @@
         <x-flex v-bind="$attrs" aligns=":center" colors="quine" radius="a2" overflow="hidden">
           <x-background 
             image="linear-gradient(90deg, {=ng}, {=wh}, {=wh}, {=wh})"
-            wh="color::white_f.15"
-            :ng="'color::' + ($negate ? 'negate' : 'white_f.15')"
+            wh="color::transparent"
+            :ng="'color::' + ($negate ? 'negate' : 'transparent')"
           />      
-          <x-flex aligns=":center">
-            <x-checkbox #default="{ checked }" name="$negate" hf-colors="white:black_f.5" pad="a1">
+          <x-flex :colors="ext.diff" aligns=":center">
+            <x-checkbox #default="{ checked }" name="$negate" :hf-colors="`${bgColor}:${ext.diff}_f.25`" pad="a1">
               <x-icon :name="checked ? 'not_equal' : 'equal'" :size="iconSize" />
             </x-checkbox>
             <x-flex aligns=":center" @click="show = !show">
-              <x-text block font="base" colors="black" pad="a1" width="16vw" space="nowrap" overflow="auto">
+              <x-text 
+                block 
+                font="base" 
+                :colors="`:${bgColor}`" 
+                pad="v1 h2" 
+                width="16vw" 
+                space="nowrap" 
+                overflow="auto"
+                cursor="pointer"
+              >
                 <template v-if="$test && $test.length">
                   {{ $test.length == 1 ? policyMap[$test[0]] : $test.length + ' collections selected.' }}
                 </template>
+                <span v-else style="opacity:0.5"> select collection(s) </span>
               </x-text>
-              <x-button hf-colors="white:black_f.5" pad="a1">
+              <x-button :hf-colors="`${bgColor}:${ext.diff}_f.25`" pad="a1">
                 <x-icon name="caret" :size="iconSize" />
               </x-button>
             </x-flex>
+            <x-button :hf-colors="`${bgColor}:${ext.diff}_f.25`" pad="a1" @click="$emit('remove', $event)">
+              <x-icon name="close" colors="danger" :size="iconSize" />
+            </x-button>
             <x-drop-menu 
               :show.sync="show" 
               space="nowrap" 
@@ -49,9 +62,6 @@
               </x-flex>
             </x-drop-menu>
           </x-flex>            
-          <x-button hf-colors="white:black_f.5" pad="a1" @click="$emit('remove', $event)">
-            <x-icon name="close" colors="danger" :size="iconSize" />
-          </x-button>
         </x-flex>
       </x-fieldset>
     </div>
