@@ -9,10 +9,10 @@ let reProto = /^(https?)|(ipfs)|(data):/i;
 /**
     Gets token data for the given asset id.
     
-    @param { string } stakeKey
-      Staking key for the wallet to be retrieved.
+    @param { string } assetId
+      Asset id identifying the token (policy & asset name).
     @return { promise }
-      Resolves to a "account" object.
+      Resolves to a "token" object.
 */
 module.exports = async function(assetId, trans)
 {

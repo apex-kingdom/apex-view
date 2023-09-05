@@ -1,5 +1,5 @@
 var { createClient } = require('redis');
-var { keyexp, redis_url, throttles } = require('./');
+var { keyexp, prod, redis_url, throttles } = require('./');
 
 
 var client = createClient({ url: redis_url });
@@ -42,4 +42,12 @@ module.exports =
     }
 }
 
-client.connect();
+client.connect().then(() => 
+{
+    // clear cache in production
+    if (prod)
+    {
+        client.flushDb();
+        console.log('apex: redis app cache cleared.');
+    }  
+});

@@ -7,6 +7,7 @@ module.exports =
     apikey:
     {
         blockfrost: process.env.API_BLOCKFROST,
+        koios: process.env.API_KOIOS,
         opencnft: process.env.API_OPENCNFT
     },
     // redis key expiration (seconds)
@@ -28,6 +29,7 @@ module.exports =
     // api request throttling
     throttles:
     {
+        koios: { max: 100, period: 10000 }, // max 100 per 10 seconds
         opencnft: { max: 5, period: 1000 } // max 5 per 1 second
     }
 }

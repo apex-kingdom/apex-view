@@ -27,13 +27,10 @@ var reducer = (obj, name) =>
             if (data) 
             {
                 if (!prod) console.log('apex: using cached data for', key);
-                                  
                 return data;
             }
             else
             {
-                if (!prod) console.log('apex: pulling api data for', key);
-                
                 return entities[name](ident, ...args).then(data =>
                 {
                     redis.jset(key, data, keyexp[name]);

@@ -10,8 +10,8 @@ var { prod, throttles } = require('../config');
     
     Named fetches are defined in /config/chain-data.js
     
-    @param { string } name
-      Name of the request to make.
+    @param { string } spec
+      Configuration for the request to make.
     @param { any, object } params
       Interpolation parameters for request.
     @param { string } pathname
@@ -19,45 +19,81 @@ var { prod, throttles } = require('../config');
     @return { promise }
       Resolves to the data requested.
 */
-function pull(name, params, pathname)
+function pull(spec, params)
 {
-    let { root, paths, throttle } = resolve(name);
-    
-    let request = () => send(name, params).then(data => 
+    var { paging, path, throttle, vars } = spec;
+    var reps = { ...vars, ...(typeof params === 'object' ? params : { default: params }) };
+
+    var execute = args =>
     {
-        // resolve data to proper path
-        let path = [root, paths[pathname]].filter(x => !!x).join('.');        
-        return op.get(data, path);
-    });
+        var request = () => send(spec, args).then(data => op.get(data, path))        
+        return throttle ? redis.throttle(throttle, request) : request();
+    }
     
-    return throttle ? redis.throttle(throttle, request) : request();
+    var { limit, type, lname, pname } = paging;
+    
+    if (pname) // get all results by page
+    {
+        var all = [];
+        var page = next => execute({ ...reps, [lname]: limit, [pname]: next }).then(array => 
+        {
+            // potential provider error: limits/offsets not working
+            if (!Array.isArray(array)) return all;
+            
+            all.push(...array);           
+            return array.length < limit ? all : page(next + (type || limit));
+        });
+        
+        return page(type);
+    }
+    
+    return execute(reps);
 }
 
 
 /**
     Sends request for Cardano blockchain data.
     
-    @param { string } name
-      Name of the request to make.
+    @param { string } spec
+      Configuration for the request to make.
     @param { any, object } args
       Interpolation parameters for url.
       Used as a default replacement value if not an object.
     @return { promise }
       Resolves to the data requested.
 */
-function send(name, args)
+function send(spec, reps)
 {
-    let { method, headers, url, vars } = resolve(name);
+    var { method, headers, url, data } = spec;
     
-    let reps = { ...vars, ...(typeof args === 'object' ? args : { default: args }) };
-    // interpolate url
-    url = url.replace(/\{(.+?)\}/g, (m, s1) => reps.hasOwnProperty(s1) ? reps[s1] : reps.default );
-
-    let request = { url, method, headers };
+    var options = { method, url: inter(url, reps), headers };
+    // add data if there is data
+    if (Object.keys(data).length) options.data = inter(data, reps);
+            
+    if (!prod) console.log('apex:', method.toUpperCase(), options.url);
     
-    if (!prod) console.log('apex: sending', method.toUpperCase(), url);
+    return axios(options);
+}
 
-    return axios({ url, method, headers });
+
+var reBrace = /\{(.+?)\}/g;
+function inter(target, reps)
+{
+    let polate = item =>
+    {
+        if (typeof item === 'string')
+            return item.replace(reBrace, (m, s1) => reps.hasOwnProperty(s1) ? reps[s1] : reps.default);
+        
+        if (Array.isArray(item))
+            return item.map(polate);
+        
+        if (typeof item === 'object')
+            return Object.keys(item).reduce((o, k) => ({ ...o, [k]: polate(item[k]) }), {});
+        
+        return item;
+    }
+    
+    return polate(target);
 }
 
 
@@ -65,7 +101,7 @@ function resolve(name)
 {
     if (!resolve.cache[name])
     {
-        let { method, base, headers = {}, url = '', root, paths, vars, throttle } = config[name];
+        var { method, base, headers = {}, url = '', data, path, vars, throttle, paging } = config[name];
                 
         if (base)
         {
@@ -76,17 +112,19 @@ function resolve(name)
             headers = { ...pre.headers, ...headers };
             // concatenate url
             url = pre.url + url;
-            // request data root
-            root = root || pre.root;
-            // requst data paths
-            paths = { ...pre.paths, ...paths };
+            // request data
+            data = { ...pre.data, ...data };
+            // path to data in request
+            path = [ ...[].concat(pre.path), ...[].concat(path) ].filter(p => p || p === 0);
             // interpolation variables
             vars = { ...pre.vars, ...vars };
             // api throttling config
             throttle = throttle || pre.throttle;
+            // api paging information
+            paging = { ...pre.paging, ...paging };
         }
         
-        resolve.cache[name] = { method, headers, url, root, paths, vars, throttle };
+        resolve.cache[name] = { method, headers, url, data, path, vars, throttle, paging };
     }
     
     return resolve.cache[name];
@@ -94,4 +132,4 @@ function resolve(name)
 
 resolve.cache = {};
 
-module.exports = Object.keys(config).reduce((o, n) => o = { ...o, [n]: (...a) => pull(n, ...a) }, {});
+module.exports = Object.keys(config).reduce((o, n) => ({ ...o, [n]: (...a) => pull(resolve(n), ...a) }), {});

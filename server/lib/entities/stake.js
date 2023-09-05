@@ -3,6 +3,7 @@ var { encode } = require('hex-encode-decode');
 
 
 var reHandle = /^\$/;
+var reStake = /^stake/;
 /**
     Resolves the given input to a staking key.
     
@@ -16,7 +17,6 @@ module.exports = async function(input)
     let stake = { __entity: 'stake' };
     
     stake.input = input;
-    stake.inputType = type(input);
     
     return resolve(input).then(stakeKey => ({ ...stake, stakeKey }));
 }
@@ -25,18 +25,9 @@ module.exports = async function(input)
 async function resolve(input)
 {
     // resolve handle to address
-    if (reHandle.test(input)) return pull.adaHandle(encode(input.replace(/^\$/, '')), 'address').then(resolve);
+    if (reHandle.test(input)) return pull.adaHandle(encode(input.replace(/^\$/, ''))).then(resolve);
     // resolve address to staking key
-    else if (!/^stake/.test(input)) return pull.address(input, 'stakeKey').then(resolve);
+    else if (!reStake.test(input)) return pull.address(input).then(resolve);
     // we should have a staking key here
     return input;
-}
-
-
-function type(input)
-{
-    if (/^\$/.test(input)) return 'handle'; // handle
-    if (/^stake/.test(input)) return 'staking'; // stake key
-    
-    return 'address'; // address
 }

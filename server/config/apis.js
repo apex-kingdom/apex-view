@@ -11,7 +11,12 @@ module.exports =
         { 
             project_id: apikey.blockfrost
         },
-        root: 'data',        
+        path: 'data',
+        paging:
+        {
+            limit: 100,
+            type: 1 // start at 1, increment by 1
+        },
         error_codes:
         {
             // when the request is not valid
@@ -33,6 +38,23 @@ module.exports =
         }
     },
     
+    koios:
+    {
+        method: 'get',
+        url: 'https://api.koios.rest/api/v0',
+        headers:
+        {
+            authorization: 'Bearer ' + apikey.koios
+        },
+        path: 'data',
+        throttle: 'koios',
+        paging:
+        {
+            limit: 800,
+            type: 0 // start at 0, increment by limit
+        }
+    },
+    
     opencnft:
     {
         method: 'get',
@@ -41,7 +63,7 @@ module.exports =
         { 
             'X-Api-Key': apikey.opencnft
         },
-        root: 'data',
+        path: 'data',
         vars:
         {
             version: '2'
@@ -49,107 +71,52 @@ module.exports =
         throttle: 'opencnft'
     },
     
-    account:
-    {
-        base: 'blockfrost',
-        url: '/accounts/{account}'
-    },
+    account: { base: 'blockfrost', url: '/accounts/{account}' },
+    
+    // accountAssets:
+    // {
+    //     base: 'account',
+    //     url: '/addresses/assets?page={page}',
+    //     paging: { pname: 'page' }
+    // }, 
     
     accountAssets:
     {
-        base: 'account',
-        url: '/addresses/assets?page={page}',
-        vars:
-        {
-            page: 1
-        }
+        base: 'koios',
+        method: 'post',
+        url: '/account_assets?limit={limit}&offset={offset}',
+        path: [ 0, 'asset_list' ],
+        data: { _stake_addresses: [ '{account}' ] },
+        paging: { lname: 'limit', pname: 'offset' }
     }, 
-    
+
     adaHandle:
     {
         base: 'blockfrost',
         url: '/assets/{policy}{adaHandle}/addresses',
-        paths:
-        { 
-            address: '0.address'
-        },
-        vars:
-        {
-            policy: 'f0ff48bbb7bbe9d59a40f1ce90e9e9d0ff5002ec48f232b49ca0fb9a'
-        }
+        path: [ 0, 'address' ],
+        vars: { policy: 'f0ff48bbb7bbe9d59a40f1ce90e9e9d0ff5002ec48f232b49ca0fb9a' }
     },
     
-    address:
-    {
-        base: 'blockfrost',
-        url: '/addresses/{address}',
-        paths:
-        { 
-            stakeKey: 'stake_address'
-        }
-    },
+    address: { base: 'blockfrost', url: '/addresses/{address}', path: 'stake_address' },
                         
-    asset:
-    {
-        base: 'blockfrost',
-        url: '/assets/{asset}'
-    },
+    asset: { base: 'blockfrost', url: '/assets/{asset}' },
         
-    assetAddress:
-    {
-        base: 'asset',
-        url: '/addresses'
-    },
+    assetAddress: { base: 'asset', url: '/addresses' },
     
-    collection:
-    {
-        base: 'opencnft',
-        url: '/collection/search?q={policy}'
-    },
+    collection: { base: 'opencnft', url: '/collection/search?q={policy}' },
     
-    collectionMetrics:
-    {
-        base: 'opencnft',
-        url: '/collection/{policy}'
-    },
+    collectionMetrics: { base: 'opencnft', url: '/collection/{policy}' },
     
-    genesis:
-    {
-        base: 'blockfrost',
-        url: '/genesis'
-    },
+    genesis: { base: 'blockfrost', url: '/genesis' },
     
-    eras:
-    {
-        base: 'blockfrost',
-        url: '/network/eras'
-    },
+    eras: { base: 'blockfrost', url: '/network/eras' },
     
-    policy:
-    {
-        base: 'asset',
-        url: '/{policy}',
-        vars:
-        {
-            asset: 'policy'
-        }
-    },
+    policy: { base: 'asset', url: '/{policy}', vars: { asset: 'policy' } },
     
-    poolMeta:
-    {
-        base: 'blockfrost',
-        url: '/pools/{poolMeta}/metadata'
-    },
+    poolMeta: { base: 'blockfrost', url: '/pools/{poolMeta}/metadata' },
     
-    scriptJson:
-    {
-        base: 'blockfrost',
-        url: '/scripts/{hash}/json'
-    },
+    scriptJson: { base: 'blockfrost', url: '/scripts/{hash}/json' },
     
-    transaction:
-    {
-        base: 'blockfrost',
-        url: '/txs/{hash}'
-    }
+    transaction: { base: 'blockfrost', url: '/txs/{hash}' }
 }
