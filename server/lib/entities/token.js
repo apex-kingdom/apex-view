@@ -70,8 +70,6 @@ module.exports = async function(assetId, trans)
         if (reBaseName.test(token.name)) token.assetBaseName = token.name.replace(reBaseName, '$1');    
         
         token.decimals = meta.decimals || 0;    
-        // token.quantity = numeral(data.quantity).value();
-        // token.quantityFormatted = numeral(token.quantity).format(format(token.quantity));
 
         token.traits = getTraits(ocmd);
         token.onchainMetadataStandard = data.onchain_metadata_standard;

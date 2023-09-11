@@ -3,7 +3,7 @@
     <div style="position:relative">
       <x-fieldset #default="{ $negate, $test }" :name="name">
         <x-flex v-bind="$attrs" aligns=":center" colors="quine" radius="a2" overflow="hidden">
-          <x-background 
+          <e-background 
             image="linear-gradient(90deg, {=ng}, {=wh}, {=wh}, {=wh})"
             wh="color::transparent"
             :ng="'color::' + ($negate ? 'negate' : 'transparent')"
@@ -70,7 +70,7 @@
 
 
 <script>
-import { XBackground, XButton, XCheckbox, XChoose, XContext } from 'exude'
+import { EBackground, XButton, XCheckbox, XChoose, XContext } from 'exude'
 import { XDropMenu, XFieldset, XFlex, XIcon, XOption, XText } from 'exude'
 
 
@@ -80,7 +80,7 @@ export default
     
     components: 
     { 
-        XBackground, 
+        EBackground, 
         XButton, 
         XCheckbox, 
         XChoose, 

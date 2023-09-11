@@ -45,11 +45,7 @@
           <slot :remove="remove" />
         </x-field-list>
       </x-flex>
-      <token-lister>
-        <x-lister #iter="{ item }">
-          <wallet-item :data="item" />
-        </x-lister>
-      </token-lister>
+      <token-lister />
     </x-lister>
   </x-context>  
 </template>
@@ -60,7 +56,6 @@ import { XButton, XChoose, XContext, XDropMenu, XFieldList, XFlex, XIcon, XListe
 import { m_context } from 'exude'
 import FCanvasButton from '../face/FCanvasButton'
 import TokenLister from '_comps/TokenLister'
-import WalletItem from '_comps/WalletItem'
 import escapeRE from '_source/lib/escape-re';
 import { decode, encode } from '_source/lib/json-code';
 
@@ -75,7 +70,6 @@ export default
     { 
         FCanvasButton,
         TokenLister, 
-        WalletItem, 
         XButton, 
         XChoose, 
         XContext, 
@@ -221,7 +215,7 @@ export default
     
     methods:
     {
-        handleUpdate(value) { this.sort = value; this.show = false; }
+        handleUpdate(value) { this.sort = value; this.show = false; },
     }
 }
 </script>

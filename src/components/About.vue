@@ -3,11 +3,11 @@
     <x-layout-cell span="7">
       <x-text block align="center" font="vSmall" margin="h2" pad="v2">
         <f-main-title block text="ApexView" align="center" font="vHuge" margin="t5 b8" />
+        <e-stylesheet sel="p" margin="v8" />
         <p>
           ApexView is built and maintained by <b>Wilsonape</b> and brought to you by
           the <b>ApexKingdom</b> CNFT project.
         </p>
-        <br /><br />
         <p>
           Take snapshots of your wallet here and flex them on twitter... be sure to
           tag us!
@@ -16,12 +16,10 @@
             @ApexKingdomCnft
           </x-link>
         </p>
-        <br /><br />
         <p>
           Got some feedback or maybe a feature you'd like to see here?  Hop into our
           discord and let us know!
-          <br />
-          <x-link href="https://discord.gg/jyWgDmGd63" target="_blank">
+          <x-link block href="https://discord.gg/jyWgDmGd63" target="_blank">
             <x-icon name="discord" size="10" title="ApexKingdom Discord" />
           </x-link>
         </p>
@@ -30,17 +28,14 @@
     </x-layout-cell>
     <x-layout-cell span="5" anchor="center:center">
       <x-box overflow="hidden" radius="a1000px" pos="relative" height="25vw" width="25vw">
-        <x-destyler 
+        <e-stylesheet 
           sel="&::after" 
           content=""
-          box-shadow="0px 0px 48px gray, inset 0px 0px 48px black" 
-          border="2px solid black"
-          position="absolute" 
-          top="12px"
-          bottom="12px"
-          left="12px"
-          right="12px"
-          border-radius="1000px"
+          shadow="0px 0px 48px gray, inset 0px 0px 48px black" 
+          border="a.5!black"
+          pos="absolute" 
+          trbl="a3"
+          radius="a250"
         />
         <x-image src="ipfs://QmY2v4eNHjRCCnDngHPGvrALqFakqMkoxNR4oNfYEgvZp5" width="100%" />
       </x-box>
@@ -53,7 +48,7 @@
     <x-layout-cell span="7">
       <x-text block align="center" font="vSmall" margin="h4" pad="v2">
         If you appreciate this app, please consider sending a small donation.
-        It can really help us pay the bills and keep the site running.
+        It can really help us pay the bills and keep the site running. Thanks!
       </x-text>
     </x-layout-cell>
     <x-layout-cell span="5" anchor="center:center">
@@ -92,7 +87,7 @@
       </x-flex>
     </x-layout-cell>
     <x-layout-cell span="12" anchor="center:center">
-      <f-button label="Close" font="vSmall" margin="v8 hauto" @click="$emit('close')" />
+      <f-button font="vSmall" margin="v8 hauto" @click="$emit('close')"> Close </f-button>
       <x-text colors="quine" font="vSmaller">
         <x-icon name="cardano" size="4" title="Cardano Logo" align-v="middle" margin="b.5" />ApexView 
         is Copyright ©2023 
@@ -105,7 +100,7 @@
 
 
 <script>
-import { XDestyler, XBox, XFlex, XIcon, XImage, XLayout, XLayoutCell, XLink, XText } from 'exude'
+import { EStylesheet, XBox, XFlex, XIcon, XImage, XLayout, XLayoutCell, XLink, XText } from 'exude'
 import FButton from './face/FButton'
 import FMainTitle from './face/FMainTitle'
 
@@ -114,7 +109,7 @@ export default
 {
     name: 'About',
     
-    components: { FButton, FMainTitle, XDestyler, XBox, XFlex, XIcon, XImage, XLayout, XLayoutCell, XLink, XText },
+    components: { EStylesheet, FButton, FMainTitle, XBox, XFlex, XIcon, XImage, XLayout, XLayoutCell, XLink, XText },
     
     data: () => 
     ({

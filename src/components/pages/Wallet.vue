@@ -12,11 +12,11 @@
       </x-exapse>
     </x-flex>
     <x-box pos="fixed" trbl="t0 b0 r0" z-index="20" radius="t6 l6">
-      <x-background :image="`linear-gradient(#99999922 50%, #66666622 0)`" size="50 50" />
-      <x-background :image="`linear-gradient(72deg, #99999922 50%, #22222222 0)`" size="50 50" />
-      <x-background :image="`linear-gradient(144deg, #99999922 50%, #22222222 0)`" size="50 50" />
-      <x-background :image="`linear-gradient(216deg, #99999922 50%, #22222222 0)`" size="50 50" />
-      <x-background :image="`linear-gradient(288deg, #99999922 50%, #22222222 0)`" size="50 50" />
+      <e-background :image="`linear-gradient(#99999922 50%, #66666622 0)`" size="50 50" />
+      <e-background :image="`linear-gradient(72deg, #99999922 50%, #22222222 0)`" size="50 50" />
+      <e-background :image="`linear-gradient(144deg, #99999922 50%, #22222222 0)`" size="50 50" />
+      <e-background :image="`linear-gradient(216deg, #99999922 50%, #22222222 0)`" size="50 50" />
+      <e-background :image="`linear-gradient(288deg, #99999922 50%, #22222222 0)`" size="50 50" />
       <wallet-console :show.sync="showConsole" :title="title">
         <component :is="details" :data="consoleData" />
       </wallet-console>
@@ -28,7 +28,7 @@
 
 
 <script>
-import { XBackground, XBox, XContext, XExapse, XFlex } from 'exude'
+import { EBackground, XBox, XContext, XExapse, XFlex } from 'exude'
 import { m_context } from 'exude'
 import FSiteLoading from '../face/FSiteLoading'
 import FWalletError from '../face/FWalletError'
@@ -56,7 +56,7 @@ export default
         WalletDetails,
         WalletInfo, 
         WalletTabs, 
-        XBackground, 
+        EBackground, 
         XBox, 
         XContext, 
         XExapse, 
@@ -159,11 +159,14 @@ export default
             {
                 let addys = JSON.parse(window.localStorage.getItem('addys') || '[]');
                 let index = 0;
-                
+                // remove current address from list if exists
                 while ((index = addys.indexOf(address)) >= 0)
                     addys = [ ...addys.slice(0, index), ...addys.slice(index + 1) ];
                 
                 addys.unshift(address);
+                // limit saved addresses to 50
+                addys = addys.slice(0, 50);
+                
                 window.localStorage.setItem('addys', JSON.stringify(addys));
             }
         }

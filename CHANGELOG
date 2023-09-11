@@ -17,11 +17,11 @@ backlog:
 - screenshot feature
 - SEO stuff
 - show additional media for tokens (images/videos)
+- meta data parsing for CIP68
 
 bugs:
 - fix responsiveness for mobile (navigation/settings)
 - fix router navigation "to same route" error on reload with filter hash
 
 tasks:
-- meta data parsing for CIP68
 - sea creature icons for wallet size

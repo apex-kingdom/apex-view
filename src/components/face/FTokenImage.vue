@@ -1,6 +1,7 @@
 <template>
   <x-context #default="{ ext }">
     <x-flex v-bind="flexProps" :data-x-bone="loading" @click="$emit('click')" @hover="$emit('hover', $event)">
+      <e-transition property="filter" :duration=".25" />
       <x-image 
         v-if="image" 
         :id="fsid" 
@@ -34,7 +35,7 @@
 
 
 <script>
-import { XContext, XFlex, XFullscreen, XIcon, XImage } from 'exude'
+import { ETransition, XContext, XFlex, XFullscreen, XIcon, XImage } from 'exude'
 import { m_toggle } from 'exude'
 
 
@@ -44,7 +45,7 @@ export default
     
     mixins: [ m_toggle('iconbar') ],
     
-    components: { XContext, XFlex, XFullscreen, XIcon, XImage },
+    components: { ETransition, XContext, XFlex, XFullscreen, XIcon, XImage },
     
     props:
     {
