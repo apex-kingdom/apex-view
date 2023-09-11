@@ -3,13 +3,13 @@
     <div style="position:relative">
       <x-fieldset #default="{ $negate, $path }" :name="name">
         <x-flex v-bind="$attrs" aligns=":center" radius="a2" overflow="hidden">
-          <x-background v-bind="backgroundProps($path, $negate)" />      
+          <e-background v-bind="backgroundProps($path, $negate)" />      
           <x-flex :colors="ext.diff" aligns=":center">
             <x-checkbox #default="{ checked }" name="$negate" :hf-colors="`${bgColor}:${ext.diff}_f.25`" pad="a1">
               <x-icon :name="checked ? 'not_equal' : 'equal'" :size="iconSize" />
             </x-checkbox>
             <x-flex aligns=":center">
-              <x-destyler sel="input::placeholder" :color="ext.diff" opacity=".5" />
+              <e-stylesheet sel="input::placeholder" :colors="ext.diff" opacity=".5" />
               <x-input 
                 ref="input"
                 name="$test" 
@@ -54,8 +54,8 @@
 
 
 <script>
-import { XBackground, XButton, XCheckbox, XChoose, XContext } from 'exude'
-import { XDestyler, XDropMenu, XFieldset, XFlex, XIcon, XInput, XOption } from 'exude'
+import { EBackground, EStylesheet, XButton, XCheckbox, XChoose, XContext } from 'exude'
+import { XDropMenu, XFieldset, XFlex, XIcon, XInput, XOption } from 'exude'
 
 
 export default
@@ -64,18 +64,18 @@ export default
     
     components: 
     { 
-        XBackground, 
+        EBackground, 
+        EStylesheet, 
         XButton, 
         XCheckbox, 
         XChoose, 
         XContext, 
-        XDestyler, 
         XDropMenu, 
         XFieldset, 
         XFlex, 
         XIcon, 
         XInput, 
-        XOption 
+        XOption
     },
     
     props:

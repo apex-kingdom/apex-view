@@ -29,7 +29,7 @@
             colors="text:entryBg"
             hf-colors="white:prime"
             pad="v2 h3" 
-            flex="1" 
+            xelf="1" 
             radius="a2" 
             shadow="entry"
             @click="emitSelection(addy)" 
@@ -78,13 +78,7 @@ export default
     
     computed:
     {
-        list() 
-        {
-            let { addys, value } = this;
-            let list = (addys || []).filter(a => a.indexOf(value) >= 0);
-            
-            return list.length === 0 ? addys : list;
-        }
+        list() { return (this.addys || []).filter(a => a.indexOf(this.value) >= 0); }
     },
 
     methods:

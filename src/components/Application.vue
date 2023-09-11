@@ -1,20 +1,7 @@
 <template>
   <x-app :colors="`text:${bgColor}`" min-height="100vh" font="base" @click="hideNav(false)">
-    <x-context 
-      :hideCtrls="hideCtrls" 
-      :hideLbls="settings.noLabels"
-      :hideCnts="settings.noCounts"
-      :mobile="smallScreen" 
-      :bgColor="bgColor"
-      :ext="color('white', 'black')"
-      :gray="color('ltgray', 'gray')"
-      :apex="color('quarter', 'prime')"
-      :red="color('lightcoral', 'darkred')"
-      :dm="bgIsDark ? '_l' : '_d'"
-      :sm="bgIsDark ? '_d' : '_l'"
-      :cs="colspace"
-      :rs="rowspace"
-    >
+    <e-transition sel="div" property="width,height,margin,gap" :duration=".15" timing="ease" />
+    <x-context v-bind="context">
       <x-box v-listen-outside-click="() => openConfig = false" pos="fixed" trbl="t0 b0 l0" z-index="1000">
         <app-settings 
           :show="openConfig" 
@@ -61,7 +48,7 @@
 
 <script>
 import color from 'color'
-import { XApp, XBox, XContext, XFlex, XWhen } from 'exude';
+import { ETransition, XApp, XBox, XContext, XFlex, XWhen } from 'exude';
 import { m_media_query } from 'exude'
 import { listenOutsideClick } from 'exude'
 import About from './About'
@@ -80,7 +67,7 @@ export default
     
     mixins: [ m_media_query('smallScreen') ],
     
-    components: { About, AppSettings, MainNav, XApp, XBox, XContext, XFlex, XWhen },
+    components: { About, AppSettings, ETransition, MainNav, XApp, XBox, XContext, XFlex, XWhen },
     
     directives: { listenOutsideClick },
     
@@ -138,10 +125,30 @@ export default
     computed:
     {
         bgIsDark() { return color(this.bgColor).isDark(); },
-      
-        colspace() { return this.settings.noGutters ? 0 : 5; },
         
-        rowspace() { return this.settings.noGutters ? 0 : 4; }
+        context()
+        {
+            let { noCounts, noGutters, noLabels } = this.settings;
+            
+            let context =
+            {
+                hideCtrls: this.hideCtrls,
+                hideLbls: noLabels,
+                hideCnts: noCounts,
+                mobile: this.smallScreen,
+                bgColor: this.bgColor,
+                ext: this.color('white', 'black'),
+                gray: this.color('ltgray', 'gray'),
+                apex: this.color('quarter', 'prime'),
+                red: this.color('lightcoral', 'darkred'),
+                dm: this.bgIsDark ? '_l' : '_d',
+                sm: this.bgIsDark ? '_d' : '_l',
+                cs: noGutters ? 0 : 5,
+                rs: noGutters ? 0 : 4
+            };
+            
+            return context;
+        }
     }
 }
 </script>

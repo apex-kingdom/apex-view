@@ -7,20 +7,20 @@
     pos="relative"
   >
     {{ text }}
-    <x-background clip="text" image="linear-gradient(#4b4114, #e6debb 47%, #ffffff00 48.5%, #e6debb 50%, #b9a032)" />
+    <e-background clip="text" image="linear-gradient(#4b4114, #e6debb 47%, #ffffff00 48.5%, #e6debb 50%, #b9a032)" />
   </x-text>
 </template>
 
 
 <script>
-import { XBackground, XText } from 'exude'
+import { EBackground, XText } from 'exude'
 
 
 export default
 {
     name: 'FMainTitle',
     
-    components: { XBackground, XText },
+    components: { EBackground, XText },
     
     props:
     {

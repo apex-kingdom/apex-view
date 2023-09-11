@@ -24,7 +24,7 @@
       <x-grid cols="1fr 1fr" gap="1:1" :width="size" margin="hauto v5" pad="h2">
         <template v-for="({ label, value }) in gridData">
           <x-flex :key="label" aligns=":center" :colors="`:${ext.diff}_f.35`" pad="v1.5 h2"> 
-            <x-text font="small" :colors="`${bgColor+sm}.6`"> {{ label }} </x-text>
+            <x-text weight="5" font="small" :colors="`${bgColor+sm}.6`"> {{ label }} </x-text>
           </x-flex>
           <x-flex :key="value" :colors="`${ext.same}:${ext.diff}_f.4`" pad="v1.5 h2"> 
             <x-text :colors="ext.same"> {{ value }} </x-text>

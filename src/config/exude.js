@@ -10,6 +10,10 @@ export default
     basis: 
     {
         /**
+            Automatic HTML id generation.
+        */
+        htmlIdGen: true,
+        /**
             String used to help prevent naming collisions.
         */
         namespace: 'apex',
@@ -76,7 +80,15 @@ export default
             console1: { image: 'linear-gradient(72deg, #99999933 50%, #22222222 0)', size: "25 25" },
             console2: { image: 'linear-gradient(144deg, #99999933 50%, #22222222 0)', size: "25 25" },
             console3: { image: 'linear-gradient(216deg, #99999933 50%, #22222222 0)', size: "25 25" },
-            console4: { image: 'linear-gradient(288deg, #99999933 50%, #22222222 0)', size: "25 25" }            
+            console4: { image: 'linear-gradient(288deg, #99999933 50%, #22222222 0)', size: "25 25" },
+            
+            homepage: 
+            {
+                image: "url(/pub/images/bg.png)",
+                size: "100% 100%",
+                repeat: "no-repeat",
+                position: "center center"
+            }
         }
     },
     
@@ -307,9 +319,9 @@ export default
         */
         named: 
         {
-            about: { property: 'opacity, z-index', duration: '0.5s', timingFunction: 'ease' },          
-            default: { property: 'all', duration: '0.15s', timingFunction: 'ease' },
-            nav: { property: 'opacity, right', duration: '0.5s', timingFunction: 'ease' }          
+            about: { property: 'opacity, z-index', duration: '0.5s', timing: 'ease' },          
+            default: { property: 'all', duration: '0.15s', timing: 'ease' },
+            nav: { property: 'opacity, right', duration: '0.5s', timing: 'ease' }          
         }
     }
 }

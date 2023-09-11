@@ -69,6 +69,7 @@ export default
             { data: 'traits/keyvals', color: 'attribute', label: 'Attribute/Trait' },
             { data: 'traits', color: 'trait', label: 'Trait' },
             { data: 'name', color: 'name', label: 'Name' },
+            { data: 'description', color: 'description', label: 'Description' },
             { data: 'onchainMetadataStandard', color: 'metadata', label: 'Metadata Standard' }
         ];            
     },

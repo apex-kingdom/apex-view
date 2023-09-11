@@ -1,20 +1,16 @@
 <template>
   <x-context #default="{ mobile }">
     <x-flex invert aligns=":center" min-height="100vh" pers="100vh" overflow="hidden">
-      <x-destyler 
+      <e-extension sel="&::before" background="homepage" />
+      <e-stylesheet 
         sel="&::before" 
-        content="" 
-        background-image="url(/pub/images/bg.png)" 
-        background-size="100% 100%" 
-        background-repeat="no-repeat"
-        background-position="center center" 
-        transform="rotateX(40deg)"
+        content 
+        trans="rx38"
         filter="grayscale(100%)"
         opacity=".25"
-        position="fixed"
-        bottom="-10%"
-        left="-20%"
-        width="140%"
+        pos="fixed"
+        trbl="b-10%"
+        width="150%"
         height="160%"
         z-index="-1"
       />
@@ -50,7 +46,7 @@
 
 
 <script>
-import { XBox, XContext, XDestyler, XFlex, XIcon, XText } from 'exude'
+import { EExtension, EStylesheet, XBox, XContext, XFlex, XIcon, XText } from 'exude'
 import AddressSelect from '../AddressSelect'
 import FMainTitle from '../face/FMainTitle'
 
@@ -59,7 +55,7 @@ export default
 {
     name: 'Home',
         
-    components: { AddressSelect, FMainTitle, XBox, XContext, XDestyler, XFlex, XIcon, XText },
+    components: { AddressSelect, EExtension, EStylesheet, FMainTitle, XBox, XContext, XFlex, XIcon, XText },
     
     data: () => ({ addys: [] }),
     
