@@ -8,6 +8,7 @@
     "scripts":
     {
         "build": "node task build-prod",
+        "prestart": "node server/scripts/prestart",
         "start": "node server"
     },
     "taskFiles": [
