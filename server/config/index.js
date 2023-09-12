@@ -26,6 +26,8 @@ module.exports =
     prod: /^production$/i.test(process.env.NODE_ENV),
     // redis connection url
     redis_url: process.env.REDIS_URL,
+    // application status message (blocks access when set)
+    block_status: process.env.BLOCKING_STATUS,
     // api request throttling
     throttles:
     {
