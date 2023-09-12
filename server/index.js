@@ -1,12 +1,25 @@
 var express = require('express');
-var app = express();
-var router = require('./config/router');
 var paths = require('../paths');
-var { port } = require('./config');
+var { block_status, port } = require('./config');
 
+
+var app = express();
 
 app.use('/pub', express.static(paths.public));
-app.use(router);
+
+if (block_status)
+{
+    var spright = require('sprightly/express');
+        
+    app.set('views', paths.public);
+    app.engine('html', spright({ cache: false }));
+    app.get('/*', (req, res) => res.render('block.html', { block_status }));
+}
+else
+{  
+    app.use(require('./config/router'));
+}
+
 
 app.listen(port, () => 
 {
