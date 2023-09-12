@@ -2,20 +2,26 @@
 
 ## Notes
 
+holder features:
+- show date (or block height/time) NFT acquired by wallet
+
 thoughts:
 - separate section for ada handles?
-- taptools link for tokens (sidepanel)
+- carousel viewing mode for NFTs?
+
 
 ## To Dos
 
-features:
-- sea creature icons for wallet size
+backlog:
+- filtering by date range
+- screenshot feature
+- SEO stuff
+- show additional media for tokens (images/videos)
+- meta data parsing for CIP68
 
 bugs:
-- $handle collection name not displaying properly
-- better floater window positioning on open
+- fix responsiveness for mobile (navigation/settings)
+- fix router navigation "to same route" error on reload with filter hash
 
 tasks:
-- pull all native tokens (not just 100)
-- metadata parsing for CIP68
-- show additional media for tokens (images/videos)
+- sea creature icons for wallet size

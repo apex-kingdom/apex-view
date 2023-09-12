@@ -1,9 +1,23 @@
 <template>
   <x-context #default="{ mobile }">
-    <x-flex invert aligns=":center">
-      <f-main-title text="ApexView" :font="mobile ? 'huge' : 'jumbo'" margin="t8" />
-      <x-flex display="inline-block" colors="quarter" margin="t4 b7" filter="drop-shadow(4px 4px 0 black)">
-        <x-icon name="cardano" :size="mobile ? 28 : 32" colors=":black_f.5" stroke-width=".5" />
+    <x-flex invert aligns=":center" min-height="100vh" pers="100vh" overflow="hidden">
+      <e-extension sel="&::before" background="homepage" />
+      <e-stylesheet 
+        sel="&::before" 
+        content 
+        trans="rx38"
+        filter="grayscale(100%)"
+        opacity=".25"
+        pos="fixed"
+        trbl="b-10%"
+        width="150%"
+        height="160%"
+        z-index="-1"
+      />
+      <f-main-title block text="ApexView" :font="mobile ? 'huge' : 'jumbo'" margin="t8" />
+      <x-flex display="inline-block" colors="quarter" margin="t4 b7" filter="drop-shadow(6px 6px 0 #00000099)">
+        <e-animation sel="svg" infinite name="spin" duration="30s" timing="linear" />
+        <x-icon name="cardano" :size="mobile ? 28 : 32" colors=":terti_d.5" stroke-width=".25" />
       </x-flex>
       <x-text 
         block 
@@ -18,12 +32,12 @@
         margin="b5"
       >
         <p>
-          Please note that this app is currently in <u>LIMITED ALPHA</u> as bugs are squashed and features are 
+          Please note that this app is currently in <u>ALPHA</u> as bugs are squashed and features are 
           being added.  
         </p>
         <br />
         <p>
-          <b>Wallets show only the first 100 tokens being returned from the APIs.</b>
+          <b>Beware that third-party service limits may cut off access to the app with excessive usage.</b>
         </p>
       </x-text>
       <address-select :addys="addys" width="75%" max-width="225" @select="handleSelect" @remove="handleRemove" />
@@ -33,7 +47,7 @@
 
 
 <script>
-import { XBox, XContext, XFlex, XIcon, XText } from 'exude'
+import { EAnimation, EExtension, EStylesheet, XBox, XContext, XFlex, XIcon, XText } from 'exude'
 import AddressSelect from '../AddressSelect'
 import FMainTitle from '../face/FMainTitle'
 
@@ -42,11 +56,13 @@ export default
 {
     name: 'Home',
         
-    components: { AddressSelect, FMainTitle, XBox, XContext, XFlex, XIcon, XText },
+    components: { AddressSelect, EAnimation, EExtension, EStylesheet, FMainTitle, XBox, XContext, XFlex, XIcon, XText },
+    
+    data: () => ({ addys: [] }),
     
     created()
     {
-        Object.defineProperty(this, 'addys', { get: () => JSON.parse(window.localStorage.getItem('addys')) || [] });
+        this.updateAddys();
     },
     
     methods:
@@ -65,7 +81,12 @@ export default
             
             window.localStorage.setItem('addys', JSON.stringify(addys));
             
-            this.$forceUpdate();
+            this.updateAddys();
+        },
+        
+        updateAddys()
+        {
+            this.addys = JSON.parse(window.localStorage.getItem('addys')) || [];          
         }
     }
 }

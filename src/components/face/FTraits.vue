@@ -1,25 +1,25 @@
 <template>
-  <x-context #default="{ bgColor, bgDiff, bgSame }">
+  <x-context #default="{ bgColor, ext }">
     <x-flex v-bind="$attrs" wrap aligns=":center:center" margin="v4">
-      <x-box v-for="key of keys" :key="key" align="center" margin="a2">
+      <x-box v-for="key of keys" :key="key" align="center" margin="a2" :width="boxWidth">
         <x-text 
           block 
           bold 
           font="tiny" 
-          :colors="`${bgDiff}:${bgColor}_r-20`" 
-          :border="`b.25!${bgSame}`"
-          pad="a1" 
+          :colors="`${ext.diff}:${bgColor}_r-20`" 
+          :border="`b.25!${ext.same}`"
+          pad="v1 h2" 
           radius="t1 r1"
           over-wrap="anywhere"
         > 
           {{ key || '---' }} 
         </x-text>
-        <x-text block :colors="`${bgSame}:${bgDiff}_f.25`" pad="v1 h2" radius="b1 l1" over-wrap="anywhere"> 
-          <!-- @slot trait value -->
-          <slot :value="object[key]">     
+        <!-- @slot trait value -->
+        <slot :value="object[key]">     
+          <x-text block :colors="`${ext.same}:${ext.diff}_f.25`" pad="v1 h2" radius="b1 l1" over-wrap="anywhere"> 
             {{ object[key] || '---' }}
-          </slot> 
-        </x-text>
+          </x-text>
+        </slot> 
       </x-box>
     </x-flex>
   </x-context>
@@ -38,6 +38,10 @@ export default
     
     props:
     {
+        /**
+            Width of individual trait box.
+        */
+        boxWidth: [ String, Number ],
         /**
             Key/value pairs.
         */

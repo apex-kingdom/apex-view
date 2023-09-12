@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> ApexView | Message </title>
+    <link rel="icon" type="image/x-icon" href="/pub/images/favicon.ico">
+    <meta charset="utf-8">
+    <meta name="author" content="wilsonape">
+    <meta name="viewport" content="width=device-width, initial-scale=1">    
+    <style> 
+      html, body { background-color: #2c2c2c; } 
+      
+      .image { margin-bottom: 24px; width: 500px; }
+      
+      .main
+      {
+          color: #E6DEBB;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          margin-top: 18vh;
+      }
+      
+      .message
+      {
+          font-family: sans-serif;
+          font-size: 24px;
+          text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <div>
+        <image class="image" src="/pub/images/preview_title.jpg" />
+        <div class="message"> {{ block_status }} </div>
+      </div>
+    </div>
+  </body>
+</html>

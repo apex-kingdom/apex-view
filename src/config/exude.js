@@ -10,13 +10,21 @@ export default
     basis: 
     {
         /**
+            Automatic HTML id generation.
+        */
+        htmlIdGen: true,
+        /**
             String used to help prevent naming collisions.
         */
         namespace: 'apex',
         /**
+            Scale degrees value.
+        */
+        sangle: 1,
+        /**
             Scale time value.
         */
-        stime: 100,
+        stime: 1000,
         /**
             Scale unit value.
         */
@@ -72,16 +80,16 @@ export default
             console1: { image: 'linear-gradient(72deg, #99999933 50%, #22222222 0)', size: "25 25" },
             console2: { image: 'linear-gradient(144deg, #99999933 50%, #22222222 0)', size: "25 25" },
             console3: { image: 'linear-gradient(216deg, #99999933 50%, #22222222 0)', size: "25 25" },
-            console4: { image: 'linear-gradient(288deg, #99999933 50%, #22222222 0)', size: "25 25" }            
+            console4: { image: 'linear-gradient(288deg, #99999933 50%, #22222222 0)', size: "25 25" },
+            
+            homepage: 
+            {
+                image: "url(/pub/images/bg.png)",
+                size: "100% 100%",
+                repeat: "no-repeat",
+                position: "center center"
+            }
         }
-    },
-    
-    button:
-    {
-        /**
-            Default button padding.
-        */
-        // defaultPad: 'v1% h1.25%'
     },
     
     color:
@@ -119,18 +127,27 @@ export default
             black: '#000000',
             white: '#FFFFFF',
             gray: '#3D3D3D',
+            ltgray: '#C2C2C2',
             
             prime: '#776518',
             second: '#B9A032', // alpine
             terti: '#C7B35D', // sundance
             quarter: '#E6DEBB', // spanish white
-            quine: '#4b483d', //roti
+            quine: '#4B483D', //roti
 
             text: '#F0ECDA',
             link: '#bba43c',
             linkHover: '#EEEEEE',
             highlight: '#4B4114', // punga
             entryBg: '#2A2A2A',
+            
+            collection: '#99CCFF',
+            attribute: '#CCFF99',
+            description: '#99FFCC',
+            trait: '#FFCC99',
+            name: '#CC99FF',
+            negate: '#FF9999',
+            metadata: '#FF99CC',
             
             // accent: '#',
             // error: '#',
@@ -178,36 +195,26 @@ export default
             h4: { fontSize: 12, lineHeight: 12 },
             h5: { fontSize: 9, lineHeight: 9 },
             h6: { fontSize: 6, lineHeight: 6 },
-            
+
             micro: { fontSize: 2.75, lineHeight: 2.75 },
             tiny: { fontSize: 3.5, lineHeight: 4 },
             small: { fontSize: 4, lineHeight: 4 },
             base: { fontSize: 5, lineHeight: 6 },
             large: { fontSize: 6.5, lineHeight: 6.5 },
             huge: { fontSize: 18, lineHeight: 18 },
-            jumbo: { fontSize: 24, lineHeight: 24 }
+            jumbo: { fontSize: 24, lineHeight: 24 },
+
+            vTiny: { fontSize: '1vw', lineHeight: '1.1vw' },
+            vSmaller: { fontSize: 'calc(.8vw + 6px)', lineHeight: 'calc(.8vw + 6px)' },
+            vSmall: { fontSize: 'calc(.9vw + 9px)', lineHeight: 'calc(.9vw + 12px)' },
+            vBase: { fontSize: 'calc(1vw + 14px)', lineHeight: 'calc(1vw + 14px)' },
+            vHuge: { fontSize: 'calc(3vw + 18px)', lineHeight: 'calc(3vw + 18px)' }
         },
         
         /**
             Font weight enumerations.
         */
-        // weight: 
-        // {
-        //     '9': '900',
-        //     '8': '800',
-        //     '7': '700',
-        //     '6': '600',
-        //     '5': '500',
-        //     '4': '400',
-        //     '3': '300',
-        //     '2': '200',
-        //     '1': '100',
-        // 
-        //     '+': 'bolder',
-        //     '-': 'lighter',
-        // 
-        //     clear: 'unset'
-        // }
+        // weight: {}
     },
     
     icon:
@@ -245,6 +252,23 @@ export default
         defaultSize: 12,
     },
     
+    length:
+    {
+        /**
+            General purpose enumerated CSS length values.
+            
+            Define "aliases" using keys that point to other keys.                
+        */
+        named: 
+        {
+            address: 'calc(1vw + 8px)',
+            austral: 'calc(1.7vw + 12px)',
+            hidenav: '-1vw',
+            mainnav: 'calc(1.5vw + 22px)',
+            shownav: 'calc(-5vw - 22px)'
+        }
+    },
+    
     media:
     {
         /**
@@ -270,9 +294,8 @@ export default
         */
         named: 
         {
-            entry: '1px 1px 6px black',
-            floater: '0px 0px 4px black',
-            insetEntry: 'inset 1px 1px 6px black',
+            entry: '2px 2px 4px black',
+            floater: '0px 0px 8px black',
             insetFloater: 'inset 0px 0px 8px black',
             section: '0px 0px 4px quarter',
             sidebar: '4px 4px 4px black',
@@ -296,8 +319,9 @@ export default
         */
         named: 
         {
-            default: { property: 'all', duration: '0.15s', timingFunction: 'ease' },
-            nav: { property: 'opacity, right', duration: '0.5s', timingFunction: 'ease' }          
+            about: { property: 'opacity, z-index', duration: '0.5s', timing: 'ease' },          
+            default: { property: 'all', duration: '0.15s', timing: 'ease' },
+            nav: { property: 'opacity, right', duration: '0.5s', timing: 'ease' }          
         }
     }
 }

@@ -1,33 +1,37 @@
 <template>
-  <x-context v-if="w" #default="{ mobile }">
-    <x-flex 
-      wrap 
-      aligns=":center:center" 
-      colors=":black_f.125" 
-      border="a.25!terti" 
-      pad="v2 h4" 
-      radius="a3" 
-      gap="4:2" 
-      margin="a2" 
-      shadow="floater"
-    >
-      <f-data-value :value="w.input" label="wallet address" :font="mobile ? 'tiny' : 'small'" copy qr-code /> 
-      <f-data-value :value="w.stakeKey" label="stake key" :font="mobile ? 'tiny' : 'small'" copy qr-code /> 
-      <x-flex aligns=":center:center"> 
-        <x-icon name="austral" :size="mobile ? 4 : 8" />
-        <x-text bold :font="mobile ? 'base' : 'large'"> {{ w.adaFormatted }} </x-text>
-      </x-flex>
-      <component v-if="w.pool" v-bind="poolProps"> {{ w.pool.ticker || 'UNSTAKED' }} </component>
-      <x-link @click="wallet.reload" title="reload data">
-        <x-icon name="reload" size="7" align-v="middle" />
-      </x-link>
+  <x-flex 
+    wrap 
+    aligns=":center:center" 
+    colors=":black_f.125" 
+    border="a.1vw!gray"
+    pad="v.8vw h1.8vw" 
+    radius="a1vw" 
+    gap="1.5vw:1.5vw"
+    margin="a2.5vh" 
+    shadow="floater"
+  >
+    <f-data-value 
+      :value="w.input" 
+      label="wallet address" 
+      font="vSmall" 
+      icon-size="address" 
+      copy 
+      :action="handleClick" 
+    /> 
+    <x-flex aligns=":center:center"> 
+      <x-icon name="austral" size="austral" />
+      <x-text bold font="vBase"> {{ w.adaFormatted }} </x-text>
     </x-flex>
-  </x-context>
+    <component v-if="w.pool" v-bind="poolProps"> {{ w.pool.ticker || 'UNSTAKED' }} </component>
+    <x-link display="flex" title="reload data" @click="wallet.reload">
+      <x-icon name="reload" size="austral" />
+    </x-link>
+  </x-flex>
 </template>
 
 
 <script>
-import { XContext, XFlex, XIcon, XLink, XText } from 'exude'
+import { XFlex, XIcon, XLink, XText } from 'exude'
 import { m_context } from 'exude'
 import FDataValue from './face/FDataValue'
 
@@ -38,7 +42,7 @@ export default
     
     mixins: [ m_context('wallet').receiver ],
 
-    components: { FDataValue, XContext, XFlex, XIcon, XLink, XText },
+    components: { FDataValue, XFlex, XIcon, XLink, XText },
     
     computed:
     {
@@ -48,7 +52,7 @@ export default
             {
                 is: 'x-text',
                 colors: 'terti',
-                font: this.mobile ? 'base' : 'large'
+                font: 'vBase'
             };
             
             if (this.w.pool.home)
@@ -63,6 +67,11 @@ export default
         },
         
         w() { return this.wallet.data; }
+    },
+    
+    methods:
+    {
+        handleClick() { this.wallet.showConsole(this.wallet.data); }
     }
 }
 </script>

@@ -1,43 +1,32 @@
 <template>
-  <x-flex v-bind="$attrs" :aligns="aligns" gap="1" pos="relative">
-    <component :is="link ? 'x-link' : 'x-text'" :font="font">
+  <x-flex v-bind="$attrs" :aligns="aligns" gap=".25vw" pos="relative">
+    <component v-bind="linkProps" v-on="linkEvents">
       {{ shorten(value, count) }}
     </component>
     <template v-if="copy">
-      <x-copy-to-clipboard :data="value" :size="iconSize" @copied="showCopy = true" />
-      <f-pop-message mode="alert" :timeo="4000" :show.sync="showCopy">
-        <x-text colors="quarter" font="small" pad="a1"> Copied to clipboard! </x-text>
-      </f-pop-message>
-    </template>
-    <template v-if="qrCode">
-      <x-link @click="show = true">
-        <x-icon name="qrcode" :size="iconSize" />
-      </x-link>
-      <f-pop-message mode="info" :show.sync="show">
-        <x-text block align="center" colors="quarter" pad="a1" radius="a100" width="100%"> 
-          {{ label }} 
-        </x-text>
-        <x-qr-code :content="value" :padding="2" colors="quarter:black" width="64" height="64" />
-      </f-pop-message>
+      <x-copy-to-clipboard :data="value" display="flex" :size="iconSize" duration="3" />
     </template>
   </x-flex>
 </template>
 
 
 <script>
-import { XCopyToClipboard, XFlex, XIcon, XLink, XQrCode, XText } from 'exude'
+import { XCopyToClipboard, XFlex, XLink, XText } from 'exude'
 import shorten from '_source/lib/shorten'
-import FPopMessage from './FPopMessage'
 
 
 export default
 {
     name: 'FDataValue',
     
-    components: { FPopMessage, XCopyToClipboard, XFlex, XIcon, XLink, XQrCode, XText },
+    components: { XCopyToClipboard, XFlex, XLink, XText },
     
     props:
     {
+        /**
+            URL to open or function to call on click.
+        */
+        action: [ String, Function ],
         /**
             Flex alignment values.
         */
@@ -57,25 +46,44 @@ export default
         /**
             Size of utility icons.
         */
-        iconSize: { type: Number, default: 4 },
-        /**
-            Label for the data value.
-        */
-        label: String,
-        /**
-            URL for data value.
-        */
-        link: String,
-        /**
-            Allow display of QR code?
-        */
-        qrCode: Boolean,
+        iconSize: { type: [ String, Number ], default: 4 },
         /**
             The data value.
         */
         value: String
     },
     
-    data: () => ({ shorten, show: false, showCopy: false })
+    data: () => ({ shorten }),
+    
+    computed:
+    {
+        linkProps()
+        {
+            let props = { font: this.font };
+            
+            if (this.action)
+            {
+                props.is = 'x-link';
+                if (typeof this.action === 'string')
+                    props.href = this.action;
+            }
+            else
+            {
+                props.is = 'x-text';
+            }
+            
+            return props;
+        },
+        
+        linkEvents()
+        {
+            let events = {};
+            
+            if (typeof this.action === 'function')
+                events.click = this.action;
+            
+            return events;
+        }
+    }
 }
 </script>

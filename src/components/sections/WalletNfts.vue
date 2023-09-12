@@ -1,19 +1,50 @@
 <template>
-  <x-box> 
-    <wallet-header> {{ list.length }} NFTs </wallet-header>
-    <token-lister>
-      <wallet-item v-for="t in list" :key="t.fingerprint" :data="t" />
-    </token-lister>
-  </x-box>
+  <x-context #default="{ ext }"> 
+    <wallet-section label="NFTs" :items="nfts">
+      <template #controls="{ append, disable }">
+        <f-canvas-button  
+          icon="search_collection"
+          title="add collection filter"
+          :disabled="disable.collection"
+          @click="append(defaultCollectionFilter)"
+        />
+        <f-canvas-button  
+          icon="search_text"
+          title="add text filter"
+          :disabled="disable.string"
+          @click="append(defaultStringFilter)"
+        />
+      </template>
+      <template #default="{ remove }">
+        <x-lister #iter="{ item: { filterType }, index }">
+          <string-filter 
+            v-if="filterType == 'string'" 
+            :name="index"
+            :optionData="stringOptionData" 
+            :border="`a.25!${ext.diff}_f.25`" 
+            @remove="remove(index)" 
+          />
+          <collection-filter 
+            v-if="filterType == 'collection'" 
+            :name="index" 
+            :collections="collections" 
+            :border="`a.25!${ext.diff}_f.25`" 
+            @remove="remove(index)" 
+          />
+        </x-lister>
+      </template>
+    </wallet-section>
+  </x-context>
 </template>
 
 
 <script>
-import { XBox } from 'exude'
+import { XContext, XLister } from 'exude'
 import { m_context } from 'exude'
-import TokenLister from '_comps/TokenLister'
-import WalletHeader from '_comps/WalletHeader'
-import WalletItem from '_comps/WalletItem'
+import CollectionFilter from '../filtering/CollectionFilter'
+import FCanvasButton from '../face/FCanvasButton'
+import StringFilter from '../filtering/StringFilter'
+import WalletSection from './WalletSection'
 
 
 export default
@@ -22,21 +53,32 @@ export default
 
     mixins: [ m_context('wallet').receiver ],
 
-    components: { TokenLister, WalletHeader, WalletItem, XBox },
+    components: { CollectionFilter, FCanvasButton, StringFilter, WalletSection, XContext, XLister },
+
+    data: () => 
+    ({ 
+        defaultCollectionFilter: { filterType: 'collection', $path: 'policyId' },
+        defaultStringFilter: { filterType: 'string', $path: ['traits/keyvals', 'name'] }
+    }),
+    
+    created()
+    {
+        this.stringOptionData =
+        [
+            // { data: 'collection', color: 'collection', label: 'Collection Name' },
+            { data: 'traits/keyvals', color: 'attribute', label: 'Attribute/Trait' },
+            { data: 'traits', color: 'trait', label: 'Trait' },
+            { data: 'name', color: 'name', label: 'Name' },
+            { data: 'description', color: 'description', label: 'Description' },
+            { data: 'onchainMetadataStandard', color: 'metadata', label: 'Metadata Standard' }
+        ];            
+    },
     
     computed:
     {
-        c() { return this.$route.query.c; },
+        collections() { return this.wallet.data.collections; },
         
-        list() 
-        { 
-            let { nfts } = this.wallet.data;
-            
-            if (this.c)
-                return nfts.filter(nft => nft.policyId === this.c);
-            
-            return nfts;
-        }
-    }    
+        nfts() { return this.wallet.data.nfts; }        
+    }
 }
 </script>

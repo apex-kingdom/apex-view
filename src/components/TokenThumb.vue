@@ -1,35 +1,38 @@
 <template>
-  <x-context #default="{ bgColor, bgDiff, bgSame, hideLbls }">
-    <x-flex invert align="center" :width="size">
-      <x-text 
-        v-if="count" 
-        font="tiny" 
-        :colors="`${bgDiff}:${bgSame}_f.75`" 
-        :h-colors="`${bgSame}:${bgDiff}_f.5`" 
-        pad="v1" 
-        cursor="pointer" 
-        @click="$emit('amount')"
-      > 
-        {{ count }} 
-      </x-text>
-      <f-token-image 
-        :iconbar="show && !hideLbls" 
-        :image="image" 
-        :image-type="imageType" 
-        :size="size" 
-        @click="$emit('open')"
-        @hover="show = $event"
-      />
-      <x-text v-if="!hideLbls" font="tiny" over-wrap="anywhere" :colors="`${bgDiff}:${bgSame}_f.75`" pad="v1"> 
-        {{ title }} 
-      </x-text>
-    </x-flex>    
+  <x-context #default="{ ext, hideLbls, hideCnts }">
+    <x-box v-observe-viewport-intersection="intersect" :width="size">
+      <x-flex v-if="visible" invert align="center" width="100%">
+        <x-text 
+          v-if="!hideCnts && count" 
+          font="tiny" 
+          :colors="`${ext.diff}:${ext.same}_f.65`" 
+          :h-colors="`${ext.same}:${ext.diff}_f.5`" 
+          pad="v1" 
+          cursor="pointer" 
+          @click="$emit('amount')"
+        > 
+          {{ count }} 
+        </x-text>
+        <f-token-image 
+          :iconbar="show && !hideLbls" 
+          :image="image" 
+          :image-type="imageType" 
+          :size="size" 
+          @click="$emit('open')"
+          @hover="show = $event"
+        />
+        <x-text v-if="!hideLbls" font="tiny" over-wrap="anywhere" :colors="`${ext.diff}:${ext.same}_f.65`" pad="v1"> 
+          {{ title }} 
+        </x-text>
+      </x-flex>    
+    </x-box>
   </x-context>
 </template>
 
 
 <script>
-import { XContext, XFlex, XFullscreen, XIcon, XImage, XText } from 'exude'
+import { XBox, XContext, XFlex, XFullscreen, XIcon, XImage, XText } from 'exude'
+import { observeViewportIntersection } from 'exude'
 import FTokenImage from './face/FTokenImage'
 
 
@@ -37,7 +40,9 @@ export default
 {
     name: 'TokenThumb',
     
-    components: { FTokenImage, XContext, XFlex, XFullscreen, XIcon, XImage, XText },
+    components: { FTokenImage, XBox, XContext, XFlex, XFullscreen, XIcon, XImage, XText },
+    
+    directives: { observeViewportIntersection },
     
     props:
     {
@@ -63,6 +68,11 @@ export default
         title: String
     },
     
-    data: () => ({ show: false })
+    data: () => ({ show: false, visible: false }),
+    
+    methods:
+    {
+        intersect(bool) { if (bool) this.visible = bool; }
+    }
 }
 </script>

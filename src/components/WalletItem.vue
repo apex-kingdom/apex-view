@@ -14,6 +14,7 @@
 import { XBox } from 'exude'
 import { m_context } from 'exude'
 import TokenThumb from '_comps/TokenThumb'
+import { encode } from '_source/lib/json-code';
 
 
 export default
@@ -35,16 +36,26 @@ export default
     computed:
     {
         count() { return this.data.isNFT ? null : this.data.userQuantityFormatted; },              
+
+        isCollection() { return this.data.__entity === 'collection' },
     },
     
     methods:
     {
         handleAmount() 
         {
-            if (this.data.isCollection)
-                this.$router.push({ name: 'nfts', query: { c: this.data.policyId } });
+            if (this.isCollection)
+            {
+                let filter = 
+                [ 
+                    { $test: [ this.data.policyId ], filterType: 'collection', $path: 'policyId' } 
+                ];
+                this.$router.push({ name: 'nfts-filter', params: { hash: encode(filter) } });
+            }
             else if (this.wallet)
-                this.wallet.showToken(this.data);
+            {
+                this.wallet.showConsole(this.data);
+            }
         },
         
         handleOpen() 
@@ -52,7 +63,7 @@ export default
             console.log(this.data.name, this.data);
             
             if (this.wallet)
-                this.wallet.showToken(this.data);
+                this.wallet.showConsole(this.data);
         }        
     }
 }

@@ -4,24 +4,27 @@
     "author": "Wilson Ape",
     "description": "Apex Wallet Visualizer",
     "license": "UNLICENSED",
-    "main": "apexview.js",
+    "main": "server",
     "scripts":
     {
-        "dev": "node task watch-dev",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "build": "node task build-prod",
+        "prestart": "node server/scripts/prestart",
+        "start": "node server"
     },
     "taskFiles": [
-        "bld/tasks.js"
+        "bld/tasks.js",
+        "server/tasks.js"
     ],
     "dependencies":
     {
-        "@captison/exude": "0.0.2",
+        "@captison/exude": "^0.0.8",
         "axios": "^1.3.4",
         "color": "^4.2.3",
         "express": "^4.18.2",
         "hex-encode-decode": "^1.0.0",
-        "numeral": "^2.0.6",
         "object-path": "^0.11.8",
+        "redis": "^4.6.8",
+        "sprightly": "^2.0.1",
         "string-hash": "^1.1.3",
         "verte": "^0.0.12",
         "vue": "^2.7.14",
@@ -33,14 +36,19 @@
         "@babel/preset-env": "^7.20.2",
         "babel-loader": "^9.1.2",
         "chalk": "^4.1.2",
+        "copy-webpack-plugin": "^11.0.0",
         "cross-env": "^7.0.3",
         "css-loader": "^6.7.3",
         "html-webpack-plugin": "^5.5.0",
-        "inject-body-webpack-plugin": "^1.3.0",
         "raw-loader": "^4.0.2",
         "style-loader": "^3.3.2",
         "vue-loader": "^15.9.8",
         "webpack": "^5.75.0",
         "webpack-dev-server": "^4.11.1"
+    },
+    "engines":
+    {
+        "node": ">=16.20.0",
+        "npm": ">=8.19.0"
     }
 }

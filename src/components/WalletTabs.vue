@@ -1,34 +1,28 @@
 <template>
-  <x-context v-if="w" #default="{ mobile }">
-    <x-text block colors="quarter" :font="mobile ? 'small' : 'base'">
-      <x-flex 
-        wrap 
-        aligns=":center:center" 
-        colors=":black_f.125" 
-        border="a.25!terti" 
-        pad="v2 h4" 
-        radius="a3" 
-        gap="6:2" 
-        margin="a2" 
-        shadow="floater"
-      >
-        <x-link @click="$router.push({ name: 'tokens' })">
-          <f-stat label="Tokens" :active="$route.name === 'tokens'" :value="w.tokens.length" />
+  <x-text block colors="quarter" font="vBase">
+    <x-flex 
+      wrap 
+      aligns=":center:center" 
+      colors=":black_f.125" 
+      border="a.1vw!gray"
+      pad="v.6vw h1.8vw" 
+      radius="a1vw" 
+      gap="1.5vw:1.5vw"
+      margin="a2.5vh" 
+      shadow="floater"
+    >
+      <template v-for="({ name, label }) of sections">
+        <x-link :key="name" @click="$router.push({ name })">
+          <f-stat :label="label" :active="$route.name.indexOf(name) === 0" :value="w[name].length" />
         </x-link>
-        <x-link @click="$router.push({ name: 'collections' })">
-          <f-stat label="Collections" :active="$route.name === 'collections'" :value="w.collections.length" />
-        </x-link>
-        <x-link @click="$router.push({ name: 'nfts' })">
-          <f-stat label="NFTs" :active="$route.name === 'nfts'" :value="w.nfts.length" />
-        </x-link>
-      </x-flex>
-    </x-text>
-  </x-context>
+      </template>
+    </x-flex>
+  </x-text>
 </template>
 
 
 <script>
-import { XContext, XFlex, XLink, XText } from 'exude'
+import { XFlex, XLink, XText } from 'exude'
 import { m_context } from 'exude'
 import FStat from './face/FStat'
 
@@ -39,11 +33,23 @@ export default
     
     mixins: [ m_context('wallet').receiver ],
 
-    components: { FStat, XContext, XFlex, XLink, XText },
+    components: { FStat, XFlex, XLink, XText },
     
     computed:
     {        
-        w() { return this.wallet.data; }
+        sections()
+        {
+            let sections =
+            [
+                { label: 'Tokens', name: 'tokens' },
+                { label: 'Collections', name: 'collections' },
+                { label: 'NFTs', name: 'nfts' }
+            ];
+            
+            return sections;
+        },
+      
+        w() { return this.wallet.data; },
     }
 }
 </script>

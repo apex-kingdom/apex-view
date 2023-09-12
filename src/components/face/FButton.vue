@@ -1,35 +1,29 @@
 <template>
   <x-button 
     v-bind="$attrs"
-    :font="small ? 'small' : 'base'"
+    block
     bold
     colors="black"
-    background="button"
     border="a.5!black_f.25"
-    h-border="a.5!terti"
-    radius="a2"
-    :pad="small ? 'v1 h2' : 'v2 h3'"
+    hf-border="a.5!terti"
+    radius="a50"
+    pad="v.5vw h1.5vw"
     @click="$emit('click', $event)"
-  />
+  >
+    <e-extension background="button" />
+    <slot />
+  </x-button>
 </template>
 
 
 <script>
-import { XBackground, XButton } from 'exude'
+import { EExtension, XButton } from 'exude'
 
 
 export default
 {
     name: 'FButton',
     
-    components: { XBackground, XButton },
-    
-    props:
-    {
-        /**
-            Render a smaller size button?
-        */
-        small: Boolean
-    }
+    components: { EExtension, XButton },    
 }
 </script>

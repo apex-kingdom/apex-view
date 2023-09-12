@@ -1,24 +1,24 @@
 <template>
   <x-context #default="{ hideCtrls, cs, rs }">
     <x-flex v-if="data" invert aligns=":center">
-      <x-exapse :expand="!hideCtrls" max-breadth="60%" pos="fixed" trbl="t0" pad="t2" z-index="10">
+      <x-exapse no-scroll :expand="!hideCtrls" max-breadth="85%" pos="fixed" trbl="t0" z-index="10">
         <wallet-info />
       </x-exapse>
-      <x-box :margin="`v${ hideCtrls ? 0 : 30 }`" place-self="stretch">
+      <x-box :margin="`v${ hideCtrls ? 0 : '12vh' }`" place-self="stretch">
         <router-view />
       </x-box> 
-      <x-exapse lower :expand="!hideCtrls" max-breadth="90%" pos="fixed" trbl="b0" pad="b2" z-index="10">
+      <x-exapse lower no-scroll :expand="!hideCtrls" max-breadth="90%" pos="fixed" trbl="b0" z-index="10">
         <wallet-tabs />
       </x-exapse>
     </x-flex>
     <x-box pos="fixed" trbl="t0 b0 r0" z-index="20" radius="t6 l6">
-      <x-background :image="`linear-gradient(#99999922 50%, #66666622 0)`" size="50 50" />
-      <x-background :image="`linear-gradient(72deg, #99999922 50%, #22222222 0)`" size="50 50" />
-      <x-background :image="`linear-gradient(144deg, #99999922 50%, #22222222 0)`" size="50 50" />
-      <x-background :image="`linear-gradient(216deg, #99999922 50%, #22222222 0)`" size="50 50" />
-      <x-background :image="`linear-gradient(288deg, #99999922 50%, #22222222 0)`" size="50 50" />
-      <wallet-console :show.sync="showConsole" :title="tokenData.name">
-        <token-details :token="tokenData" />
+      <e-background :image="`linear-gradient(#99999922 50%, #66666622 0)`" size="50 50" />
+      <e-background :image="`linear-gradient(72deg, #99999922 50%, #22222222 0)`" size="50 50" />
+      <e-background :image="`linear-gradient(144deg, #99999922 50%, #22222222 0)`" size="50 50" />
+      <e-background :image="`linear-gradient(216deg, #99999922 50%, #22222222 0)`" size="50 50" />
+      <e-background :image="`linear-gradient(288deg, #99999922 50%, #22222222 0)`" size="50 50" />
+      <wallet-console :show.sync="showConsole" :title="title">
+        <component :is="details" :data="consoleData" />
       </wallet-console>
     </x-box>
     <f-site-loading :opacity="loading ? 1 : 0" :z-index="loading ? 1000 : -1" />
@@ -28,14 +28,16 @@
 
 
 <script>
-import { XBackground, XBox, XContext, XExapse, XFlex } from 'exude'
+import { EBackground, XBox, XContext, XExapse, XFlex } from 'exude'
 import { m_context } from 'exude'
 import FSiteLoading from '../face/FSiteLoading'
 import FWalletError from '../face/FWalletError'
 import TokenDetails from '../TokenDetails'
 import WalletConsole from '../WalletConsole'
+import WalletDetails from '../WalletDetails'
 import WalletInfo from '../WalletInfo'
 import WalletTabs from '../WalletTabs'
+import shorten from '_source/lib/shorten'
 import wallet from '_source/lib/wallet'
 
 
@@ -51,9 +53,10 @@ export default
         FWalletError, 
         TokenDetails, 
         WalletConsole, 
+        WalletDetails,
         WalletInfo, 
         WalletTabs, 
-        XBackground, 
+        EBackground, 
         XBox, 
         XContext, 
         XExapse, 
@@ -63,19 +66,49 @@ export default
     data: () => 
     ({ 
         address: null, 
+        consoleData: {},
         data: null, 
         error: null,
         loading: false,
         showConsole: false, 
-        tokenData: {} 
     }),
+    
+    computed:
+    {
+        details()
+        {
+            switch(this.entity)
+            {
+                case 'account': 
+                    return 'wallet-details';
+                case 'collection': 
+                case 'asset': 
+                    return 'token-details';
+            }
+        },
+      
+        entity() { return this.consoleData.__entity; },
+        
+        title() 
+        {          
+            switch(this.entity)
+            {
+                case 'account': 
+                    return shorten(this.consoleData.input, 8);
+                case 'collection': 
+                    return this.consoleData.name;
+                case 'asset': 
+                    return this.consoleData.title;
+            }
+        }
+    },
     
     watch:
     {
         address() 
         { 
             this.data = null;
-            this.requestData()
+            this.requestData().then(data => { this.data = data; this.updateHistory(this.address) });
         },
         
         '$route.params':
@@ -91,16 +124,16 @@ export default
         {
             let obj = 
             {
-                reload: () => this.requestData(true),
-                showToken: data =>
+                reload: () => this.requestData(true).then(data => this.data = data),             
+                showConsole: data =>
                 {
-                    if (this.showConsole && this.tokenData === data)
+                    if (this.showConsole && this.consoleData === data)
                     {
                         this.showConsole = false;
                     }
                     else
                     {
-                        this.tokenData = data;
+                        this.consoleData = data;
                         this.showConsole = true;
                     }
                 }
@@ -111,26 +144,31 @@ export default
             return obj;           
         },
         
-        requestData(clear)
+        requestData(reset)
         {
             this.loading = true;
             
-            wallet(this.address, clear)
-                .then(data => { this.data = data; this.updateHistory(data.input); })
-                .catch(error => { this.data = null; this.error = error; })
+            return wallet(this.address, reset)
+                .catch(error => { this.data = null; throw this.error = error; })
                 .finally(() => { this.loading = false; });    
         }, 
         
         updateHistory(address)
         {
-            let addys = JSON.parse(window.localStorage.getItem('addys') || '[]');
-            let index = 0;
-            
-            while ((index = addys.indexOf(address)) >= 0)
-                addys = [ ...addys.slice(0, index), ...addys.slice(index + 1) ];
-            
-            addys.unshift(address);
-            window.localStorage.setItem('addys', JSON.stringify(addys));
+            if (address)
+            {
+                let addys = JSON.parse(window.localStorage.getItem('addys') || '[]');
+                let index = 0;
+                // remove current address from list if exists
+                while ((index = addys.indexOf(address)) >= 0)
+                    addys = [ ...addys.slice(0, index), ...addys.slice(index + 1) ];
+                
+                addys.unshift(address);
+                // limit saved addresses to 50
+                addys = addys.slice(0, 50);
+                
+                window.localStorage.setItem('addys', JSON.stringify(addys));
+            }
         }
     }
 }

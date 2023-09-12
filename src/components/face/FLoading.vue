@@ -1,13 +1,13 @@
 <template>
   <x-flex v-bind="$attrs" inline>
-    <x-animation name="spin" repeat="infinite" :duration="rps + 's'" timing="linear" />
-    <x-icon :name="icon" :size="size" :colors="iconColors" title="loading" />
+    <e-animation name="spin" repeat="infinite" :duration="rps + 's'" timing="linear" />
+    <x-icon :name="icon" :size="size" :colors="iconColors" />
   </x-flex>
 </template>
 
 
 <script>
-import { XAnimation, XFlex, XIcon } from 'exude'
+import { EAnimation, XFlex, XIcon } from 'exude'
 
 
 /**
@@ -17,7 +17,7 @@ export default
 {
     name: 'FLoading',
 
-    components: { XAnimation, XFlex, XIcon },
+    components: { EAnimation, XFlex, XIcon },
 
     props:
     {

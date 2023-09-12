@@ -1,11 +1,11 @@
 <template>
-  <x-context #default="{ bgColor, bgDiff, bgSame }">
+  <x-context #default="{ bgColor, ext }">
     <x-exapse 
       horiz 
       lower
       invert 
       :expand="show" 
-      :colors="`${bgDiff}:${bgColor}_f.5`" 
+      :colors="`${ext.diff}:${bgColor}_f.4`" 
       breadth="100%" 
       margin="r-.25"
       radius="t6 l6"
@@ -13,18 +13,23 @@
     >
       <!-- setting background for the enclosing xexapse -->
       <x-box radius="t6 l6" width="100" pad="v15 h2">
-        <x-box colors=":black_f.125" border="a.25!terti" pad="a2.5" pos="absolute" trbl="t2 h2" radius="a10" z-index="10">
-          <x-text block align="center" font="base" colors="quarter" height="6" overflow="auto" pad="l4"> 
+        <x-button 
+          :colors="`${ext.diff}:${bgColor}_f.15`" 
+          :hf-colors="`:${ext.same}_f.25`" 
+          :border="`a.5!${bgColor}_r10`"
+          weight="5"
+          font="base" 
+          pad="a2" 
+          pos="absolute" 
+          trbl="t2 h2" 
+          radius="a10" z-index="10"
+          shadow="insetFloater"
+          @click="$emit('update:show', false)" 
+        >
+          <x-box height="6" overflow="auto" margin="hauto" pad="h.5"> 
             {{ title }} 
-          </x-text>
-          <f-close-button 
-            pos="absolute" 
-            trbl="t50% l0" 
-            trans="ty-50%" 
-            margin="h2" 
-            @click="$emit('update:show', false)" 
-          />
-        </x-box>
+          </x-box>
+        </x-button>
         <!-- @slot console content -->
         <slot />        
       </x-box>
@@ -35,15 +40,14 @@
 
 
 <script>
-import { XBox, XContext, XExapse, XFlex, XText } from 'exude'
-import FCloseButton from './face/FCloseButton'
+import { XBox, XButton, XContext, XExapse, XFlex, XText } from 'exude'
 
 
 export default
 {
     name: 'WalletConsole',
     
-    components: { FCloseButton, XBox, XContext, XExapse, XFlex, XText },
+    components: { XBox, XButton, XContext, XExapse, XFlex, XText },
     
     props:
     {
