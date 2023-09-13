@@ -4,7 +4,7 @@ var pull = require('../request');
 var { prod } = require('../../config');
 
 
-var reBaseName = /^(.+)\s*#.*$/;
+var reBaseName = /^(.+?)(\s*#)?\d*$/;
 let reProto = /^(https?)|(ipfs)|(data):/i;
 /**
     Gets token data for the given asset id.

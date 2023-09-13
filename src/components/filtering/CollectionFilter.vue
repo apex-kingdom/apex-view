@@ -55,7 +55,7 @@
                   >
                     <x-flex aligns=":center" align="left" gap="1">
                       <x-icon :name="selected ? 'check' : 'checkEmpty'" :size="iconSize" /> 
-                      <x-text overflow="auto"> {{ c.name }} </x-text>
+                      <x-text xelf="1 0" overflow="auto"> {{ c.name }} </x-text>
                     </x-flex>
                   </x-option>                
                 </x-choose>
