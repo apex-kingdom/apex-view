@@ -20,7 +20,7 @@ module.exports = async function(input)
           e.pool(account.poolId).then(pool => ({ ...account, pool })),
           Promise.all(assets.map(data => 
           {
-              var assetId = data.policy_id + data.asset_name;
+              var assetId = data.unit || (data.policy_id + data.asset_name);
               var mintTx = hash => e.tx(hash, chain)
               
               return e.token(assetId, mintTx).then(token => e.asset(data, token));

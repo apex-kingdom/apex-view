@@ -73,22 +73,22 @@ module.exports =
     
     account: { base: 'blockfrost', url: '/accounts/{account}' },
     
-    // accountAssets:
-    // {
-    //     base: 'account',
-    //     url: '/addresses/assets?page={page}',
-    //     paging: { pname: 'page' }
-    // }, 
-    
     accountAssets:
     {
-        base: 'koios',
-        method: 'post',
-        url: '/account_assets?limit={limit}&offset={offset}',
-        path: [ 0, 'asset_list' ],
-        data: { _stake_addresses: [ '{account}' ] },
-        paging: { lname: 'limit', pname: 'offset' }
+        base: 'account',
+        url: '/addresses/assets?page={page}',
+        paging: { pname: 'page' }
     }, 
+    
+    // accountAssets:
+    // {
+    //     base: 'koios',
+    //     method: 'post',
+    //     url: '/account_assets?limit={limit}&offset={offset}',
+    //     path: [ 0, 'asset_list' ],
+    //     data: { _stake_addresses: [ '{account}' ] },
+    //     paging: { lname: 'limit', pname: 'offset' }
+    // }, 
 
     adaHandle:
     {
@@ -100,7 +100,7 @@ module.exports =
     
     address: { base: 'blockfrost', url: '/addresses/{address}', path: 'stake_address' },
                         
-    asset: { base: 'blockfrost', url: '/assets/{asset}' },
+    asset: { base: 'blockfrost', url: '/assets/{asset}', throttle: 'blockfrost' },
         
     assetAddress: { base: 'asset', url: '/addresses' },
     
