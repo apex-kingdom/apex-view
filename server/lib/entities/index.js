@@ -15,32 +15,18 @@ var entities =
     tx: require('./tx')
 }
 
-
 var reducer = (obj, name) => 
 {
-    obj[name] = (ident, ...args) => 
-    {
-        let key = name + ':' + ident;
-
-        return redis.jget(key).then(data => 
-        {
-            if (data) 
-            {
-                if (!prod) console.log('apex: using cached data for', key);
-                return data;
-            }
-            else
-            {
-                return entities[name](ident, ...args).then(data =>
-                {
-                    redis.jset(key, data, keyexp[name]);
-                    return data;
-                });
-            }
-        });
-    }
+    let key = ident => name + ':' + ident    
+    let fn = (ident, ...args) => fn.fromCache(ident).then(data => data || fn.request(ident, ...args))
+    // request data
+    fn.request = (ident, ...args) => entities[name](ident, ...args).then(data => fn.toCache(ident, data))
+    // get data from cache
+    fn.fromCache = ident => redis.jget(key(ident))
+    // set data in cache
+    fn.toCache = (ident, data) => (redis.jset(key(ident), data, keyexp[name]), data)
     
-    return obj;
+    return { ...obj, [name]: fn };
 }
 
 var cacheables = [ 'account', 'assets', 'chain', 'collection', 'pool', 'stake', 'token', 'tx' ];

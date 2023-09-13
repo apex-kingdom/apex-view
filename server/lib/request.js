@@ -72,7 +72,7 @@ function send(spec, reps)
             
     if (!prod) console.log('apex:', method.toUpperCase(), options.url);
     
-    return axios(options);
+    return axios(options).catch(error => { console.error('apex: request error', error); throw error; });
 }
 
 

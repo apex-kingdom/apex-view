@@ -17,6 +17,7 @@ if (block_status)
 }
 else
 {  
+    app.use(express.json());
     app.use(require('./config/router'));
 }
 
