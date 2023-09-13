@@ -55,7 +55,7 @@
                   >
                     <x-flex aligns=":center" align="left" gap="1">
                       <x-icon :name="selected ? 'check' : 'checkEmpty'" :size="iconSize" /> 
-                      <x-text flex="1 0" overflow="auto"> {{ c.name }} </x-text>
+                      <x-text overflow="auto"> {{ c.name }} </x-text>
                     </x-flex>
                   </x-option>                
                 </x-choose>
@@ -72,6 +72,7 @@
 <script>
 import { EBackground, XButton, XCheckbox, XChoose, XContext } from 'exude'
 import { XDropMenu, XFieldset, XFlex, XIcon, XOption, XText } from 'exude'
+import { extra } from '_source/lib/wallet';
 
 
 export default
@@ -116,16 +117,33 @@ export default
             let one = s1.name.toLowerCase();
             let two = s2.name.toLowerCase();
             
+            if (one === '?????') one = 'zzzzz';
+            if (two === '?????') two = 'zzzzz';
+            
             return one.localeCompare(two);
         },
+        items: [],
         show: false 
     }),
     
     computed:
     {
-        list() { return (this.collections || []).sort(this.compare); },
+        list() { return this.items.sort(this.compare); },
         
         policyMap() { return (this.collections || []).reduce((o, c) => ({ ...o, [c.policyId]: c.name }), {}); }
+    },
+    
+    watch:
+    {
+        collections:
+        {
+            handler()
+            {
+                this.items = this.collections;
+                extra.all(this.collections).then(data => this.items = [ ...data ]);
+            },
+            immediate: true
+        }
     }
 }
 </script>

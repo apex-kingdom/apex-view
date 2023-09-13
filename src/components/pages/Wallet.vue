@@ -38,7 +38,7 @@ import WalletDetails from '../WalletDetails'
 import WalletInfo from '../WalletInfo'
 import WalletTabs from '../WalletTabs'
 import shorten from '_source/lib/shorten'
-import wallet from '_source/lib/wallet'
+import { wallet } from '_source/lib/wallet'
 
 
 export default
