@@ -12,7 +12,7 @@ var reCut = /\s*#.*$/;
 */
 module.exports = function(base)
 {
-    var collections = {}, requests = {}, cname = {};
+    var collections = {}, requests = {};
     
     var add = async asset =>
     {
@@ -35,7 +35,7 @@ module.exports = function(base)
                 collection = { ...collection, ...data };
             }            
           
-            if (!collection.name) collection.name = asset.project;
+            if (!collection.name) collection.name = asset.project || asset.assetBaseName || asset.name;
             if (!collection.description) collection.description = asset.description;
           
             if (!collection.mintTime || collection.mintTime > asset.mintTime)             
@@ -58,9 +58,7 @@ module.exports = function(base)
             }
             
             collection.traits = Object.keys(asset.traits).reduce(reducer, collection.traits || {});
-            
-            cname[policyId] = common(cname[policyId], asset.name);
-            
+                        
             return collections[policyId] = collection;
         });      
     }
@@ -72,33 +70,11 @@ module.exports = function(base)
             let collection = collections[key];
           
             collection.userQuantityFormatted = nf(collection.userQuantity);
-            
-            if (!collection.name)
-            {
-                if (cname[key] && collection.userQuantity > 1) 
-                    collection.name = cname[key].replace(reCut, '');
-                else 
-                    collection.name = '?????';
-            }
-            
+            if (!collection.name) collection.name = '?????';
+                        
             return collection;
         });
     }
     
     return { add, get };
-}
-
-
-function common(og, name)
-{
-    if (og && name)
-    {
-        var index = 0;
-        
-        while(index < og.length && og[index] === name[index]) index++;
-        
-        return og.slice(0, index);
-    }
-    
-    return og || name;
 }
