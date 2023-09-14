@@ -1,9 +1,9 @@
 <template>
   <token-thumb 
-    :title="data.name" 
+    :title="token.name" 
     :count="count" 
-    :image="data.image" 
-    :image-type="data.imageType" 
+    :image="token.image" 
+    :image-type="token.imageType" 
     @open="handleOpen" 
     @amount="handleAmount" 
   />
@@ -15,6 +15,7 @@ import { XBox } from 'exude'
 import { m_context } from 'exude'
 import TokenThumb from '_comps/TokenThumb'
 import { encode } from '_source/lib/json-code';
+import { extra } from '_source/lib/wallet';
 
 
 export default
@@ -33,11 +34,26 @@ export default
         data: Object
     },
     
+    data: () => ({ token: {} }),
+    
     computed:
     {
-        count() { return this.data.isNFT ? null : this.data.userQuantityFormatted; },              
+        count() { return this.token.isNFT ? null : this.token.userQuantityFormatted; },              
 
-        isCollection() { return this.data.__entity === 'collection' },
+        isCollection() { return this.token.__entity === 'collection' }
+    },
+    
+    watch:
+    {
+        data:
+        {
+            handler()
+            {
+                this.token = this.data;
+                extra(this.data).__ready.then(data => this.token = { ...data });
+            },
+            immediate: true
+        }
     },
     
     methods:
@@ -48,7 +64,7 @@ export default
             {
                 let filter = 
                 [ 
-                    { $test: [ this.data.policyId ], filterType: 'collection', $path: 'policyId' } 
+                    { $test: [ this.token.policyId ], filterType: 'collection', $path: 'policyId' } 
                 ];
                 this.$router.push({ name: 'nfts-filter', params: { hash: encode(filter) } });
             }
@@ -60,7 +76,7 @@ export default
         
         handleOpen() 
         { 
-            console.log(this.data.name, this.data);
+            console.log(this.token.name, this.token);
             
             if (this.wallet)
                 this.wallet.showConsole(this.data);

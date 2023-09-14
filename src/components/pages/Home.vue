@@ -23,21 +23,21 @@
         block 
         align="center" 
         font="tiny" 
-        colors="white:red_l-.75" 
-        width="50%" 
+        colors="blue_l.6:blue_l-.75" 
+        border="a.5!blue_l-.25"
+        width="40%" 
         min-width="86" 
-        max-width="180" 
+        max-width="150" 
         radius="a2" 
-        pad="a4" 
+        pad="v3 h4" 
         margin="b5"
       >
+        <x-text bold inline block font="large" border="b.25!blue" pad="b1 h10" margin="b3">
+          BETA
+        </x-text>
         <p>
-          Please note that this app is currently in <u>ALPHA</u> as bugs are squashed and features are 
-          being added.  
-        </p>
-        <br />
-        <p>
-          <b>Beware that third-party service limits may cut off access to the app with excessive usage.</b>
+          Please make abundant use of this app and provide feedback, suggestions, and comments in our 
+          <x-link colors="blue_l.75" href="https://discord.gg/jyWgDmGd63" target="_blank">discord</x-link>!
         </p>
       </x-text>
       <address-select :addys="addys" width="75%" max-width="225" @select="handleSelect" @remove="handleRemove" />
@@ -47,7 +47,7 @@
 
 
 <script>
-import { EAnimation, EExtension, EStylesheet, XBox, XContext, XFlex, XIcon, XText } from 'exude'
+import { EAnimation, EExtension, EStylesheet, XBox, XContext, XFlex, XIcon, XLink, XText } from 'exude'
 import AddressSelect from '../AddressSelect'
 import FMainTitle from '../face/FMainTitle'
 
@@ -56,7 +56,10 @@ export default
 {
     name: 'Home',
         
-    components: { AddressSelect, EAnimation, EExtension, EStylesheet, FMainTitle, XBox, XContext, XFlex, XIcon, XText },
+    components: 
+    { 
+        AddressSelect, EAnimation, EExtension, EStylesheet, FMainTitle, XBox, XContext, XFlex, XIcon, XLink, XText 
+    },
     
     data: () => ({ addys: [] }),
     

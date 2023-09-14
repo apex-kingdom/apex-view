@@ -4,7 +4,7 @@ var pull = require('../request');
 var { prod } = require('../../config');
 
 
-var reBaseName = /^(.+)\s*#.*$/;
+var reBaseName = /^(.+?)(\s*#)?\d*$/;
 let reProto = /^(https?)|(ipfs)|(data):/i;
 /**
     Gets token data for the given asset id.
@@ -115,6 +115,7 @@ function getTraits(ocmd)
     for (prop of traitObjects)
     {
         if (Array.isArray(ocmd[prop]))
+        {
             return ocmd[prop].reduce((obj, item) => 
             {
                 if (typeof item === 'object' && item !== null)
@@ -125,9 +126,13 @@ function getTraits(ocmd)
                         return { ...obj, ...item };
                 }
                 
+                if (typeof item === 'string')
+                    return { ...obj, traits: (obj.traits ? obj.traits + ', ' : '') + item };
+                
                 return obj;
             }, {});
-            
+        }
+        
         if (typeof ocmd[prop] === 'object')
             return objectFilter(ocmd[prop], () => true);
     }

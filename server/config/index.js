@@ -31,6 +31,7 @@ module.exports =
     // api request throttling
     throttles:
     {
+        blockfrost: { max: 100, period: 500 },
         koios: { max: 100, period: 10000 }, // max 100 per 10 seconds
         opencnft: { max: 5, period: 1000 } // max 5 per 1 second
     }

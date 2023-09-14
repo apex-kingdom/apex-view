@@ -1,7 +1,7 @@
 <template>
   <x-context #default="{ bgColor, ext, apex }">
     <x-box :key="assetProps.value" width="100%">
-      <f-token-image iconbar :image="data.image" :image-type="data.imageType" :size="size" margin="hauto" />
+      <f-token-image iconbar :image="token.image" :image-type="token.imageType" :size="size" margin="hauto" />
       <x-flex 
         aligns=":center:space-around" 
         colors="#EEEEEE:black_f.25" 
@@ -22,7 +22,7 @@
       </x-flex>
       <x-flex invert aligns=":center" margin="v5 h3">
         <x-text 
-          v-if="data.description" 
+          v-if="token.description" 
           block
           align="center"
           font="base" 
@@ -33,23 +33,23 @@
           radius="a3"
           over-wrap="anywhere"
         >
-          {{ data.description }}
+          {{ token.description }}
         </x-text>
         <x-link 
-          v-if="data.homepage" 
+          v-if="token.homepage" 
           font="micro"
           :colors="`${apex.diff}_f.5:${apex.diff}_f.75`" 
           :hf-colors="ext.diff" 
-          :href="data.homepage" 
+          :href="token.homepage" 
           target="_blank" 
           pad="v1 h3"
           radius="a10"
         >
-          <x-icon name="web" size="4" align-v="middle" /> {{ data.homepage }}
+          <x-icon name="web" size="4" align-v="middle" /> {{ token.homepage }}
         </x-link>
       </x-flex>
-      <f-traits v-if="data.isNFT" :object="data.traits" />
-      <f-traits v-if="isCollection" #default="{ value }" :object="data.traits" box-width="100%">
+      <f-traits v-if="token.isNFT" :object="token.traits" />
+      <f-traits v-if="isCollection" #default="{ value }" :object="token.traits" box-width="100%">
         <x-grid inline cols="4fr 1fr" gap="1:1" margin="b2" over-wrap="anywhere" width="100%">
           <template v-for="(key, idx) in Object.keys(value)">
             <x-box :key="key" align="left" :colors="`:${bgColor}_f.75`" pad="a1"> 
@@ -98,6 +98,7 @@ import { XBox, XContext, XGrid, XFlex, XIcon, XImage, XLink, XText } from 'exude
 import FDataValue from './face/FDataValue'
 import FTokenImage from './face/FTokenImage'
 import FTraits from './face/FTraits'
+import { extra } from '_source/lib/wallet';
 
 
 export default
@@ -118,21 +119,23 @@ export default
         data: Object
     },
     
+    data: () => ({ token: {} }),
+    
     computed:
     {
         assetProps()
         {
-            let props = {}, { data } = this;
+            let props = {}, { token } = this;
             
             if (this.isCollection)
             {
                 props.label = 'policy id';
-                props.value = data.policyId;
+                props.value = token.policyId;
             }
             else
             {
                 props.label = 'fingerprint';
-                props.value = data.fingerprint;
+                props.value = token.fingerprint;
             }
         
             return props;
@@ -140,17 +143,17 @@ export default
         
         images() 
         {
-            let { files } = this.data;
+            let { files } = this.token;
             return files ? files.filter(i => (i.mediaType || '').includes('image')) : []; 
         },
         
-        isCollection() { return this.data.__entity === 'collection' },
+        isCollection() { return this.token.__entity === 'collection' },
         
         mintDate()
         {
-            if (!this.isCollection && this.data.mintTime)
+            if (!this.isCollection && this.token.mintTime)
             {
-                let date = new Date(this.data.mintTime);
+                let date = new Date(this.token.mintTime);
                 let m = date.getUTCMonth() + 1;
                 let d = date.getUTCDate();
                                            
@@ -158,13 +161,26 @@ export default
             }
         },
         
-        ocmds() { return this.data.onchainMetadataStandard; },
+        ocmds() { return this.token.onchainMetadataStandard; },
 
         videos() 
         {
-            let { files } = this.data;
+            let { files } = this.token;
             return files ? files.filter(v => (v.mediaType || '').includes('video')) : []; 
         }
-    }
+    },
+
+    watch:
+    {
+        data:
+        {
+            handler()
+            {
+                this.token = this.data;
+                extra(this.data).__ready.then(data => this.token = { ...data });
+            },
+            immediate: true
+        }
+    },
 }
 </script>

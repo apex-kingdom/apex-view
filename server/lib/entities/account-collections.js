@@ -1,6 +1,7 @@
 var nf = require('../num-format');
 
 
+var reCut = /\s*#.*$/;
 /**
     Builds collection entities for an account.
     
@@ -11,18 +12,30 @@ var nf = require('../num-format');
 */
 module.exports = function(base)
 {
-    var collections = {};
+    var collections = {}, requests = {};
     
     var add = async asset =>
     {
-        var { policyId } = asset;
-        // if we already have a collection or a pending promise for it,
-        // do not send for the data
-        collections[policyId] = Promise.resolve(collections[policyId] || base(policyId));
+        var { policyId } = asset;        
         
-        return collections[policyId].then(collection =>
+        return base.fromCache(policyId).then(data =>
         {
-            if (!collection.name) collection.name = asset.project || asset.name;
+            var collection = collections[policyId] || { __entity: 'collection', policyId };
+            
+            if (!data && !requests[policyId])
+            {
+                // request collection information if we haven't already (for caching 
+                // purposes)... but we're not waiting for it
+                requests[policyId] = base.request(policyId);
+                // instead we can inform client how to get this data
+                collection.__extra = ['/collection', { policyId }];
+            }
+            else
+            {
+                collection = { ...collection, ...data };
+            }            
+          
+            if (!collection.name) collection.name = asset.project || asset.assetBaseName || asset.name;
             if (!collection.description) collection.description = asset.description;
           
             if (!collection.mintTime || collection.mintTime > asset.mintTime)             
@@ -45,16 +58,20 @@ module.exports = function(base)
             }
             
             collection.traits = Object.keys(asset.traits).reduce(reducer, collection.traits || {});
-            
+                        
             return collections[policyId] = collection;
         });      
     }
     
     var get = () =>
     {
-        return Object.values(collections).map(collection => 
+        return Object.keys(collections).map(key => 
         {
+            let collection = collections[key];
+          
             collection.userQuantityFormatted = nf(collection.userQuantity);
+            if (!collection.name) collection.name = '?????';
+                        
             return collection;
         });
     }
