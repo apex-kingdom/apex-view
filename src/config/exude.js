@@ -12,7 +12,7 @@ export default
         /**
             Automatic HTML id generation.
         */
-        htmlIdGen: true,
+        htmlIdGen: false,
         /**
             String used to help prevent naming collisions.
         */
