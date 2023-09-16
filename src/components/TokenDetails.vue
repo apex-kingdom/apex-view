@@ -1,5 +1,5 @@
 <template>
-  <x-context #default="{ bgColor, ext, apex }">
+  <x-context #default="{ bgColor, ext, dm, apex }">
     <x-box :key="assetProps.value" width="100%">
       <f-token-image iconbar :image="token.image" :image-type="token.imageType" :size="size" margin="hauto" />
       <x-flex 
@@ -48,18 +48,28 @@
           <x-icon name="web" size="4" align-v="middle" /> {{ token.homepage }}
         </x-link>
       </x-flex>
-      <f-traits v-if="token.isNFT" :object="token.traits" />
-      <f-traits v-if="isCollection" #default="{ value }" :object="token.traits" box-width="100%">
-        <x-grid inline cols="4fr 1fr" gap="1:1" margin="b2" over-wrap="anywhere" width="100%">
-          <template v-for="(key, idx) in Object.keys(value)">
-            <x-box :key="key" align="left" :colors="`:${bgColor}_f.75`" pad="a1"> 
+      <f-traits v-if="token.isNFT" :object="token.traits" @trait="heTrait" />
+      <f-traits v-if="isCollection" #default="{ attr, value }" :object="token.traits" box-width="100%">
+        <template v-for="(key, idx) in Object.keys(value).sort()">
+          <x-flex 
+            el="button"
+            pointer
+            :colors="`:${bgColor}_f.75`" 
+            :hf-colors="`:${bgColor}_f.25`" 
+            over-wrap="anywhere" 
+            width="100%"
+            pad="h1"
+            margin="v1" 
+            @click="heTrait({ attr, trait: key })"
+          >
+            <x-box :key="key" align="left" xelf="5" pad="a1"> 
               {{ key }} 
             </x-box>
-            <x-box :key="key + '_ct'" align="right" :colors="`:${bgColor}_f.75`" pad="a1"> 
+            <x-box :key="key + '_ct'" align="right" xelf="1" pad="a1"> 
               {{ value[key] }} 
             </x-box>
-          </template>
-        </x-grid>
+          </x-flex>
+        </template>
       </f-traits>
       <!-- <x-box :height="size" :width="size" margin="v8 hauto">
         <f-token-image
@@ -98,6 +108,7 @@ import { XBox, XContext, XGrid, XFlex, XIcon, XImage, XLink, XText } from 'exude
 import FDataValue from './face/FDataValue'
 import FTokenImage from './face/FTokenImage'
 import FTraits from './face/FTraits'
+import { encode } from '_source/lib/json-code';
 import { extra } from '_source/lib/wallet';
 
 
@@ -182,5 +193,22 @@ export default
             immediate: true
         }
     },
+    
+    methods:
+    {
+        heTrait({ attr, trait })
+        {
+            if (attr && trait)
+            {
+                let filter = 
+                [ 
+                    { $test: [ this.token.policyId ], filterType: 'collection', $path: 'policyId' },
+                    { $test: `${attr}/${trait}`, filterType: 'string', $path: 'traits/keyvals' }
+                ];
+                
+                this.$router.push({ name: 'nfts-filter', params: { hash: encode(filter) } });            
+            }
+        }
+    }
 }
 </script>

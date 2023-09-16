@@ -1,4 +1,4 @@
-var { apikey } = require('./');
+var { api } = require('./');
 
 
 module.exports =
@@ -9,9 +9,10 @@ module.exports =
         url: 'https://cardano-mainnet.blockfrost.io/api/v0',
         headers: 
         { 
-            project_id: apikey.blockfrost
+            project_id: '{apikey}'
         },
         path: 'data',
+        api: 'blockfrost',
         paging:
         {
             limit: 100,
@@ -44,10 +45,10 @@ module.exports =
         url: 'https://api.koios.rest/api/v0',
         headers:
         {
-            authorization: 'Bearer ' + apikey.koios
+            authorization: 'Bearer {apikey}'
         },
         path: 'data',
-        throttle: 'koios',
+        api: 'koios',
         paging:
         {
             limit: 800,
@@ -61,14 +62,14 @@ module.exports =
         url: 'https://api.opencnft.io/{version}',
         headers: 
         { 
-            'X-Api-Key': apikey.opencnft
+            'X-Api-Key': '{apikey}'
         },
         path: 'data',
+        api: 'opencnft',
         vars:
         {
             version: '2'
-        },
-        throttle: 'opencnft'
+        }
     },
     
     account: { base: 'blockfrost', url: '/accounts/{account}' },
@@ -100,7 +101,7 @@ module.exports =
     
     address: { base: 'blockfrost', url: '/addresses/{address}', path: 'stake_address' },
                         
-    asset: { base: 'blockfrost', url: '/assets/{asset}', throttle: 'blockfrost' },
+    asset: { base: 'blockfrost', url: '/assets/{asset}' },
         
     assetAddress: { base: 'asset', url: '/addresses' },
     
