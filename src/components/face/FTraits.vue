@@ -15,8 +15,18 @@
           {{ key || '---' }} 
         </x-text>
         <!-- @slot trait value -->
-        <slot :value="object[key]">     
-          <x-text block :colors="`${ext.same}:${ext.diff}_f.25`" pad="v1 h2" radius="b1 l1" over-wrap="anywhere"> 
+        <slot :attr="key" :value="object[key]">     
+          <x-text 
+            block 
+            el="button"
+            :colors="`${ext.same}:${ext.diff}_f.25`" 
+            :pointer="!!object[key]"
+            pad="v1 h2" 
+            radius="b1 l1" 
+            width="100%"
+            over-wrap="anywhere"
+            @click="heTrait(key)"
+          > 
             {{ object[key] || '---' }}
           </x-text>
         </slot> 
@@ -51,6 +61,11 @@ export default
     computed:
     {
         keys() { return Object.keys(this.object).sort(); }
+    },
+    
+    methods:
+    {
+        heTrait(key) { this.$emit('trait', { attr: key, trait: this.object[key] }); }
     }
 }
 </script>
