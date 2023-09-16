@@ -22,7 +22,7 @@ export function extra(entity, reset = false)
         {
             entity.__ready = axios.post(...__extra)
                 .then(r => Object.keys(r.data).reduce((o, k) => { o[k] = r.data[k] || o[k]; return o; }, entity))
-                .catch(e => console.info('Unable to retrieve additional entity data', e));
+                .catch(e => { console.info('Unable to retrieve additional entity data', e); throw e; });
         }
     }
     else
