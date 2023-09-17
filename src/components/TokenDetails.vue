@@ -63,7 +63,7 @@
             @click="heTrait({ attr, trait: key })"
           >
             <x-box :key="key" align="left" xelf="5" pad="a1"> 
-              {{ key }} 
+              {{ key || '---' }} 
             </x-box>
             <x-box :key="key + '_ct'" align="right" xelf="1" pad="a1"> 
               {{ value[key] }} 
