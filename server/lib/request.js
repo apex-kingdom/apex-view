@@ -14,8 +14,6 @@ var { apikeys, prod, throttles } = require('../config');
       Configuration for the request to make.
     @param { any, object } params
       Interpolation parameters for request.
-    @param { string } pathname
-      Path to the data needed from the request.
     @return { promise }
       Resolves to the data requested.
 */
@@ -52,28 +50,23 @@ function pull(spec, params)
     
     var { limit, type, lname, pname } = paging;
     
-    var go = () =>
+    if (pname) // get all results by page
     {
-        if (pname) // get all results by page
+        var all = [];
+        
+        var page = next => execute({ ...reps, [lname]: limit, [pname]: next }).then(array => 
         {
-            var all = [];
+            // potential provider error: limits/offsets not working
+            if (!Array.isArray(array)) return all;
             
-            var page = next => execute({ ...reps, [lname]: limit, [pname]: next }).then(array => 
-            {
-                // potential provider error: limits/offsets not working
-                if (!Array.isArray(array)) return all;
-                
-                all.push(...array);           
-                return array.length < limit ? all : page(next + (type || limit));
-            });
-            
-            return page(type);
-        }
-
-        return execute(reps);
+            all.push(...array);           
+            return array.length < limit ? all : page(next + (type || limit));
+        });
+        
+        return page(type);
     }
-    
-    return go().catch(error => handler(error, () => pull(spec, params)));
+
+    return execute(reps);
 }
 
 
@@ -124,39 +117,48 @@ function inter(target, reps)
 }
 
 
-function handler(errorObj, retry)
+function handler(name)
 {
-    var { code, response: { status = 0, statusText } = {} } = errorObj;
+    var spec = resolve(name);
     
-    var err = msg => console.error('apex-error:', msg, { status, code, statusText });
+    var checkRetry = error =>
+    {
+        var { code, response: { status = 0, statusText } = {} } = error;
         
-    if (status >= 500)
-    {
-        // api server issue - cannot continue
-        err('api server issue');
-    }
-    else if (status === 429)
-    {
-        // resource not found
-        err('too many requests');
-        return retry();
-    }
-    else if (status >= 400)
-    {
-        // resource not found
-        err('request cannot be fulfilled');
-    }
-    else if (code === 'ECONNRESET')
-    {
-        err('api server connection was reset');
-        return retry();
-    }
-    else
-    {
-        err('unknown error occurred');
-    }
+        var err = msg => console.error('apex-error:', msg, { status, code, statusText });
+      
+        if (status >= 500)
+            return (err('api server issue'), false);
+
+        if (status === 429)
+            return (err('too many requests'), true);
+
+        if (status >= 400)
+            return (err('request cannot be fulfilled'), false);
             
-    throw errorObj;
+        if (code === 'ECONNRESET' || code === 'ETIMEDOUT')
+            return (err('api server connection reset or timeout'), true);
+        
+        return (err('an error occurred'), false);
+    }
+    
+    return (...args) => 
+    {
+        let retries = 2;
+        
+        let operation = () => pull(spec, ...args).catch(error => 
+        {
+            if (checkRetry(error) && retries-- > 0)
+            {
+                console.log('apex: retrying', name, 'request for', ...args);
+                return operation();
+            }
+            
+            throw error;
+        });
+        
+        return operation();
+    }
 }
 
 
@@ -199,4 +201,4 @@ function resolve(name)
 
 resolve.cache = {};
 
-module.exports = Object.keys(config).reduce((o, n) => ({ ...o, [n]: (...a) => pull(resolve(n), ...a) }), {});
+module.exports = Object.keys(config).reduce((o, n) => ({ ...o, [n]: handler(n) }), {});
