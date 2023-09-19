@@ -1,43 +1,8 @@
 <template>
-  <x-app :colors="`text:${bgColor}`" min-height="100vh" font="base" @click="hideNav(false)">
+  <x-app :colors="`text:${settings.bgColor}`" min-height="100vh" font="base">
     <e-transition sel="div" property="width,height,margin,gap" :duration=".15" timing="ease" />
     <x-context v-bind="context">
-      <x-box v-listen-outside-click="() => openConfig = false" pos="fixed" trbl="t0 b0 l0" z-index="1000">
-        <app-settings 
-          :show="openConfig" 
-          :bgColor.sync="bgColor"
-          @update="settings = $event" 
-          @about="openAbout = !openAbout, openConfig = false"
-        />
-        <main-nav 
-          v-bind="navProps[navState]" 
-          :hide.sync="hideCtrls" 
-          :small="smallScreen"
-          transition="nav" 
-          z-index="10"
-          @config="openConfig = !openConfig" 
-          @bg-color="bgColor = $event"
-          @hover="navHover = $event"
-        />
-      </x-box>
-      <x-when #default="props" :test="openAbout" opacity="0" w-opacity="1" z-index="-1" w-z-index="1010">
-        <x-flex v-bind="props" aligns=":center:center" colors=":black_f.25" pos="fixed" trbl="a0">
-          <x-box 
-            colors=":black" 
-            height="75%" 
-            width="75%" 
-            overflow="auto"
-            overscroll="contain"
-            border="a1vw!black"
-            pad="a1vw" 
-            shadow="floater" 
-            transition="about" 
-            radius="a6"
-          >
-            <about @close="openAbout = false" />
-          </x-box>
-        </x-flex>
-      </x-when>
+      <app-control @settings="settings = $event" />
       <x-box pos="relative" z-index="1">
         <router-view />
       </x-box>
@@ -48,12 +13,8 @@
 
 <script>
 import color from 'color'
-import { ETransition, XApp, XBox, XContext, XFlex, XWhen } from 'exude';
-import { m_media_query } from 'exude'
-import { listenOutsideClick } from 'exude'
-import About from './About'
-import AppSettings from './AppSettings'
-import MainNav from './MainNav'
+import { ETransition, XApp, XBox, XContext } from 'exude';
+import AppControl from './AppControl'
 import router from '_source/config/router'
 
 
@@ -64,52 +25,13 @@ export default
     el: `#${app.rootHtmlId}`,
     
     router,
-    
-    mixins: [ m_media_query('smallScreen') ],
-    
-    components: { About, AppSettings, ETransition, MainNav, XApp, XBox, XContext, XFlex, XWhen },
-    
-    directives: { listenOutsideClick },
-    
-    data: () => 
-    ({
-        bgColor: 'black',
-        hideCtrls: false,
-        navHover: false, 
-        navState: 'show',
-        openAbout: false,
-        openConfig: false,
-        settings: {}
-    }),
+        
+    components: { AppControl, ETransition, XApp, XBox, XContext },
+        
+    data: () => ({ settings: { bgColor: 'black' } }),
     
     created()
     {
-        this.navProps =
-        {
-            show: { trbl: 'rshownav t0', opacity: 1 },
-            hide: { trbl: 'rhidenav t0', opacity: 0 }
-        }
-        
-        let timeId = null;
-        this.hideNav = bool =>
-        {
-            clearTimeout(timeId);
-            
-            if (bool)
-            {
-                // do not allow main nav to close if settings open
-                if (!this.openConfig && !this.navHover)
-                    timeId = setTimeout(() => this.navState = 'hide', 4000);
-            }
-            else
-            {
-                this.navState = 'show';
-                // hide again if necessary
-                if (this.hideCtrls) this.hideNav(this.hideCtrls);
-            }
-        }
-        
-        ['hideCtrls', 'openConfig', 'navHover'].forEach(p => this.$watch(p, () => this.hideNav(this.hideCtrls)));
         // color swapper
         this.color = (light, dark) =>
         {
@@ -124,19 +46,19 @@ export default
     
     computed:
     {
-        bgIsDark() { return color(this.bgColor).isDark(); },
+        bgIsDark() { return color(this.settings.bgColor).isDark(); },
         
         context()
         {
-            let { noCounts, noGutters, noLabels } = this.settings;
+            let { bgColor, hideCtrls, mobile, noCounts, noGutters, noLabels } = this.settings;
             
             let context =
             {
-                hideCtrls: this.hideCtrls,
+                hideCtrls,
                 hideLbls: noLabels,
                 hideCnts: noCounts,
-                mobile: this.smallScreen,
-                bgColor: this.bgColor,
+                mobile,
+                bgColor,
                 ext: this.color('white', 'black'),
                 gray: this.color('ltgray', 'gray'),
                 apex: this.color('quarter', 'prime'),

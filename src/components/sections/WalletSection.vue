@@ -16,7 +16,7 @@
                   font="base" 
                   align="left" 
                   pad="v1 h2" 
-                  @update:value="handleUpdate"
+                  @update:value="heSort"
                 >
                   <x-option 
                     v-for="key of sortKeys" 
@@ -108,19 +108,13 @@ export default
             nameDesc: { label: 'Name (desc)', fn: (a, b) => b.name.localeCompare(a.name) },
         };
         
-        return { show: false, sort: 'time', sorting, sortKeys: Object.keys(sorting), value: [] };
+        let sortKeys = Object.keys(sorting);
+        
+        return { show: false, sort: 'time', sorting, sortKeys, value: [] };
     },
 
     created()
     {
-        this.routeFilter = () =>
-        {
-            let { hash } = this.$route.params;
-            this.value = hash ? decode(hash) : [];            
-        }
-        
-        this.routeFilter();
-        
         this.sort = localStorage.getItem(this.label.toLowerCase() + '-sort') || 'time';
     },
         
@@ -141,7 +135,7 @@ export default
       
         filterSpec()
         {                      
-            let $test = this.jsonSpec.map(value =>
+            let $test = this.cleanSpec(this.value).map(value =>
             {
                 let { filterType, ...spec } = value;
                 
@@ -173,11 +167,49 @@ export default
             return { $test, $and: true };
         },
 
-        inputHash() { return this.jsonSpec.length ? encode(this.jsonSpec) : '' },
-
-        jsonSpec()
+        sortedItems() 
         {
-            return this.value.filter(({ $test, $path }) => 
+            let { items, sorting, sort } = this;
+            return sort ? items.sort(sorting[sort].fn) : items; 
+        }
+    },
+
+    watch:
+    {
+        '$route.params':
+        {
+            handler({ hash }) 
+            {
+                if (this.hash !== hash)
+                    this.value = hash ? decode(hash) : []; 
+            },
+            immediate: true
+        },
+
+        sort() { localStorage.setItem(this.label.toLowerCase() + '-sort', this.sort); },
+        
+        value()
+        {
+            let list = this.cleanSpec(this.value);
+
+            this.hash = list.length ? encode(list) : undefined;
+
+            if (this.hash !== this.$route.params.hash)
+            {              
+                let route = { name: this.label.toLowerCase() + '-filter' };                            
+              
+                if (this.hash) route.params = { hash: this.hash };
+                    
+                this.$router.push(route);
+            }
+        }        
+    },
+    
+    methods:
+    {
+        cleanSpec(spec)
+        {
+            return spec.filter(({ $test, $path }) => 
             {              
                 if (!$test) return false;
                 if (!$path) return false;
@@ -188,34 +220,8 @@ export default
                 return true;
             });
         },
-        
-        sortedItems() 
-        {
-            let { items, sorting, sort } = this;
-            return sort ? items.sort(sorting[sort].fn) : items; 
-        }
-    },
 
-    watch:
-    {
-        '$route.name'() { this.routeFilter(); },
-        
-        inputHash()
-        {
-            let name = this.label.toLowerCase() + '-filter';
-          
-            if (this.inputHash)
-                this.$router.push({ name, params: { hash: this.inputHash } });
-            else
-                this.$router.push({ name });
-        },
-        
-        sort() { localStorage.setItem(this.label.toLowerCase() + '-sort', this.sort); }
-    },
-    
-    methods:
-    {
-        handleUpdate(value) { this.sort = value; this.show = false; },
+        heSort(value) { this.sort = value; this.show = false; },
     }
 }
 </script>

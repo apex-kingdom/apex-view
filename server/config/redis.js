@@ -1,5 +1,5 @@
 var { createClient } = require('redis');
-var { keyexp, prod, redis_url, throttles } = require('./');
+var { keyexp, prod, redis_url } = require('./');
 
 
 var client = createClient({ url: redis_url });
@@ -26,23 +26,29 @@ module.exports =
     clearCache: () => client.flushDb().then(() => console.log('apex: redis app cache cleared.')),    
     disconnect: () => client.disconnect(),
     
+    incr: name => client.incr(name),
+    
     jget: key => client.get(key).then(value => value ? (msg.usingCache(key), JSON.parse(value)) : null),
     jset: (key, value, ttl) => value && client.set(key, JSON.stringify(value), { EX: ttl || keyexp.default }),
     
-    throttle: (name, operation) =>
+    throttle: (throttle, operation) =>
     {
-        var { max, period, interval = period / max } = throttles[name], counter = 0;
+        var { name, max, cool, scale } = throttle;
+        var decr = () => client.decr(name)
         
-        let permit = () => 
+        var permit = () => 
         {
-            var lock = name + '-' + (counter++ % max);
-            
-            return client.set(lock, 'locked', { NX: true }).then(status => new Promise(accept =>
+            return client.incr(name).then(count => new Promise((accept, reject) =>
             {
-                if (status)
-                    setTimeout(() => operation().then(accept).finally(() => client.del(lock)), period);
+                if (count <= max)
+                {                    
+                    var wait = (Math.floor(Math.min(count, max) / scale) || 1) * cool;      
+                    operation().then(accept).catch(reject).finally(() => setTimeout(decr, wait));
+                }
                 else
-                    return setTimeout(() => accept(permit()), interval);
+                {
+                    decr().finally(() => setTimeout(() => accept(permit()), cool / max));
+                }
             }));
         }
         

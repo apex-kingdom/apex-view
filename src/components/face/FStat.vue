@@ -7,7 +7,7 @@
     >
       {{ value }} 
     </x-text>
-    <x-box margin="r2" :colors="active || hover ? 'white:white_f.75' : null" pad="v.4vw r.75vw l.5vw" radius="b.5vw r.5vw"> 
+    <x-box :colors="active || hover ? 'white:white_f.75' : null" pad="v.4vw r.75vw l.5vw" radius="b.5vw r.5vw"> 
       {{ label }} 
     </x-box>
   </x-flex>
