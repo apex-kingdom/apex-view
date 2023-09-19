@@ -48,7 +48,7 @@ module.exports =
     throttles:
     {
         // max 500 in 1 second with 25 per second cool
-        blockfrost: { max: 500, cool: 1000, scale: 25 }, 
+        blockfrost: { max: 500, cool: 1000, scale: 10 }, 
         // max 100 per 10 seconds
         koios: { max: 100, cool: 10000 },
         // max 5 per second
