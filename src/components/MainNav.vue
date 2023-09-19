@@ -1,18 +1,5 @@
 <template>
-  <x-flex 
-    v-bind="$attrs" 
-    invert 
-    pos="absolute"         
-    aligns=":center" 
-    colors=":black_f.125" 
-    border="a.1vw!gray" 
-    pad="a.8vw" 
-    gap=":.75vw"
-    radius="a1vw" 
-    margin="t2.5vh" 
-    shadow="floater"
-    @hover="$emit('hover', $event)"
-  >
+  <f-overbox v-bind="$attrs" invert pos="absolute" margin="v2.5vh" pad="v.6vw h.8vw" @hover="$emit('hover', $event)">
     <x-link colors="quarter" display="flex" @click="$router.push({ name: 'home' })">
       <x-icon name="apex" size="mainnav" />
     </x-link>
@@ -24,7 +11,6 @@
       hf-colors="white"
       cursor="pointer" 
       radius="a2"
-      shadow="insetFloater"
       @update:value="$emit('bg-color', $event)"
     >
       <x-icon name="eyedropper" size="mainnav" />
@@ -32,13 +18,14 @@
     <x-link display="flex" @click="$emit('config')">
       <x-icon name="settings" size="mainnav" />
     </x-link>
-  </x-flex>
+  </f-overbox>
 </template>
 
 
 <script>
-import { XColor, XFlex, XIcon, XLink } from 'exude'
+import { XColor, XIcon, XLink } from 'exude'
 import { m_toggle } from 'exude'
+import FOverbox from './face/FOverbox'
 
 
 export default
@@ -47,7 +34,7 @@ export default
     
     mixins: [ m_toggle('hide') ],
     
-    components: { XColor, XFlex, XIcon, XLink },
+    components: { FOverbox, XColor, XIcon, XLink },
     
     props:
     {

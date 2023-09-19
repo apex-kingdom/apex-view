@@ -90,10 +90,9 @@
       <x-layout-cell span="12" anchor="center:center">
         <f-button font="vSmall" margin="v8 hauto" @click="$emit('close')"> Close </f-button>
         <x-text colors="quine" font="vSmaller">
-          <x-icon name="cardano" size="4" title="Cardano Logo" align-v="middle" margin="b.5" />ApexView 
-          is Copyright ©2023 
-          <x-icon name="apex" size="4" title="AK Logo" align-v="middle" margin="b.5" />Apex Kingdom &amp; 
-          <x-image :src="hadley" height="4" title="The Hadley" align=":middle" margin="b.5" />Wilsonape
+          ApexView from 
+          <x-icon name="apex" size="5" title="AK Logo" align-v="middle" margin="b.5" /> &amp; 
+          <x-image :src="hadley" height="5" title="The Hadley" align=":middle" margin="b.5" />
         </x-text>
       </x-layout-cell>
     </x-layout>

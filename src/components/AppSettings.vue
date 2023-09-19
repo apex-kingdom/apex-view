@@ -4,12 +4,12 @@
     invert 
     :expand="show" 
     colors=":black_f.125"
-    border="a.1vw!gray l0"
+    :border="`a.15vw!${bgColor}_f.25 l0`"
     :hide="hide" 
-    breadth="100%"
-    margin="l-.1vw" 
+    breadth="98vh"
+    margin="l-.1vw v1vh" 
     radius="r6 b6"
-    shadow="sidebar"
+    shadow="floater"
     @transitionstart="hide = false"
     @transitionend="hide = !show"
   >
@@ -39,8 +39,8 @@
         @update:value="emitBgColor($event)" 
       />
     </x-text> 
-    <x-link block margin="v1vw hauto" colors="quine" @click="$emit('about')">
-      <x-icon name="apex" size="3.5vw" />
+    <x-link block margin="t1vw b2vw hauto" colors="quine" @click="$emit('about')">
+      <x-icon name="info" size="3.5vw" />
     </x-link>
   </x-exapse>
 </template>

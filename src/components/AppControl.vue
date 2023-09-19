@@ -1,11 +1,11 @@
 <template>
   <x-box v-listen-outside-click="heOutsideClick" pos="fixed" trbl="t0 b0 l0" z-index="1000">
-    <e-extension sel=".nav" transition="nav" /> 
+    <e-extension sel="[data-main-nav]" transition="nav" /> 
     <app-settings :show="openConfig" :bgColor.sync="bgColor" @update="heUpdate" @about="heAbout" />
     <main-nav 
-      v-bind="navProps" 
-      class="nav"
+      v-bind="navProps"       
       :hide.sync="hideCtrls" 
+      data-main-nav
       @config="heConfig" 
       @bg-color="bgColor = $event"
       @hover="navHover = $event"

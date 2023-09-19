@@ -1,8 +1,8 @@
 <template>
   <x-app :colors="`text:${settings.bgColor}`" min-height="100vh" font="base">
     <e-transition sel="div" property="width,height,margin,gap" :duration=".15" timing="ease" />
-    <app-control @settings="settings = $event" />
     <x-context v-bind="context">
+      <app-control @settings="settings = $event" />
       <x-box pos="relative" z-index="1">
         <router-view />
       </x-box>
@@ -28,7 +28,7 @@ export default
         
     components: { AppControl, ETransition, XApp, XBox, XContext },
         
-    data: () => ({ settings: {} }),
+    data: () => ({ settings: { bgColor: 'black' } }),
     
     created()
     {
