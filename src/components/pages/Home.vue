@@ -36,8 +36,12 @@
           BETA
         </x-text>
         <p>
-          Please make abundant use of this app and provide feedback, suggestions, and comments in our 
-          <x-link colors="blue_l.75" href="https://discord.gg/jyWgDmGd63" target="_blank">discord</x-link>!
+          Wallet loading may be slow, with larger wallets (500+ assets) taking quite some time to load.
+        </p>
+        <br />
+        <p>
+          Please make abundant use of this app and feel free to offer feedback, suggestions, and comments in the 
+          <x-link colors="blue_l.75" href="https://discord.gg/jyWgDmGd63" target="_blank">Apex Kingdom discord</x-link>!
         </p>
       </x-text>
       <address-select :addys="addys" width="75%" max-width="225" @select="handleSelect" @remove="handleRemove" />
