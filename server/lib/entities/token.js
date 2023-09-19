@@ -39,7 +39,7 @@ module.exports = async function(assetId, trans)
         token.title = meta.ticker && meta.name
             ? (meta.ticker !== meta.name ? `${meta.name} (${meta.ticker})` : meta.name) : token.name;
 
-        token.description = [].concat(ocmd.description || meta.description).join('');
+        token.description = [].concat(meta.description || ocmd.description).join('');
         token.homepage = meta.url;
 
         token.files = [].concat(ocmd.files || []).map(data => 
@@ -51,20 +51,22 @@ module.exports = async function(assetId, trans)
             
             return file;
         });
+
+        if (meta.logo)
+        {
+            token.image = [].concat(meta.logo).join('');
+            token.imageType = meta.mediaType;
+        }
         
-        if (ocmdExists && ocmd.image)
+        if (!token.image && ocmd.image)
         {
             token.image = [].concat(ocmd.image).join('');
             token.imageType = ocmd.mediaType;
             
-            if (!reProto.test(token.image)) 
+            if (!reProto.test(token.image))
                 token.image = 'ipfs://' + token.image;
-        }
-        else
-        {
-            token.image = [].concat(meta.logo).join('');          
-            token.imageType = meta.mediaType || 'image/png';     
-        }
+        }        
+
         // for collection use
         token.project = ocmd.project ? [].concat(ocmd.project).join('') : null;
         if (reBaseName.test(token.name)) token.assetBaseName = token.name.replace(reBaseName, '$1');    
@@ -82,11 +84,19 @@ module.exports = async function(assetId, trans)
             token.traits = {};
         }
         
-        return trans(data.initial_mint_tx_hash).then(tx => 
+        return Promise.all(
+        [
+            trans(data.initial_mint_tx_hash),
+            resolveImage(token.image, token.imageType)
+        ])
+        .then(([ tx, { image, imageType } ]) => 
         {
-            token.mintTime = tx.time
+            token.mintTime = tx.time;
+            token.image = image;
+            token.imageType = imageType;
+            
             return token;            
-        });
+        })        
     });
 }
 
@@ -138,4 +148,31 @@ function getTraits(ocmd)
     }
     
     return objectFilter(ocmd, (k, v) => !reNonTraits.test(k.slice(-1)[0]) && typeof v !== 'object');    
+}
+
+
+async function resolveImage(image, imageType)
+{
+    // limit image regex test to imitial characters to remove false positives
+    if (image && !reProto.test(image.slice(0, 10)))
+    {
+        if (imageType)
+        {
+            return { image: `data:${imageType};base64,${image}` };
+        }
+        else
+        {
+            return import('image-type').then(mod => 
+            {
+                let arrayBuff = Uint8Array.from(Buffer.from(image, 'base64'));
+                
+                return mod.default(arrayBuff).then(({ mime }) => 
+                {
+                    return { image: `data:${mime};base64,${image}` };
+                });
+            });            
+        }
+    }
+    
+    return { image, imageType };
 }

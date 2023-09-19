@@ -1,15 +1,5 @@
 <template>
-  <x-flex 
-    wrap 
-    aligns=":center:center" 
-    colors=":black_f.125" 
-    border="a.1vw!gray"
-    pad="v.8vw h1.8vw" 
-    radius="a1vw" 
-    gap="1.5vw:1.5vw"
-    margin="a2.5vh" 
-    shadow="floater"
-  >
+  <f-overbox>
     <f-data-value 
       :value="w.input" 
       label="wallet address" 
@@ -26,7 +16,7 @@
     <x-link display="flex" title="reload data" @click="wallet.reload">
       <x-icon name="reload" size="austral" />
     </x-link>
-  </x-flex>
+  </f-overbox>
 </template>
 
 
@@ -34,6 +24,7 @@
 import { XFlex, XIcon, XLink, XText } from 'exude'
 import { m_context } from 'exude'
 import FDataValue from './face/FDataValue'
+import FOverbox from './face/FOverbox'
 
 
 export default
@@ -42,7 +33,7 @@ export default
     
     mixins: [ m_context('wallet').receiver ],
 
-    components: { FDataValue, XFlex, XIcon, XLink, XText },
+    components: { FDataValue, FOverbox, XFlex, XIcon, XLink, XText },
     
     computed:
     {

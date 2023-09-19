@@ -7,7 +7,7 @@
           font="tiny" 
           :colors="`${ext.diff}:${ext.same}_f.65`" 
           :h-colors="`${ext.same}:${ext.diff}_f.5`" 
-          pad="v1" 
+          pad="v1 h.5" 
           cursor="pointer" 
           @click="$emit('amount')"
         > 
@@ -21,7 +21,7 @@
           @click="$emit('open')"
           @hover="show = $event"
         />
-        <x-text v-if="!hideLbls" font="tiny" over-wrap="anywhere" :colors="`${ext.diff}:${ext.same}_f.65`" pad="v1"> 
+        <x-text v-if="!hideLbls" font="tiny" over-wrap="anywhere" :colors="`${ext.diff}:${ext.same}_f.65`" pad="v1 h.5"> 
           {{ title }} 
         </x-text>
       </x-flex>    
