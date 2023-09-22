@@ -1,4 +1,4 @@
-var nf = require('../num-format');
+var nf = require('./num-format');
 
 
 var reCut = /\s*#.*$/;

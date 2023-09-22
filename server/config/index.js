@@ -1,6 +1,4 @@
 
-let min = 60, hour = min * 60, day = 24 * hour, week = 7 * day;
-
 module.exports =
 {
     // 3rd party apis
@@ -8,11 +6,6 @@ module.exports =
     {
         blockfrost:
         [
-            process.env.API_BLOCKFROST,
-            process.env.API_BLOCKFROST,
-            process.env.API_BLOCKFROST,
-            process.env.API_BLOCKFROST,
-            process.env.API_BLOCKFROST,
             process.env.API_BLOCKFROST,
             process.env.API_BLOCKFROST_2
         ],
@@ -26,16 +19,6 @@ module.exports =
             process.env.API_OPENCNFT_2
         ]
     },
-    // redis key expiration (seconds)
-    keyexp: 
-    {
-        default: 1 * min,
-        chain: 30 * day,
-        collection: 1 * week,
-        pool: 1 * week,
-        token: 2 * day,
-        tx: 1 * week
-    },
     // server listening port
     port: process.env.PORT || 3000,
     // production flag
@@ -48,7 +31,7 @@ module.exports =
     throttles:
     {
         // max 500 in 1 second with 25 per second cool
-        blockfrost: { max: 500, cool: 1000, scale: 10 }, 
+        blockfrost: { max: 450, cool: 1000, scale: 10 }, 
         // max 100 per 10 seconds
         koios: { max: 100, cool: 10000 },
         // max 5 per second

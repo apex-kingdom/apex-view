@@ -1,6 +1,6 @@
 var express = require('express');
 var wallet = require('../lib/wallet');
-var { collection } = require('../lib/entities');
+var { collection } = require('../lib/adapters');
 var paths = require('../../paths');
  
 
