@@ -1,4 +1,6 @@
-var e = require('./entities');
+var e = require('./adapters');
+var nf = require('./num-format');
+var accountCollections = require('./account-collections')
 
 
 module.exports = async function(input)
@@ -11,19 +13,22 @@ module.exports = async function(input)
     var stage2 = ([ stake ]) => Promise.all(
     [
         e.account(stake.stakeKey).then(account => ({ ...account, input: stake.input })),
-        e.assets(stake.stakeKey),
-        e.chain()        
+        e.assets(stake.stakeKey)
     ])
     
-    var stage3 = ([ account, assets, chain ]) => Promise.all(
+    var stage3 = ([ account, { ids, map } ]) => Promise.all(
     [
           e.pool(account.poolId).then(pool => ({ ...account, pool })),
-          Promise.all(assets.map(data => 
+          e.token(ids).then(tokens => tokens.map(tok => 
           {
-              var assetId = data.unit || (data.policy_id + data.asset_name);
-              var mintTx = hash => e.tx(hash, chain)
+              var asset = { __entity: 'asset' };
               
-              return e.token(assetId, mintTx).then(token => e.asset(data, token));
+              if (!map[tok.policyId + tok.assetName]) console.log('not found', tok);
+              
+              asset.userQuantity = map[tok.policyId + tok.assetName].quantity;
+              asset.userQuantityFormatted = nf(asset.userQuantity, tok.decimals);
+                  
+              return { ...tok, ...asset };
           }))
     ])
     
@@ -34,7 +39,7 @@ module.exports = async function(input)
     
     var stage5 = account =>
     {
-        var c = e.accountCollections(e.collection);        
+        var c = accountCollections(e.collection);        
         return Promise.all(account.nfts.map(c.add)).then(() => ({ ...account, collections: c.get() }));
     }
     
