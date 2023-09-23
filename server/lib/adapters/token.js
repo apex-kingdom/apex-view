@@ -47,8 +47,13 @@ exports.entity = function(data)
     token.policyId = data.policy_id;
     token.fingerprint = data.fingerprint;
     // for now we will assume token is an NFT when 
-    // quantity is 1. (other checks may be needed)
-    token.isNFT = data.total_supply == 1;
+    // total supply is 1. (other checks may be needed)
+    token.isNFT = data.total_supply == 1;    
+    // ----------------------------------------------------
+    // BUG: it seems sometimes we get bad data from Koios, 
+    // so we'll also call it an NFT if supply is 2.
+    token.isNFT = token.isNFT || data.total_supply == 2;
+    // ----------------------------------------------------
     
     token.ticker = meta.ticker || ocmd.ticker;
     token.assetName = data.asset_name;

@@ -8,27 +8,7 @@ var reBaseName = /^(.+?)(\s*#)?\d*$/;
 let reProto = /^(https?)|(ipfs)|(data):/i;
 /**
     Transforms raw api data into ApexView entity data.
-    
-    Token entity data fields:
-    - policyId (string)
-    - fingerprint (string)
-    - isNFT (boolean)
-    - ticker (string)
-    - assetName (string)
-    - assetNameDec (string)
-    - name (string)
-    - title (string)
-    - description (string)
-    - homepage (string)
-    - files (array)
-    - image
-    - imageType
-    - project
-    - assetBaseName
-    - decimals
-    - traits
-    - onchainMetadataStandard
-    
+        
     @param { object } data
       Raw api data.
     @return { object }

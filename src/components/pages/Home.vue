@@ -25,9 +25,9 @@
         font="tiny" 
         colors="blue_l.6:blue_l-.75" 
         border="a.5!blue_l-.25"
-        width="40%" 
+        width="60%" 
         min-width="86" 
-        max-width="150" 
+        max-width="180" 
         radius="a2" 
         pad="v3 h4" 
         margin="b5"
@@ -36,7 +36,8 @@
           BETA
         </x-text>
         <p>
-          Wallet loading may be slow, with larger wallets (500+ assets) taking quite some time to load.
+          Performance has improved, although there may still be some intermittent errors. CIP68 tokens 
+          will have limited data display as current data provider does not support them.
         </p>
         <br />
         <p>

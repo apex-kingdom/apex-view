@@ -19,7 +19,7 @@ module.exports = async function(input)
     var stage3 = ([ account, { ids, map } ]) => Promise.all(
     [
           e.pool(account.poolId).then(pool => ({ ...account, pool })),
-          e.token(ids).then(tokens => tokens.map(tok => 
+          e.token(ids, true).then(tokens => tokens.map(tok => 
           {
               var asset = { __entity: 'asset' };
               

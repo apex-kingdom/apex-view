@@ -16,46 +16,48 @@ var entities =
     transaction: require('./transaction')    
 }
 
-var toList = ident => (data, oper) =>
-{
-    if (Array.isArray(ident) && Array.isArray(data))
-        return Promise.all(ident.map((id, idx) => oper(id, data[idx])));
-    
-    return oper(ident, data);
-}
-
 var adapt = name => 
 {
     var { apiName, cacheExp, entity, ancillary = async e => e } = entities[name];
     // determine the data request function
     var api = typeof apiName === 'function' ? apiName : get[apiName];
     
-    var key = ident => name + ':' + ident    
+    var cacheKey = ident => name + ':' + ident    
     
-    var fn = ident => 
+    var fn = (ident, multi) => multi ? fn.listGet(ident) : fn.get(ident)    
+    // get an item from cache or request
+    fn.get = ident => 
     {
-        var asSingle = data => data || fn.request(ident)
-        var asArray = data =>
+        return fn.fromCache(ident)
+            .then(data => data || api(ident).then(data => fn.build(ident, data)))
+            .then(data => fn.toCache(ident, data))
+    }
+    // get a list of items from cache or request
+    fn.listGet = ident =>
+    {
+        return fn.listFromCache(ident).then(data => 
         {
-            var cache = { y: [], n: [] };
-            (data || []).forEach((item, idx) => item ? cache.y.push(item) : cache.n.push(ident[idx]))
-            return cache.n.length ? fn.request(cache.n).then(items => ([ ...cache.y, ...(items || []) ])) : data;
-        }
-        
-        return fn.fromCache(ident).then(Array.isArray(ident) ? asArray : asSingle);
+            var reducer = (arr, itm, idx) => (itm ? arr[0].push(itm) : arr[1].push(ident[idx]), arr)
+            var [ yes, no ] = data.reduce(reducer, [ [], [] ]);
+            
+            return no.length === 0 ? data : api(no)
+                .then(items => fn.listBuild(no, items))
+                .then(items => fn.listToCache(no, items))
+                .then(items => ([ ...yes, ...items ]))
+        })      
     }
-    // request data
-    fn.request = ident => 
-    {
-        var build = (id, item) => fn.build(id, item).then(ent => fn.toCache(id, ent))        
-        return api(ident).then(data => toList(ident)(data, build));
-    }
-    // get data from cache
-    fn.fromCache = ident => toList(ident)(ident, id => redis.jget(key(id)))
+    // get item from cache
+    fn.fromCache = ident => redis.jget(cacheKey(ident))
+    // get a list of items from cache
+    fn.listFromCache = ident => Promise.all(ident.map(fn.fromCache))
     // set data in cache
-    fn.toCache = (ident, data) => (redis.jset(key(ident), data, cacheExp), data)
-    // construct an entity from raw data item
-    fn.build = (id, item) => ancillary(entity(item, id), adapters)
+    fn.toCache = (ident, data) => (redis.jset(cacheKey(ident), data, cacheExp), data)
+    // set a list of data in cache
+    fn.listToCache = (ident, data) => Promise.all(ident.map((id, idx) => fn.toCache(id, data[idx])))
+    // construct an entity from raw data
+    fn.build = (ident, data) => ancillary(entity(data, ident), adapters)
+    // construct a list of entities from raw data
+    fn.listBuild = (ident, data) => Promise.all(ident.map((id, idx) => fn.build(id, data[idx])))
     
     return fn;
 }
