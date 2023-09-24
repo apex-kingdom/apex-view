@@ -23,8 +23,6 @@ module.exports = async function(input)
           {
               var asset = { __entity: 'asset' };
               
-              if (!map[tok.policyId + tok.assetName]) console.log('not found', tok);
-              
               asset.userQuantity = map[tok.policyId + tok.assetName].quantity;
               asset.userQuantityFormatted = nf(asset.userQuantity, tok.decimals);
                   
