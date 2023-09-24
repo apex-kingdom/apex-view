@@ -73,9 +73,9 @@ module.exports =
         base: 'koios',
         method: 'post',
         url: '/account_assets?limit={limit}&offset={offset}',
-        path: [ 0, 'asset_list' ],
+        path: '0',
         data: { _stake_addresses: [ '{account}' ] },
-        paging: { limit_name: 'limit', name: 'offset' }
+        paging: { limit_name: 'limit', name: 'offset', path: 'asset_list' }
     }, 
 
     adaHandle:
@@ -92,7 +92,14 @@ module.exports =
 
     assetAddress: { base: 'asset', url: '/addresses' },
     
-    assetList: { base: 'koios', method: 'post', url: '/asset_info', defarg: 'data._asset_list', batch: 200 },
+    assetList: 
+    { 
+        base: 'koios', 
+        method: 'post', 
+        url: '/asset_info',
+        defarg: 'data._asset_list', 
+        batch: 200 
+    },
 
     collection: { base: 'opencnft', url: '/collection/search?q={policy}' },
         

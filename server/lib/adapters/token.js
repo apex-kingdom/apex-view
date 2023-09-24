@@ -5,7 +5,8 @@ var { prod } = require('../../config');
 
 
 var reBaseName = /^(.+?)(\s*#)?\d*$/;
-let reProto = /^(https?)|(ipfs)|(data):/i;
+var reProto = /^(https?)|(ipfs)|(data):/i;
+var __entity = 'token';
 /**
     Transforms raw api data into ApexView entity data.
     
@@ -33,92 +34,107 @@ let reProto = /^(https?)|(ipfs)|(data):/i;
     @return { object }
       Entity data.
 */
-exports.entity = function(data)
+var adapter =
 {
-    var token = { __entity: 'token' };
-
-    var meta = data.token_registry_metadata || {};
-    var ocmd = data.minting_tx_metadata?.['721']?.[data.policy_id]?.[data.asset_name_ascii] || {};
+    apiName: 'assetList',
     
-    if (!prod) token.__raw = data;
-    // indicates that we need more data
-    token.incomplete = !Object.keys({ ...meta, ...ocmd }).length;
+    cacheExp: at(3).days,
     
-    token.policyId = data.policy_id;
-    token.fingerprint = data.fingerprint;
-    // for now we will assume token is an NFT when 
-    // total supply is 1. (other checks may be needed)
-    token.isNFT = data.total_supply == 1;    
-    // ----------------------------------------------------
-    // BUG: it seems sometimes we get bad data from Koios, 
-    // so we'll also call it an NFT if supply is 2.
-    token.isNFT = token.isNFT || data.total_supply == 2;
-    // ----------------------------------------------------
-    
-    token.ticker = meta.ticker || ocmd.ticker;
-    token.assetName = data.asset_name;
-    token.name = (!token.isNFT && token.ticker) || ocmd.name || data.asset_name_ascii;
-    token.title = meta.ticker && meta.name
-        ? (meta.ticker !== meta.name ? `${meta.name} (${meta.ticker})` : meta.name) : token.name;
-
-    token.description = [].concat(meta.description || ocmd.description).join('');
-    token.homepage = meta.url;
-
-    token.files = [].concat(ocmd.files || []).map(data => 
+    getKey: source => 
     {
-        let file = {};
+        if (source.__entity === __entity)
+            return [ source.policyId, source.assetName ];
         
-        file.mediaType = data.mediaType;
-        file.src = [].concat(data.src).join('');
-        
-        return file;
-    });
-
-    if (meta.logo)
-    {
-        token.image = [].concat(meta.logo).join('');
-        token.imageType = meta.mediaType;
-    }
+        return [ source.policy_id, source.asset_name ];
+    },
     
-    if (!token.image && ocmd.image)
+    entity: function(data)
     {
-        token.image = [].concat(ocmd.image).join('');
-        token.imageType = ocmd.mediaType;
-        
-        if (!reProto.test(token.image))
-            token.image = 'ipfs://' + token.image;
-    } 
-    
-    var { image, imageType } = resolveImage(token.image, token.imageType);
-    token.image = image;
-    token.imageType = imageType;
+        var token = { __entity };
 
-    // for collection use
-    token.project = ocmd.project ? [].concat(ocmd.project).join('') : null;
-    if (reBaseName.test(token.name)) token.assetBaseName = token.name.replace(reBaseName, '$1');    
+        var meta = data.token_registry_metadata || {};
+        var ocmd = data.minting_tx_metadata?.['721']?.[data.policy_id]?.[data.asset_name_ascii] || {};
         
-    token.decimals = meta.decimals || 0;    
+        if (!prod) token.__raw = data;
+        // indicates that we need more data
+        token.incomplete = !Object.keys({ ...meta, ...ocmd }).length;
+        
+        token.policyId = data.policy_id;
+        token.fingerprint = data.fingerprint;
+        // for now we will assume token is an NFT when 
+        // total supply is 1. (other checks may be needed)
+        token.isNFT = data.total_supply == 1;    
+        // ----------------------------------------------------
+        // BUG: it seems sometimes we get bad data from Koios, 
+        // so we'll also call it an NFT if supply is 2.
+        token.isNFT = token.isNFT || data.total_supply == 2;
+        // ----------------------------------------------------
+        
+        token.ticker = meta.ticker || ocmd.ticker;
+        token.assetName = data.asset_name;
+        token.name = (!token.isNFT && token.ticker) || ocmd.name || data.asset_name_ascii;
+        token.title = meta.ticker && meta.name
+            ? (meta.ticker !== meta.name ? `${meta.name} (${meta.ticker})` : meta.name) : token.name;
 
-    token.traits = ocmd ? traitSearch(ocmd) : {};
-    token.onchainMetadataStandard = !!data.minting_tx_metadata?.['721'] ? 'CIP25v1' : null;
+        token.description = [].concat(meta.description || ocmd.description).join('');
+        token.homepage = meta.url;
+
+        token.files = [].concat(ocmd.files || []).map(data => 
+        {
+            let file = {};
             
-    token.mintTime = data.creation_time * 1000;
-    
-    return token;
+            file.mediaType = data.mediaType;
+            file.src = [].concat(data.src).join('');
+            
+            return file;
+        });
+
+        if (meta.logo)
+        {
+            token.image = [].concat(meta.logo).join('');
+            token.imageType = meta.mediaType;
+        }
+        
+        if (!token.image && ocmd.image)
+        {
+            token.image = [].concat(ocmd.image).join('');
+            token.imageType = ocmd.mediaType;
+            
+            if (!reProto.test(token.image))
+                token.image = 'ipfs://' + token.image;
+        } 
+        
+        var { image, imageType } = resolveImage(token.image, token.imageType);
+        token.image = image;
+        token.imageType = imageType;
+
+        // for collection use
+        token.project = ocmd.project ? [].concat(ocmd.project).join('') : null;
+        if (reBaseName.test(token.name)) token.assetBaseName = token.name.replace(reBaseName, '$1');    
+            
+        token.decimals = meta.decimals || 0;    
+
+        token.traits = ocmd ? traitSearch(ocmd) : {};
+        token.onchainMetadataStandard = !!data.minting_tx_metadata?.['721'] ? 'CIP25v1' : null;
+                
+        token.mintTime = data.creation_time * 1000;
+        
+        return token;
+    },
+
+    ancillary: async (token, { token_ext }) =>
+    {
+        if (token.incomplete)
+        {
+            var unit = token.policyId + token.assetName;
+            return token_ext(unit).then(extra => ({ ...token, ...extra, __entity }));
+        }
+        
+        return token;
+    }
 }
 
-exports.apiName = 'assetList';
-exports.cacheExp = at(3).days;
-exports.ancillary = async (token, { token_ext }) =>
-{
-    if (token.incomplete)
-    {
-        var unit = token.policyId + token.assetName;
-        return token_ext(unit).then(extra => ({ ...token, ...extra }));
-    }
-    
-    return token;
-}
+module.exports = adapter;
 
 
 function resolveImage(image, imageType)

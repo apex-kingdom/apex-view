@@ -1,7 +1,9 @@
 var at = require('../seconds');
 var nf = require('../num-format');
+var { getKey } = require('./token');
 
 
+var __entity = 'account-assets';
 /**
     Transforms raw api data into ApexView entity data.
     
@@ -10,22 +12,39 @@ var nf = require('../num-format');
     @return { object }
       Entity data.
 */
-exports.entity = function(data)
-{    
-    var assets = { __entity: 'account-assets' };
+var adapter =
+{
+    apiName: 'accountAssets',
     
-    assets.ids = [];
-    assets.map = {};
-
-    data.forEach(item => 
+    cacheExp: at(1).minutes,
+    
+    getKey: source =>
     {
-        var { asset_name, policy_id, unit } = item;
-        assets.ids.push(unit || [ policy_id, asset_name ])
-        assets.map[unit || (policy_id + asset_name)] = item;
-    });
+        if (source.__entity === __entity)
+            return source.stakeKey;
+        
+        return source.stake_address;
+    },
     
-    return assets;
+    entity: function(data)
+    {    
+        var assets = { __entity };
+
+        assets.stakeKey = data.stake_address;
+        
+        assets.ids = [];
+        assets.map = {};
+
+        data.asset_list.forEach(item => 
+        {
+            var key = getKey(item);
+            
+            assets.ids.push(key);
+            assets.map[key.join('')] = item;
+        });
+        
+        return assets;
+    }    
 }
 
-exports.apiName = 'accountAssets';
-exports.cacheExp = at(1).minutes;
+module.exports = adapter;

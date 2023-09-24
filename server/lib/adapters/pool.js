@@ -1,6 +1,7 @@
 var at = require('../seconds');
 
 
+var __entity = 'pool';
 /**
     Transforms raw api data into ApexView entity data.
     
@@ -19,18 +20,32 @@ var at = require('../seconds');
     @return { object }
       Entity data.
 */
-exports.entity = function(data)
+var adapter =
 {
-    var pool = { __entity: 'pool' };
+    apiName: 'pool',
     
-    pool.id = data.pool_id;
-    pool.name = data.name;
-    pool.desc = data.description;
-    pool.ticker = data.ticker;
-    pool.home = data.homepage;
+    cacheExp: at(1).weeks,
     
-    return pool;
+    getKey: source =>
+    {
+        if (source.__entity === __entity)
+            return source.id;
+        
+        return source.pool_id;
+    },
+    
+    entity: function(data)
+    {
+        var pool = { __entity };
+        
+        pool.id = data.pool_id;
+        pool.name = data.name;
+        pool.desc = data.description;
+        pool.ticker = data.ticker;
+        pool.home = data.homepage;
+        
+        return pool;
+    }    
 }
 
-exports.apiName = 'pool';
-exports.cacheExp = at(1).weeks;
+module.exports = adapter;

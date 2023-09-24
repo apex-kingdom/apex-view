@@ -5,6 +5,7 @@ var { encode } = require('hex-encode-decode');
 
 var reHandle = /^\$/;
 var reStake = /^stake/;
+var __entity = 'stake';
 /**
     Transforms raw api data into ApexView entity data.
     
@@ -13,18 +14,26 @@ var reStake = /^stake/;
     @return { object }
       Entity data.
 */
-exports.entity = function(data)
+var adapter =
 {
-    let stake = { __entity: 'stake' };
+    apiName: input => resolve(input).then(stakeKey => ({ input, stakeKey })),
     
-    stake.input = data.input;
-    stake.stakeKey = data.stakeKey;
+    cacheExp: at(1).minutes,
     
-    return stake;
+    getKey: source => source.input || source,
+    
+    entity: function(data)
+    {
+        let stake = { __entity };
+        
+        stake.input = data.input;
+        stake.stakeKey = data.stakeKey;
+        
+        return stake;
+    }
 }
 
-exports.apiName = input => resolve(input).then(stakeKey => ({ input, stakeKey }))
-exports.cacheExp = at(1).minutes;
+module.exports = adapter;
 
 
 async function resolve(input)
