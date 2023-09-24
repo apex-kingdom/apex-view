@@ -1,4 +1,4 @@
-var nf = require('../num-format');
+var nf = require('./num-format');
 
 
 var reCut = /\s*#.*$/;
@@ -26,7 +26,7 @@ module.exports = function(base)
             {
                 // request collection information if we haven't already (for caching 
                 // purposes)... but we're not waiting for it
-                requests[policyId] = base.request(policyId);
+                requests[policyId] = base.get(policyId);
                 // instead we can inform client how to get this data
                 collection.__extra = ['/collection', { policyId }];
             }
