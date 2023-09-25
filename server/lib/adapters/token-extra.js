@@ -37,6 +37,9 @@ var adapter =
         var ocmd = data.onchain_metadata || {};
                     
         token.policyId = data.policy_id;
+        // for now we will assume token is an NFT when 
+        // total supply is 1. (other checks may be needed)
+        token.isNFT = data.quantity == 1;    
 
         token.ticker = meta.ticker || ocmd.ticker;
         token.assetName = data.asset_name;
