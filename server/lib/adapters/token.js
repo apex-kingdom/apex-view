@@ -56,19 +56,15 @@ var adapter =
         var ocmd = data.minting_tx_metadata?.['721']?.[data.policy_id]?.[data.asset_name_ascii] || {};
         
         if (!prod) token.__raw = data;
-        // indicates that we need more data
-        token.incomplete = !Object.keys({ ...meta, ...ocmd }).length;
+        // indicates that we need more data / should get a second opinion
+        token.incomplete = !Object.keys({ ...meta, ...ocmd }).length || 
+            (data.total_supply > 1 && data.total_supply < 10);
         
         token.policyId = data.policy_id;
         token.fingerprint = data.fingerprint;
         // for now we will assume token is an NFT when 
         // total supply is 1. (other checks may be needed)
         token.isNFT = data.total_supply == 1;    
-        // ----------------------------------------------------
-        // BUG: it seems sometimes we get bad data from Koios, 
-        // so we'll also call it an NFT if supply is 2.
-        token.isNFT = token.isNFT || data.total_supply == 2;
-        // ----------------------------------------------------
         
         token.ticker = meta.ticker || ocmd.ticker;
         token.assetName = data.asset_name;
