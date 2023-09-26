@@ -18,7 +18,7 @@ module.exports = async function(input)
     
     var stage3 = ([ account, { ids, map } ]) => Promise.all(
     [
-          e.pool(account.poolId).then(pool => ({ ...account, pool })),
+          (account.poolId ? e.pool(account.poolId) : Promise.resolve({})).then(pool => ({ ...account, pool })),
           e.token(ids, true).then(tokens => tokens.map(tok => 
           {
               var asset = { __entity: 'asset' };
