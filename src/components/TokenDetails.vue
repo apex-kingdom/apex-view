@@ -54,8 +54,8 @@
           <x-flex 
             el="button"
             pointer
-            :colors="`:${bgColor}_f.75`" 
-            :hf-colors="`:${bgColor}_f.25`" 
+            :colors="`:${bgColor}_f.6`" 
+            :hf-colors="`:${bgColor}_f.1`" 
             over-wrap="anywhere" 
             width="100%"
             pad="h1"
