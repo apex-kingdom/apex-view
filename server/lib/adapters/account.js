@@ -1,5 +1,5 @@
 var at = require('../seconds');
-var nf = require('../num-format');
+var { numFormat } = require('../utils');
 
 
 var __entity = 'account';
@@ -43,10 +43,10 @@ var adapter =
         account.epoch = data.active_epoch;
 
         account.ada = data.controlled_amount;
-        account.adaFormatted = nf(account.ada, 6);
+        account.adaFormatted = numFormat(account.ada, 6);
 
         account.rewards = data.rewards_sum;
-        account.rewardsFormatted = nf(account.rewards, 6);
+        account.rewardsFormatted = numFormat(account.rewards, 6);
            
         account.stakeKey = data.stake_address;
         account.poolId = data.pool_id;

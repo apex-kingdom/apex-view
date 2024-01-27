@@ -1,5 +1,5 @@
 var e = require('./adapters');
-var nf = require('./num-format');
+var { numFormat } = require('./utils');
 var accountCollections = require('./account-collections')
 
 
@@ -24,7 +24,7 @@ module.exports = async function(input)
               var asset = { __entity: 'asset' };
               
               asset.userQuantity = map[tok.policyId + tok.assetName].quantity;
-              asset.userQuantityFormatted = nf(asset.userQuantity, tok.decimals);
+              asset.userQuantityFormatted = numFormat(asset.userQuantity, tok.decimals);
                   
               return { ...tok, ...asset };
           }))

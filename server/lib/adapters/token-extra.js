@@ -1,5 +1,6 @@
 var { decode } = require('hex-encode-decode');
 var at = require('../seconds');
+var { toAssetClass } = require('../utils');
 var traitSearch = require('../trait-search');
 var { prod } = require('../../config');
 
@@ -33,16 +34,26 @@ var adapter =
     {
         var token = { __entity };
 
+        if (!prod) token.__raw2 = data;
+        // token identification details
+        token.policyId = data.policy_id;
+        token.assetName = data.asset_name;
+        token.fingerprint = data.fingerprint;
+        // CIP67 asset class & type booleans
+        token.assetClass = toAssetClass(token.assetName);        
+        token.assetType = 
+        {
+            nft: token.assetClass === 222 || (!token.assetClass && data.quantity == 1),
+            ft: token.assetClass === 333 || (!token.assetClass && data.quantity != 1),
+            rft: token.assetClass === 444
+        }
+        token.isNFT = token.assetType.nft; // legacy
+
+
         var meta = data.metadata || {};
         var ocmd = data.onchain_metadata || {};
                     
-        token.policyId = data.policy_id;
-        // for now we will assume token is an NFT when 
-        // total supply is 1. (other checks may be needed)
-        token.isNFT = data.quantity == 1;    
-
         token.ticker = meta.ticker || ocmd.ticker;
-        token.assetName = data.asset_name;
         token.name = (!token.isNFT && token.ticker) || ocmd.name || decode(data.asset_name || '');
         token.title = meta.ticker && meta.name
             ? (meta.ticker !== meta.name ? `${meta.name} (${meta.ticker})` : meta.name) : token.name;
@@ -85,7 +96,7 @@ var adapter =
             
         token.decimals = meta.decimals || 0;    
 
-        token.traits = traitSearch(ocmd);
+        token.traits = token.traits || traitSearch(ocmd);
         token.onchainMetadataStandard = data.onchain_metadata_standard;
             
         if ((token.onchainMetadataStandard || '').indexOf('CIP68') >= 0)

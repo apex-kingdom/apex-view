@@ -2,7 +2,7 @@
   <x-context #default="{ bgColor, ext, gray, cs, rs }">
     <x-skeleton skeletize zombify :colors="`${ext.diff}_f.75:${bgColor}`" degrees="0">
       <x-flex wrap aligns=":flex-start:center" :gap="`${cs}:${rs}`" :pad="`h${cs} v${rs}`">
-        <x-lister #iter="{ item }">
+        <x-lister #iter="{ item }" excludes="hide">
           <wallet-item :data="item" />
         </x-lister>
       </x-flex>
