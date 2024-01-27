@@ -15,7 +15,7 @@
         z-index="-1"
       />
       <f-main-title block text="ApexView" :font="mobile ? 'huge' : 'jumbo'" margin="t8" />
-      <x-flex display="inline-block" colors="quarter" margin="t4 b7" filter="drop-shadow(6px 6px 0 #00000099)">
+      <x-flex colors="quarter" margin="t4 b7" filter="drop-shadow(6px 6px 0 #00000099)">
         <e-animation sel="svg" infinite name="spin" duration="30s" timing="linear" />
         <x-icon name="cardano" :size="mobile ? 28 : 32" colors=":terti_d.5" stroke-width=".25" />
       </x-flex>
@@ -35,11 +35,6 @@
         <x-text bold inline block font="large" border="b.25!blue" pad="b1 h10" margin="b3">
           BETA
         </x-text>
-        <p>
-          Performance has improved, although there may still be some intermittent errors. CIP68 tokens 
-          will have limited data display as current data provider does not support them.
-        </p>
-        <br />
         <p>
           Please make abundant use of this app and feel free to offer feedback, suggestions, and comments in the 
           <x-link colors="blue_l.75" href="https://discord.gg/jyWgDmGd63" target="_blank">Apex Kingdom discord</x-link>!
