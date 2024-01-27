@@ -1,4 +1,4 @@
-var nf = require('./num-format');
+var { numFormat } = require('./utils');
 
 
 var reCut = /\s*#.*$/;
@@ -22,18 +22,18 @@ module.exports = function(base)
         {
             var collection = collections[policyId] || { __entity: 'collection', policyId };
             
-            if (!data && !requests[policyId])
-            {
-                // request collection information if we haven't already (for caching 
-                // purposes)... but we're not waiting for it
-                requests[policyId] = base.get(policyId);
-                // instead we can inform client how to get this data
-                collection.__extra = ['/collection', { policyId }];
-            }
-            else
+            if (data)
             {
                 collection = { ...collection, ...data };
             }            
+            // else (!requests[policyId])
+            // {
+            //     // request collection information if we haven't already (for caching 
+            //     // purposes)... but we're not waiting for it
+            //     requests[policyId] = base.get(policyId);
+            //     // instead we can inform client how to get this data
+            //     collection.__extra = ['/collection', { policyId }];
+            // }
           
             if (!collection.name) collection.name = asset.project || asset.assetBaseName || asset.name;
             if (!collection.description) collection.description = asset.description;
@@ -69,7 +69,7 @@ module.exports = function(base)
         {
             let collection = collections[key];
           
-            collection.userQuantityFormatted = nf(collection.userQuantity);
+            collection.userQuantityFormatted = numFormat(collection.userQuantity);
             if (!collection.name) collection.name = '?????';
                         
             return collection;

@@ -1,5 +1,6 @@
 var { decode } = require('hex-encode-decode');
 var at = require('../seconds');
+var { cip68Traits, toAssetClass } = require('../utils');
 var traitSearch = require('../trait-search');
 var { prod } = require('../../config');
 
@@ -52,22 +53,30 @@ var adapter =
     {
         var token = { __entity };
 
+        if (!prod) token.__raw = data;
+        // token identification details
+        token.policyId = data.policy_id;
+        token.assetName = data.asset_name;
+        token.fingerprint = data.fingerprint;
+        // CIP67 asset class & type booleans
+        token.assetClass = toAssetClass(token.assetName);
+        token.is =
+        {
+            nft: token.assetClass === 222 || (!token.assetClass && data.total_supply == 1),
+            ft: token.assetClass === 333 || (!token.assetClass && data.total_supply != 1),
+            rft: token.assetClass === 444
+        }
+        token.isNFT = token.is.nft; // legacy
+
+
         var meta = data.token_registry_metadata || {};
         var ocmd = data.minting_tx_metadata?.['721']?.[data.policy_id]?.[data.asset_name_ascii] || {};
         
-        if (!prod) token.__raw = data;
         // indicates that we need more data / should get a second opinion
         token.incomplete = !Object.keys({ ...meta, ...ocmd }).length || 
             (data.total_supply > 1 && data.total_supply < 10);
-        
-        token.policyId = data.policy_id;
-        token.fingerprint = data.fingerprint;
-        // for now we will assume token is an NFT when 
-        // total supply is 1. (other checks may be needed)
-        token.isNFT = data.total_supply == 1;    
-        
+                
         token.ticker = meta.ticker || ocmd.ticker;
-        token.assetName = data.asset_name;
         token.name = (!token.isNFT && token.ticker) || ocmd.name || data.asset_name_ascii;
         token.title = meta.ticker && meta.name
             ? (meta.ticker !== meta.name ? `${meta.name} (${meta.ticker})` : meta.name) : token.name;
@@ -110,7 +119,10 @@ var adapter =
             
         token.decimals = meta.decimals || 0;    
 
-        token.traits = ocmd ? traitSearch(ocmd) : {};
+        var trait68 = data.cip68_metadata?.[token.assetClass]?.fields?.[0]?.map;
+        var traitBase = trait68 ? cip68Traits(trait68) : ocmd || {};
+        token.traits = traitSearch(traitBase);
+        
         token.onchainMetadataStandard = !!data.minting_tx_metadata?.['721'] ? 'CIP25v1' : null;
                 
         token.mintTime = data.creation_time * 1000;
@@ -123,7 +135,13 @@ var adapter =
         if (token.incomplete)
         {
             var unit = token.policyId + token.assetName;
-            return token_ext(unit).then(extra => ({ ...token, ...extra, __entity }));
+            return token_ext(unit).then(extra => (
+            { 
+                ...token, 
+                ...extra, 
+                traits: token.traits || extra.traits,
+                __entity 
+            }));
         }
         
         return token;

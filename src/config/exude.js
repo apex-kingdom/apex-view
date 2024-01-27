@@ -17,18 +17,22 @@ export default
             String used to help prevent naming collisions.
         */
         namespace: 'apex',
-        /**
-            Scale degrees value.
-        */
-        sangle: 1,
-        /**
-            Scale time value.
-        */
-        stime: 1000,
-        /**
-            Scale unit value.
-        */
-        sunit: 4
+        
+        scale: 
+        { 
+            /**
+                Scale angle.
+            */
+            angle: { num: 1, unit: 'deg' }, 
+            /**
+                Scale time.
+            */
+            time: { num: 1000, unit: 'ms' }, 
+            /**
+                Scale length.
+            */
+            length: { num: 4, unit: 'px' } 
+        }
     },
     
     animation:
@@ -181,40 +185,31 @@ export default
         defaultFace: 'Montserrat, sans-serif',
       
         /**
-            Enumerated font size rulesets.  
-            
-            Each font size must have valid CSS values for:
-              - `fontSize`
-              - `lineHeight`            
+            Enumerated font size rulesets.              
         */
-        size:
+        named:
         {
-            h1: { fontSize: 30, lineHeight: 30 },
-            h2: { fontSize: 24, lineHeight: 24 },
-            h3: { fontSize: 18, lineHeight: 18 },
-            h4: { fontSize: 12, lineHeight: 12 },
-            h5: { fontSize: 9, lineHeight: 9 },
-            h6: { fontSize: 6, lineHeight: 6 },
+            h1: { size: 30, height: 30 },
+            h2: { size: 24, height: 24 },
+            h3: { size: 18, height: 18 },
+            h4: { size: 12, height: 12 },
+            h5: { size: 9, height: 9 },
+            h6: { size: 6, height: 6 },
 
-            micro: { fontSize: 2.75, lineHeight: 2.75 },
-            tiny: { fontSize: 3.5, lineHeight: 4 },
-            small: { fontSize: 4, lineHeight: 4 },
-            base: { fontSize: 5, lineHeight: 6 },
-            large: { fontSize: 6.5, lineHeight: 6.5 },
-            huge: { fontSize: 18, lineHeight: 18 },
-            jumbo: { fontSize: 24, lineHeight: 24 },
+            micro: { size: 2.75, height: 2.75 },
+            tiny: { size: 3.5, height: 4 },
+            small: { size: 4, height: 4 },
+            base: { size: 5, height: 6 },
+            large: { size: 6.5, height: 6.5 },
+            huge: { size: 18, height: 18 },
+            jumbo: { size: 24, height: 24 },
 
-            vTiny: { fontSize: '1vw', lineHeight: '1.1vw' },
-            vSmaller: { fontSize: 'calc(.8vw + 6px)', lineHeight: 'calc(.8vw + 6px)' },
-            vSmall: { fontSize: 'calc(.9vw + 9px)', lineHeight: 'calc(.9vw + 12px)' },
-            vBase: { fontSize: 'calc(1vw + 14px)', lineHeight: 'calc(1vw + 14px)' },
-            vHuge: { fontSize: 'calc(3vw + 18px)', lineHeight: 'calc(3vw + 18px)' }
-        },
-        
-        /**
-            Font weight enumerations.
-        */
-        // weight: {}
+            vTiny: { size: '1vw', height: '1.1vw' },
+            vSmaller: { size: 'calc(.8vw + 6px)', height: 'calc(.8vw + 6px)' },
+            vSmall: { size: 'calc(.9vw + 9px)', height: 'calc(.9vw + 12px)' },
+            vBase: { size: 'calc(1vw + 14px)', height: 'calc(1vw + 14px)' },
+            vHuge: { size: 'calc(3vw + 18px)', height: 'calc(3vw + 18px)' }
+        }        
     },
     
     icon:
@@ -252,14 +247,14 @@ export default
         defaultSize: 12,
     },
     
-    length:
+    measure:
     {
         /**
             General purpose enumerated CSS length values.
             
             Define "aliases" using keys that point to other keys.                
         */
-        named: 
+        length: 
         {
             address: 'calc(1vw + 8px)',
             austral: 'calc(1.7vw + 12px)',
