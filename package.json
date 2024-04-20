@@ -17,7 +17,7 @@
     ],
     "dependencies":
     {
-        "@captison/exude": "^0.1.0",
+        "@captison/exude": "^0.1.1",
         "axios": "^1.3.4",
         "color": "^4.2.3",
         "deep-copy": "^1.4.2",
