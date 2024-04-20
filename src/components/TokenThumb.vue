@@ -16,7 +16,6 @@
         <f-token-image 
           :iconbar="show && !hideLbls" 
           :image="image" 
-          :image-type="imageType" 
           :size="size" 
           @click="$emit('open')"
           @hover="show = $event"
@@ -54,10 +53,6 @@ export default
             URL of image for token thumb.
         */
         image: [ String, Array ],
-        /**
-            Type of image (if `image` is base64 data).
-        */
-        imageType: String,
         /**
             Size of the thumbnail image (width and height).
         */

@@ -1,6 +1,6 @@
 <template>
   <x-app :colors="`text:${settings.bgColor}`" min-height="100vh" font-face="Montserrat" font="base">
-    <e-transition sel="div" property="width,height,margin,gap" :duration=".15" timing="ease" />
+    <e-transition sel="div" property="width,height,margin,gap,top,right,bottom,left" :duration=".15" timing="ease" />
     <x-context v-bind="context">
       <app-control @settings="settings = $event" />
       <x-box pos="relative" z-index="1">

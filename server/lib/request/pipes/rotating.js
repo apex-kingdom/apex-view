@@ -1,4 +1,4 @@
-var redis = require('../../config/redis');
+var redis = require('../../../config/redis');
 
 
 /**

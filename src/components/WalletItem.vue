@@ -3,7 +3,6 @@
     :title="token.name" 
     :count="count" 
     :image="token.image" 
-    :image-type="token.imageType" 
     @open="handleOpen" 
     @amount="handleAmount" 
   />

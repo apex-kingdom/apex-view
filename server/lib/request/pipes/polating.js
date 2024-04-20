@@ -1,35 +1,34 @@
-var axios = require('axios');
-var op = require('object-path');
-var { prod } = require('../../config');
-
 
 /**
-    Sends request for Cardano blockchain data.
+    Constructs a pipeline function for interpolating request data.
     
     @param { string } spec
       Request configuration object.
-    @param { any, object } reps
-      Interpolation parameters for url.
-      Used as a default replacement value if not an object.
-    @return { promise }
-      Resolves to the data requested.
+    @return { function }
+      Pipeline function.
 */
-module.exports = function({ method, headers, url, data, path })
+module.exports = function({ headers, url, data })
 {
-    return reps =>
+    /**
+        Interpolates data for sending request.
+        
+        @param { object } args
+          Interpolation parameters for request data.
+        @return { promise }
+          Resolves to the interpolated request data.
+    */
+    return (args, operation) =>
     {
         // allow for setting headers/data structure directly
-        if (reps.headers) headers = { ...headers, ...reps.headers };
-        if (reps.data) data = { ...data, ...reps.data };
+        if (args.headers) headers = { ...headers, ...args.headers };
+        if (args.data) data = { ...data, ...args.data };
         // interpolate data as necessary
-        var polated = inter({ url, headers, data }, reps);
+        var polated = inter({ url, headers, data }, args);
         // remove empty data object to prevent axios from choking
         if (!polated.data || !Object.keys(polated.data).length) 
             delete polated.data;
-                    
-        if (!prod) console.log('apex:', method.toUpperCase(), polated.url);
         
-        return axios({ method, ...polated }).then(data => op.get(data, path));
+        return operation(polated);
     }
 }
 

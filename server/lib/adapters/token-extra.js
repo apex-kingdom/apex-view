@@ -1,8 +1,9 @@
 var { decode } = require('hex-encode-decode');
 var at = require('../seconds');
-var { toAssetClass } = require('../utils');
+var { resolveImageUrl, toAssetClass } = require('../utils');
 var traitSearch = require('../trait-search');
 var { prod } = require('../../config');
+var { image } = require('../request');
 
 
 var reBaseName = /^(.+?)(\s*#)?\d*$/;
@@ -71,24 +72,25 @@ var adapter =
             return file;
         });
 
+        // if (meta.logo)
+        // {
+        //     token.image = resolveImageUrl(meta.logo, meta.mediaType);
+        //     token.thumb = token.image;
+        // }
+        // else
+        // {
+        //     token.image = image.params({ fingerprint: token.fingerprint, size: 1024 }).url;
+        //     token.thumb = image.params({ fingerprint: token.fingerprint, size: 256 }).url;
+        // }
+
         if (meta.logo)
-        {
-            token.image = [].concat(meta.logo).join('');
-            token.imageType = meta.mediaType;
-        }
+            token.image = resolveImageUrl(meta.logo, meta.mediaType);
         
         if (!token.image && ocmd.image)
         {
-            token.image = [].concat(ocmd.image).join('');
-            token.imageType = ocmd.mediaType;
-            
-            if (!reProto.test(token.image))
-                token.image = 'ipfs://' + token.image;
+            var pre = reProto.test(ocmd.image) ? '' : 'ipfs://';
+            token.image = resolveImageUrl(pre + ocmd.image, ocmd.mediaType);
         } 
-        
-        var { image, imageType } = resolveImage(token.image, token.imageType);
-        token.image = image;
-        token.imageType = imageType;
 
         // for collection use
         token.project = ocmd.project ? [].concat(ocmd.project).join('') : null;
@@ -112,23 +114,3 @@ var adapter =
 }
 
 module.exports = adapter;
-
-function resolveImage(image, imageType)
-{
-    // limit image regex test to imitial characters to remove false positives
-    if (image && !reProto.test(image.slice(0, 10)))
-    {
-        if (imageType)
-        {
-            return { image: `data:${imageType};base64,${image}` };
-        }
-        else
-        {
-            // TODO: Need some real image detection here
-            var mime = 'image/png';
-            return { image: `data:${mime};base64,${image}` };
-        }
-    }
-    
-    return { image, imageType };
-}

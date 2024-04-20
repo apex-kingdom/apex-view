@@ -58,32 +58,6 @@ var adapt = name =>
     fn.build = (ident, data) => ancillary(entity(data, ident), adapters)
     // construct a list of entities from raw data
     fn.listBuild = (ident, data) => Promise.all(ident.map((id, idx) => fn.build(id, data[idx])))
-
-    // var listVerify = (ident, data) =>
-    // {
-    //     return Promise.all(ident.map((id, idx) => 
-    //     {
-    //         var item = data[idx];
-    //         var match = matchKey(id, item);
-    // 
-    //         if (!match)
-    //         {
-    //             var json = JSON.stringify(id);
-    // 
-    //             if (listVerify.errorIds.includes(json))
-    //                 throw 'Bad data returned from API for ' + json;
-    // 
-    //             listVerify.errorIds.push(json);
-    //             console.error('apex: incorrect item returned from api for', id);
-    //             // make another attempt to get data
-    //             // item = fn.listGet([id]).then(items => items[0]);
-    //         }
-    // 
-    //         return item;
-    //     }));
-    // }
-    // 
-    // listVerify.errorIds = [];
     
     return fn;
 }
