@@ -31,35 +31,41 @@
 */
 module.exports =
 {
+    apex: { method: 'get', defarg: 'default', path: 'data' },
+  
+    /* --------------------------------------------------------------------- */
+    
     blockfrost:
     {
-        method: 'get',
+        base: 'apex',
         url: 'https://cardano-mainnet.blockfrost.io/api/v0',
         headers: { project_id: '{apikey}' },
-        defarg: 'default',
-        path: 'data',
         api: 'blockfrost',
         paging: { limit: 100, type: 1 }
     },
     
-    koios:
+    nftcdnio:
     {
         method: 'get',
-        url: 'https://api.koios.rest/api/v0',
+        url: 'https://{fingerprint}.{domain}.nftcdn.io',
+        api: 'nftcdnio',
+        vars: { domain: 'preprod', auth: '7FoxfBgV2k+RSz6UUts3/fG1edG7oIGXxdtIVCdalaI=' }
+    },
+    
+    koios:
+    {
+        base: 'apex',
+        url: 'https://api.koios.rest/api/v1',
         headers: { authorization: 'Bearer {apikey}' },
-        defarg: 'default',
-        path: 'data',
         api: 'koios',
         paging: { limit: 800, type: 0 }
     },
     
     opencnft:
     {
-        method: 'get',
+        base: 'apex',
         url: 'https://api.opencnft.io/{version}',
         headers: { 'X-Api-Key': '{apikey}' },
-        defarg: 'default',
-        path: 'data',
         api: 'opencnft',
         vars: { version: '2' }
     },
@@ -73,9 +79,8 @@ module.exports =
         base: 'koios',
         method: 'post',
         url: '/account_assets?limit={limit}&offset={offset}',
-        path: '0',
         data: { _stake_addresses: [ '{account}' ] },
-        paging: { limit_name: 'limit', name: 'offset', path: 'asset_list' }
+        paging: { limit_name: 'limit', name: 'offset' }
     }, 
 
     adaHandle:
@@ -104,6 +109,8 @@ module.exports =
     collection: { base: 'opencnft', url: '/collection/search?q={policy}' },
         
     eras: { base: 'blockfrost', url: '/network/eras' },
+    
+    image: { base: 'nftcdnio', url: '/image?tk={auth}&size={size}', vars: { size: 1024 } },
 
     genesis: { base: 'blockfrost', url: '/genesis' },    
     

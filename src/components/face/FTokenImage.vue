@@ -2,14 +2,13 @@
   <x-context #default="{ ext }">
     <x-flex v-bind="flexProps" :data-x-bone="loading" @click="$emit('click')" @hover="$emit('hover', $event)">
       <e-transition property="filter" :duration=".25" />
-      <x-image 
+      <x-embed 
         v-if="image" 
         :id="fsid" 
         :src="image" 
-        :media-type="imageType" 
         height="100%" 
         width="100%"
-        style="object-fit:contain"
+        object="contain"
         :hide="failing"
         :pos="failing ? 'absolute' : 'static'" 
         @loading="loading = $event"
@@ -17,25 +16,31 @@
       />
       <x-icon v-else name="apex" :colors="ext.diff + '_f.8'" size="50%" />
       <x-icon v-if="failing" name="alert" :colors="ext.diff + '_f.8'" size="50%" />
-      <x-fullscreen 
-        v-if="image && !failing" 
-        :target-id="fsid" 
-        colors="prime"
-        h-colors="white"
-        size="8" 
-        filter="drop-shadow(.5px .5px 1px black)"
+      <x-flex 
+        v-if="image" 
+        aligns=":center" 
+        colors="prime" 
         pos="absolute" 
-        pad="a0"
-        :trbl="`b0 r${iconbar ? '0' : '-8'}`" 
-        tabindex="-1"
-      />
+        :trbl="`b0 r${iconbar ? '0' : '-8'}`"
+        filter="drop-shadow(.5px .5px 1px black)"
+      >
+        <x-fullscreen 
+          v-if="!failing" 
+          :target-id="fsid" 
+          colors="prime"
+          h-colors="white"
+          size="8" 
+          pad="a0"           
+          tabindex="-1"
+        />
+      </x-flex>
     </x-flex>
   </x-context>  
 </template>
 
 
 <script>
-import { ETransition, XContext, XFlex, XFullscreen, XIcon, XImage } from 'exude'
+import { ETransition, XButton, XContext, XEmbed, XFlex, XFullscreen, XIcon } from 'exude'
 import { m_toggle } from 'exude'
 
 
@@ -45,7 +50,7 @@ export default
     
     mixins: [ m_toggle('iconbar') ],
     
-    components: { ETransition, XContext, XFlex, XFullscreen, XIcon, XImage },
+    components: { ETransition, XButton, XContext, XEmbed, XFlex, XFullscreen, XIcon },
     
     props:
     {
@@ -54,9 +59,9 @@ export default
         */
         image: [ String, Array ],
         /**
-            Type of image (if `image` is base64 data).
+            Turn off hover filter when clickable?
         */
-        imageType: String,
+        noHoverFilter: Boolean,
         /**
             Size of the thumbnail image (width and height).
         */
@@ -83,7 +88,9 @@ export default
             {
                 props.el = 'button';
                 props.cursor = 'pointer';
-                props.hfFilter = 'brightness(1.25)';
+                
+                if (!this.noHoverFilter)
+                  props.hfFilter = 'brightness(1.25)';
             }
             
             return props;

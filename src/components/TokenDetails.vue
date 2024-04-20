@@ -1,25 +1,64 @@
 <template>
   <x-context #default="{ bgColor, ext, dm, apex }">
     <x-box :key="assetProps.value" width="100%">
-      <f-token-image iconbar :image="token.image" :image-type="token.imageType" :size="size" margin="hauto" />
-      <x-flex 
-        aligns=":center:space-around" 
-        colors="#EEEEEE:black_f.25" 
-        border="v.25!white_f.5" 
-        :width="size" 
-        pad="a1"
-        margin="hauto"
-      >
-        <f-data-value 
-          v-bind="assetProps" 
-          copy 
-          aligns=":center:center" 
-          :count="!ocmds !== !mintDate ? 18 : ocmds && mintDate ? 16 : 24" 
-          font="micro" 
-        />
-        <x-text v-if="mintDate" font="micro" colors="quarter"> {{ mintDate }} </x-text> 
-        <x-text v-if="ocmds" font="micro" colors="second"> {{ ocmds }} </x-text>
-      </x-flex>
+      <f-flip-card y-axis :flip="flip" width="100%">
+        <template #default>
+          <f-token-image 
+            iconbar 
+            :image="token.image" 
+            :size="size" 
+            margin="hauto" 
+            no-hover-filter 
+            @click="flip = !flip" 
+          />
+          <x-flex 
+            aligns=":center:space-around" 
+            colors="#EEEEEE:black_f.25" 
+            border="v.25!white_f.5" 
+            :width="size" 
+            pad="a1"
+            margin="hauto"
+          >
+            <f-data-value 
+              v-bind="assetProps" 
+              copy 
+              aligns=":center:center" 
+              :count="!ocmds !== !mintDate ? 18 : ocmds && mintDate ? 16 : 24" 
+              font="micro" 
+            />
+            <x-text v-if="mintDate" font="micro" colors="quarter"> {{ mintDate }} </x-text> 
+            <x-text v-if="ocmds" font="micro" colors="second"> {{ ocmds }} </x-text>
+          </x-flex>          
+        </template>
+        <template #reverse>
+          <x-box cursor="pointer" margin="hauto" :width="size" @click="flip = !flip">
+            <x-qr-code 
+              :content="token.policyId" 
+              :padding="2" 
+              colors="quarter:gray_f.25" 
+              :width="size" 
+              :height="size"
+            />
+          </x-box>
+          <x-flex 
+            aligns=":center:center" 
+            colors="#EEEEEE:black_f.25" 
+            border="v.25!white_f.5" 
+            :width="size" 
+            pad="a1"
+            margin="hauto"
+          >
+            <f-data-value 
+              label="policy id"
+              :value="token.policyId"
+              copy 
+              aligns=":center:center" 
+              :count="24" 
+              font="micro"
+            />
+          </x-flex>          
+        </template>
+      </f-flip-card>      
       <x-flex invert aligns=":center" margin="v5 h3">
         <x-text 
           v-if="token.description" 
@@ -71,32 +110,6 @@
           </x-flex>
         </template>
       </f-traits>
-      <!-- <x-box :height="size" :width="size" margin="v8 hauto">
-        <f-token-image
-          v-for="(f, i) in images"
-          iconbar
-          :key="i" 
-          :image="f.src" 
-          :image-type="f.mediaType" 
-          :size="size" 
-          margin="v2" 
-        />
-        <x-box 
-          v-if="videos.length" 
-          el="video"
-          controls 
-          autoplay 
-          loop 
-          playsinline 
-          muted 
-          :poster="data.image" 
-          :width="size" 
-          margin="v2" 
-        >
-          <source v-for="(v, i) in videos" :key="i" :src="v.src" :type="v.mediaType" />
-          <div> No HTML video support! </div>
-        </x-box>
-      </x-box> -->
     </x-box>
   </x-context>
 </template>
@@ -104,8 +117,9 @@
 
 
 <script>
-import { XBox, XContext, XGrid, XFlex, XIcon, XImage, XLink, XText } from 'exude'
+import { XBox, XContext, XGrid, XFlex, XIcon, XImage, XLink, XQrCode, XText } from 'exude'
 import FDataValue from './face/FDataValue'
+import FFlipCard from './face/FFlipCard'
 import FTokenImage from './face/FTokenImage'
 import FTraits from './face/FTraits'
 import { encode } from '_source/lib/json-code';
@@ -116,7 +130,22 @@ export default
 {
     name: 'TokenDetails',
     
-    components: { FDataValue, FTokenImage, FTraits, XBox, XContext, XGrid, XFlex, XIcon, XImage, XLink, XText },
+    components: 
+    { 
+        FDataValue, 
+        FFlipCard, 
+        FTokenImage, 
+        FTraits, 
+        XBox, 
+        XContext, 
+        XGrid, 
+        XFlex, 
+        XIcon, 
+        XImage, 
+        XLink, 
+        XQrCode, 
+        XText 
+    },
     
     props:
     {
@@ -130,7 +159,7 @@ export default
         data: Object
     },
     
-    data: () => ({ token: {} }),
+    data: () => ({ token: {}, flip: false }),
     
     computed:
     {

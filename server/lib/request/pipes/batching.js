@@ -3,21 +3,22 @@ var op = require('object-path');
 
 
 /**
-    Applies declarative configuration parameters.
-
+    Constructs a pipeline function for batching request data.
+    
     @param { string } spec
       Request configuration object.
+    @return { function }
+      Pipeline function.
 */
-module.exports = function({ batch = 0, defarg, vars })
+module.exports = function({ batch = 0, defarg })
 {
+    /**
+        Manages batching of request based on default argument.
+    */
     return (args, operation) =>
     {
-        if (typeof args !== 'object' || Array.isArray(args)) 
-            args = (obj => (op.set(obj, defarg, args), obj))({});
-        // merga with spec variables
-        args = { ...vars, ...args };
-        
         var main = op.get(args, defarg);
+        
         if (batch && Array.isArray(main))
         {
             var promises = [];

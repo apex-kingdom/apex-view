@@ -29,12 +29,10 @@ var adapter =
     {    
         var assets = { __entity };
 
-        assets.stakeKey = data.stake_address;
-        
         assets.ids = [];
         assets.map = {};
 
-        data.asset_list.forEach(item => 
+        data.forEach(item => 
         {
             var key = getKey(item);
             

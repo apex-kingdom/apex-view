@@ -27,7 +27,7 @@ module.exports = function resolve(name)
             // request headers
             headers = { ...pre.headers, ...headers };
             // concatenate url
-            url = pre.url + (url || '');
+            url = (pre.url || '') + (url || '');
             // request data
             data = { ...pre.data, ...data };
             // name of default url parameter
