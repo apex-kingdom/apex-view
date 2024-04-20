@@ -12,11 +12,6 @@ module.exports =
         koios:
         [
             process.env.API_KOIOS
-        ],
-        opencnft:
-        [
-            process.env.API_OPENCNFT,
-            process.env.API_OPENCNFT_2
         ]
     },
     // server listening port
@@ -33,8 +28,6 @@ module.exports =
         // max 500 in 1 second with 25 per second cool
         blockfrost: { max: 450, cool: 1000, scale: 10 }, 
         // max 100 per 10 seconds
-        koios: { max: 100, cool: 10000 },
-        // max 5 per second
-        opencnft: { max: 5, cool: 1010 }
+        koios: { max: 100, cool: 10000 }
     }
 }

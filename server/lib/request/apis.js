@@ -44,14 +44,6 @@ module.exports =
         paging: { limit: 100, type: 1 }
     },
     
-    nftcdnio:
-    {
-        method: 'get',
-        url: 'https://{fingerprint}.{domain}.nftcdn.io',
-        api: 'nftcdnio',
-        vars: { domain: 'preprod', auth: '7FoxfBgV2k+RSz6UUts3/fG1edG7oIGXxdtIVCdalaI=' }
-    },
-    
     koios:
     {
         base: 'apex',
@@ -59,15 +51,6 @@ module.exports =
         headers: { authorization: 'Bearer {apikey}' },
         api: 'koios',
         paging: { limit: 800, type: 0 }
-    },
-    
-    opencnft:
-    {
-        base: 'apex',
-        url: 'https://api.opencnft.io/{version}',
-        headers: { 'X-Api-Key': '{apikey}' },
-        api: 'opencnft',
-        vars: { version: '2' }
     },
     
     /* --------------------------------------------------------------------- */
@@ -106,12 +89,8 @@ module.exports =
         batch: 200 
     },
 
-    collection: { base: 'opencnft', url: '/collection/search?q={policy}' },
-        
     eras: { base: 'blockfrost', url: '/network/eras' },
     
-    image: { base: 'nftcdnio', url: '/image?tk={auth}&size={size}', vars: { size: 1024 } },
-
     genesis: { base: 'blockfrost', url: '/genesis' },    
     
     pool: { base: 'blockfrost', url: '/pools/{pool_id}/metadata' },
