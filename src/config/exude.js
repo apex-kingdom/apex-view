@@ -315,7 +315,7 @@ export default
         named: 
         {
             about: { property: 'opacity, z-index', duration: '0.5s', timing: 'ease' },          
-            default: { property: 'all', duration: '0.15s', timing: 'ease' },
+            // default: { property: 'all', duration: '0.15s', timing: 'ease' },
             nav: { property: 'opacity, right', duration: '0.5s', timing: 'ease' }          
         }
     }

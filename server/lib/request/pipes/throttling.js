@@ -1,5 +1,5 @@
-var redis = require('../../config/redis');
-var { throttles } = require('../../config');
+var redis = require('../../../config/redis');
+var { throttles } = require('../../../config');
 
 
 /**
