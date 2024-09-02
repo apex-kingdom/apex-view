@@ -86,7 +86,7 @@ module.exports =
         method: 'post', 
         url: '/asset_info',
         defarg: 'data._asset_list', 
-        batch: 200 
+        batch: 60 
     },
 
     eras: { base: 'blockfrost', url: '/network/eras' },
